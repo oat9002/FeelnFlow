@@ -1,0 +1,3 @@
+rootProject.name = 'feeln4'
+
+include ':app'
