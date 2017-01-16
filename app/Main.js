@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { StyleSheet, View , Text , Image , Button} from 'react-native';
 // import { BlurView, VibrancyView } from 'react-native-blur';
 // import { Container, Content} from 'native-base';
@@ -22,13 +22,19 @@ class Main extends React.Component {
             <Button title="Sentiment"></Button>
           </View>
           <View style={{marginTop: 10}}>
-            <Button title="Clow Flow"></Button>
+            <Button  onPress={this.props.onForward} title="Crowd Flow"></Button>
           </View>
         </View>
       </Image>
     );
   }
 }
+
+// Main.propTypes = {
+//   title: PropTypes.string.isRequired,
+//   onForward: PropTypes.func.isRequired,
+//   //onBack: PropTypes.func.isRequired,
+// };
 
 const styles = StyleSheet.create({
   container: {
