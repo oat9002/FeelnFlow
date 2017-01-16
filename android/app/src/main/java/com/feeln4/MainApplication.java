@@ -2,8 +2,8 @@ package com.feeln4;
 
 import android.app.Application;
 import android.util.Log;
-
 import com.facebook.react.ReactApplication;
+import com.airbnb.android.react.maps.MapsPackage;
 import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
@@ -21,11 +21,13 @@ public class MainApplication extends Application implements ReactApplication {
       return BuildConfig.DEBUG;
     }
 
+    
     @Override
     protected List<ReactPackage> getPackages() {
-      return Arrays.<ReactPackage>asList(
-          new MainReactPackage()
-      );
+        return Arrays.<ReactPackage>asList(
+                new MainReactPackage(),
+                new MapsPackage()
+        );
     }
   };
 
