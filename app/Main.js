@@ -4,22 +4,16 @@ import React, { Component, PropTypes } from 'react';
 import { StyleSheet, View , Text , Image , Button,Navigator, TouchableOpacity} from 'react-native';
 // import { BlurView, VibrancyView } from 'react-native-blur';
 // import { Container, Content} from 'native-base';
+import MyScene from './MyScene';
 
 class Main extends React.Component {
- render() {
-    return (
-      <Navigator
-          renderScene={this.renderScene.bind(this)}
-          navigator={this.props.navigator}
-        //  navigationBar={
-           // <Navigator.NavigationBar style={{backgroundColor: '#246dd5', alignItems: 'center'}}
-               // routeMapper={NavigationBarRouteMapper} />
-         // } 
-         />
-    );
-  }
+ navigate(routeName){
+   this.props.navigator.push({
+      name: routeName
+   })
+ }
 
-    renderScene(route, navigator) {
+ render() {
     return (
       <Image source={require("./pics/bg_croped_blur.png")} style={styles.container}>
         <View>
@@ -37,20 +31,15 @@ class Main extends React.Component {
             <Button title="Sentiment"></Button>
           </View>
           <View style={{marginTop: 10}}>
-            <Button  onPress={this.gotoNext.bind(this)} title="Crowd Flow"></Button>
+            <Button  onPress={this.navigate.bind(this,'MyScene')} title="Crowd Flow"></Button>
           </View>
         </View>
       </Image>
-
-
     );
   }
-  gotoNext() {
-    navigator.push({
-      id: 'MyScene',
-     // name: '主页',
-    });
-  }
+
+  
+ 
 }
 
 
