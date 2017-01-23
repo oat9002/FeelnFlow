@@ -28,7 +28,7 @@ class Main extends React.Component {
         </View>
         <View style={styles.button}>
           <View>
-            <Button title="Sentiment"></Button>
+            <Button onPress={this.navigate.bind(this,'MyScene')} title="Sentiment"></Button>
           </View>
           <View style={{marginTop: 10}}>
             <Button  onPress={this.navigate.bind(this,'MyScene')} title="Crowd Flow"></Button>
