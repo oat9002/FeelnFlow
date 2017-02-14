@@ -8,18 +8,20 @@ import React, { Component } from 'react';
 import { AppRegistry,Navigator } from 'react-native';
 import Main from './app/Main';
 import MyScene from './app/MyScene';
-//var MyScene = require('./app/MyScene');
+import Sentiment from './app/Sentiment';
 
 export default class feeln4 extends Component {
- 
- renderScene(route,navigator){
-   if(route.name == 'Main'){
-     return <Main navigator={navigator}/>
-   }
-    if(route.name == 'MyScene'){
-     return <MyScene navigator={navigator}/>
-   }
- }
+  renderScene(route,navigator) {
+    if(route.name == 'Main') {
+      return <Main navigator={navigator} />
+    }
+    else if(route.name == 'MyScene') {
+      return <MyScene navigator={navigator} />
+    }
+    else if(route.name == 'Sentiment') {
+      return <Sentiment navigator={navigator} />
+    }
+  }
  
   render() {
     return (
@@ -27,8 +29,6 @@ export default class feeln4 extends Component {
         initialRoute={{name: 'Main'}}
         renderScene={this.renderScene.bind(this)}
      />
-  
-      
     );
   }
 }
