@@ -9,7 +9,8 @@ import MyScene from './MyScene';
 class Main extends React.Component {
  navigate(routeName){
    this.props.navigator.push({
-      name: routeName
+      name: routeName,
+      index: this.props.index + 1
    })
  }
 

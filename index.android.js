@@ -11,23 +11,28 @@ import MyScene from './app/MyScene';
 import Sentiment from './app/Sentiment';
 
 export default class feeln4 extends Component {
+  constructor(props) {
+    super(props);
+    this.renderScene = this.renderScene.bind(this)
+  }
+
   renderScene(route,navigator) {
     if(route.name == 'Main') {
-      return <Main navigator={navigator} />
+      return <Main navigator={navigator} route={route}/>
     }
     else if(route.name == 'MyScene') {
-      return <MyScene navigator={navigator} />
+      return <MyScene navigator={navigator} route={route}/>
     }
     else if(route.name == 'Sentiment') {
-      return <Sentiment navigator={navigator} />
+      return <Sentiment navigator={navigator} route={route}/>
     }
   }
  
   render() {
     return (
      <Navigator
-        initialRoute={{name: 'Main'}}
-        renderScene={this.renderScene.bind(this)}
+        initialRoute={{name: 'Main', index: 0}}
+        renderScene={this.renderScene}
      />
     );
   }
