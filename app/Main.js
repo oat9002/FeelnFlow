@@ -6,7 +6,7 @@ import { StyleSheet, View , Text , Image , Button,Navigator, TouchableOpacity} f
 // import { Container, Content} from 'native-base';
 import MyScene from './MyScene';
 
-class Main extends React.Component {
+class Main extends Component {
  navigate(routeName){
    this.props.navigator.push({
       name: routeName,
