@@ -11,6 +11,8 @@
     "react": "15.4.2",
     "react-native": "0.40.0",
     "react-native-blur": "^2.0.0",
+    "react-native-drawer": "^2.3.0",
+    "react-native-hamburger": "0.0.2",
     "react-native-maps": "^0.13.0"
   },
   "devDependencies": {

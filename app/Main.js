@@ -6,10 +6,11 @@ import { StyleSheet, View , Text , Image , Button,Navigator, TouchableOpacity} f
 // import { Container, Content} from 'native-base';
 import MyScene from './MyScene';
 
-class Main extends React.Component {
+class Main extends Component {
  navigate(routeName){
    this.props.navigator.push({
-      name: routeName
+      name: routeName,
+      index: this.props.index + 1
    })
  }
 
@@ -28,7 +29,7 @@ class Main extends React.Component {
         </View>
         <View style={styles.button}>
           <View>
-            <Button onPress={this.navigate.bind(this,'MyScene')} title="Sentiment"></Button>
+            <Button onPress={this.navigate.bind(this,'Sentiment')} title="Sentiment"></Button>
           </View>
           <View style={{marginTop: 10}}>
             <Button  onPress={this.navigate.bind(this,'MyScene')} title="Crowd Flow"></Button>
@@ -36,13 +37,8 @@ class Main extends React.Component {
         </View>
       </Image>
     );
-  }
-
-  
- 
+  } 
 }
-
-
 
 const styles = StyleSheet.create({
   container: {

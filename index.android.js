@@ -8,27 +8,32 @@ import React, { Component } from 'react';
 import { AppRegistry,Navigator } from 'react-native';
 import Main from './app/Main';
 import MyScene from './app/MyScene';
-//var MyScene = require('./app/MyScene');
+import Sentiment from './app/Sentiment';
 
 export default class feeln4 extends Component {
- 
- renderScene(route,navigator){
-   if(route.name == 'Main'){
-     return <Main navigator={navigator}/>
-   }
-    if(route.name == 'MyScene'){
-     return <MyScene navigator={navigator}/>
-   }
- }
+  constructor(props) {
+    super(props);
+    this.renderScene = this.renderScene.bind(this)
+  }
+
+  renderScene(route,navigator) {
+    if(route.name == 'Main') {
+      return <Main navigator={navigator} route={route}/>
+    }
+    else if(route.name == 'MyScene') {
+      return <MyScene navigator={navigator} route={route}/>
+    }
+    else if(route.name == 'Sentiment') {
+      return <Sentiment navigator={navigator} route={route}/>
+    }
+  }
  
   render() {
     return (
      <Navigator
-        initialRoute={{name: 'Main'}}
-        renderScene={this.renderScene.bind(this)}
+        initialRoute={{name: 'Main', index: 0}}
+        renderScene={this.renderScene}
      />
-  
-      
     );
   }
 }
