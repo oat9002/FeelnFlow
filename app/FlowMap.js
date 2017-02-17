@@ -38,19 +38,34 @@ export default class FlowMap extends Component {
         latitudeDelta: LATITUDE_DELTA,
         longitudeDelta: LONGITUDE_DELTA,
       },
-     
-     
-     denColor: ""
+       
+     denColor: 'yellow'
       
       
     };
      this.onRegionChange = this.onRegionChange.bind(this) //อย่าลืมประกาศทุกฟังก์ชั่นนะ
+     this.onChangeDenColor = this.onChangeDenColor.bind(this)
   }
 
   
     onRegionChange(region) {
       this.setState({ region });
+     
     }
+
+    onChangeDenColor(denColor){
+      //this.setState({denColor})
+       if(denColor == 'green'){
+        return green
+      }
+      if(denColor == 'yellow'){
+        return yellow
+      }
+      if(denColor == 'red'){
+        return red
+      }
+    }
+
     // makeEvent(e, name) {
     //     return {
     //       id: id++,
@@ -75,6 +90,9 @@ export default class FlowMap extends Component {
    
  
   render() {
+   
+
+
     return (
          
       <View style={styles.container}>
@@ -87,7 +105,7 @@ export default class FlowMap extends Component {
           >
              <MapView.Polygon
               coordinates={polygonParagon.coordinates}
-              fillColor="rgba(200, 0, 0, 0.5)" //red
+              fillColor=  {this.state.denColor}//red
               strokeColor="rgba(200,0,0,0.9)"
               strokeWidth={2} //ความหนาของเส้นรอบรูป
               //onPress={this.recordEvent('polygonParagon::onPress')}
@@ -133,6 +151,16 @@ export default class FlowMap extends Component {
 FlowMap.propTypes = {
   provider: MapView.ProviderPropType,
 };
+
+const green = {
+  fillColor : "rgba(0, 200, 0, 0.5)"
+}
+const yellow = {
+  fillColor : "rgba(255, 255, 0, 0.5)"
+}
+const red = {
+  fillColor : "rgba(200,0,0,0.5)"
+}
 
  const polygonParagon = {
       coordinates : [
@@ -282,6 +310,7 @@ const styles = StyleSheet.create({
     width: 200,
     alignItems: 'stretch',
   },
+ 
  
 
 });
