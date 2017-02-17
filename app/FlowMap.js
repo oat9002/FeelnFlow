@@ -8,11 +8,13 @@ import {
    Navigator, 
    TouchableOpacity, 
    StyleSheet, 
-   Dimensions, } from 'react-native';
+   Dimensions,
+  DrawerLayoutAndroid, 
+  ToolbarAndroid} from 'react-native';
 import Main from './Main';
 import MapView from 'react-native-maps';
-//import SyntheticEvent from 'react/lib/SyntheticEvent';
-import SyntheticEvent from '../node_modules/react-native/Libraries/Renderer/src/renderers/shared/stack/event/SyntheticEvent';
+
+
 
 const { width, height } = Dimensions.get('window');
 
@@ -24,7 +26,8 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 const SPACE = 0.01;
 let id = 0;
 
-export default class MyScene extends Component {
+
+export default class FlowMap extends Component {
   constructor(props) {
     super(props);
 
@@ -99,50 +102,110 @@ export default class MyScene extends Component {
           latitude: 13.746659 ,
           longitude: 100.532084
         },
-      ]
+      ],
+      polygonMBK: [
+        {
+           latitude: 13.743162,
+           longitude:100.529276
+        },
+        {
+           latitude: 13.743030,
+           longitude: 100.530086
+        },
+        {
+           latitude: 13.745630,
+           longitude: 100.530477
+        },
+        {
+           latitude: 13.745990,
+           longitude: 100.530183
+        },
+        {
+           latitude: 13.745990,
+           longitude: 100.530183
+        },
+        {
+           latitude: 13.746050, 
+           longitude: 100.529724
+        },
+      ],
+      polygonSiamDis: [
+         {
+           latitude: 13.746793, 
+           longitude: 100.531030 
+        },
+         {
+           latitude: 13.746312,
+           longitude:  100.531381
+        },
+         {
+           latitude: 13.746236, 
+           longitude: 100.531821
+        },
+         {
+           latitude: 13.746709,
+           longitude:  100.531917
+        },
+         {
+           latitude: 13.746959,
+           longitude:  100.531718
+        },
+          {
+           latitude: 13.747057,
+           longitude:  100.531084
+        },
+        
+
+      ],
       
       
     };
      this.onRegionChange = this.onRegionChange.bind(this) //อย่าลืมประกาศทุกฟังก์ชั่นนะ
-      this.recordEvent = this.recordEvent.bind(this)
+     // this.recordEvent = this.recordEvent.bind(this)
+     // this.onActionSelected = this.onActionSelected.bind(this)
   }
 
   
     onRegionChange(region) {
       this.setState({ region });
     }
-    makeEvent(e, name) {
-        return {
-          id: id++,
-          name,
-          data: e.nativeEvent ? e.nativeEvent : e,
-        };
-      }
-    recordEvent(name) {
-      return e => {
-         if (e instanceof SyntheticEvent && typeof e.persist === 'function') {
-         e.persist();
-       }
-       this.setState(prevState => ({
-          events: [
-            this.makeEvent(e, name),
-            ...prevState.events.slice(0, 10),
-          ],
+    // makeEvent(e, name) {
+    //     return {
+    //       id: id++,
+    //       name,
+    //       data: e.nativeEvent ? e.nativeEvent : e,
+    //     };
+    //   }
+    // recordEvent(name) {
+    //   return e => {
+    //      if (e instanceof SyntheticEvent && typeof e.persist === 'function') {
+    //      e.persist();
+    //    }
+    //    this.setState(prevState => ({
+    //       events: [
+    //         this.makeEvent(e, name),
+    //         ...prevState.events.slice(0, 10),
+    //       ],
        
-     }));
-      };
-    }
-  
+    //  }));
+    //   };
+    // }
+ 
+    
 
 
 
   render() {
+
     const {polygonParagon} = this.state;
     const {polygonCentralWorld} = this.state;
     const {polygonSiamCenter} = this.state;
+    const {polygonMBK} = this.state;
+    const {polygonSiamDis} = this.state;
     return (
+         
       <View style={styles.container}>
-          <MapView
+        <MapView
           region={this.state.region}
           style={styles.map}
           onRegionChange={this.onRegionChange}
@@ -151,36 +214,54 @@ export default class MyScene extends Component {
           >
              <MapView.Polygon
               coordinates={polygonParagon}
-              fillColor="rgba(0, 200, 0, 0.5)"
-              strokeColor="rgba(0,0,0,0.5)"
+              fillColor="rgba(200, 0, 0, 0.5)"
+              strokeColor="rgba(200,0,0,0.9)"
               strokeWidth={2} //ความหนาของเส้นรอบรูป
-              onPress={this.recordEvent('polygonParagon::onPress')}
-              
-              
+              //onPress={this.recordEvent('polygonParagon::onPress')}
+                          
             />
+
             <MapView.Polygon
               coordinates={polygonCentralWorld}
               fillColor="rgba(0, 200, 0, 0.5)"
-              strokeColor="rgba(0,0,0,0.5)"
+              strokeColor="rgba(0,200,0,0.9)"
               strokeWidth={2} //ความหนาของเส้นรอบรูป
             />
+            
+
             <MapView.Polygon
               coordinates={polygonSiamCenter}
               fillColor="rgba(0, 200, 0, 0.5)"
-              strokeColor="rgba(0,0,0,0.5)"
+              strokeColor="rgba(0,200,0,0.9)"
+              strokeWidth={2} //ความหนาของเส้นรอบรูป
+            />
+             <MapView.Polygon
+              coordinates={polygonMBK}
+              fillColor="rgba(255, 255, 0, 0.5)"
+              strokeColor="rgba(255,255,0,0.9)"
+              strokeWidth={2} //ความหนาของเส้นรอบรูป
+            />
+            <MapView.Polygon
+              coordinates={polygonSiamDis}
+              fillColor="rgba(0, 200, 0, 0.5)"
+              strokeColor="rgba(0,200,0,0.9)"
               strokeWidth={2} //ความหนาของเส้นรอบรูป
             />
           </MapView>
+        
     </View>
+    
 
     
     );
 }
 }
 
-MyScene.propTypes = {
+FlowMap.propTypes = {
   provider: MapView.ProviderPropType,
 };
+
+
 
 const styles = StyleSheet.create({
   container: {
@@ -211,6 +292,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     borderRadius: 20,
   },
+
 });
 
 

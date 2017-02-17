@@ -4,7 +4,7 @@ import React, { Component, PropTypes } from 'react';
 import { StyleSheet, View , Text , Image , Button,Navigator, TouchableOpacity} from 'react-native';
 // import { BlurView, VibrancyView } from 'react-native-blur';
 // import { Container, Content} from 'native-base';
-import MyScene from './MyScene';
+import FlowMap from './FlowMap';
 
 class Main extends Component {
  navigate(routeName){
@@ -32,7 +32,7 @@ class Main extends Component {
             <Button onPress={this.navigate.bind(this,'Sentiment')} title="Sentiment"></Button>
           </View>
           <View style={{marginTop: 10}}>
-            <Button  onPress={this.navigate.bind(this,'MyScene')} title="Crowd Flow"></Button>
+            <Button  onPress={this.navigate.bind(this,'FlowMap')} title="Crowd Flow"></Button>
           </View>
         </View>
       </Image>
