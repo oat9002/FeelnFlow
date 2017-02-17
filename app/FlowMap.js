@@ -38,26 +38,108 @@ export default class FlowMap extends Component {
         latitudeDelta: LATITUDE_DELTA,
         longitudeDelta: LONGITUDE_DELTA,
       },
-      polygonParagon: [
-        {
-          latitude: 13.747784 ,//LATITUDE + SPACE,
-          longitude: 100.535947//LONGITUDE + SPACE,
-        },
-        {
-          latitude: 13.745545,//LATITUDE - SPACE,
-          longitude: 100.535503//LONGITUDE - SPACE,
-        },
-        {
-          latitude: 13.745864,//LATITUDE - SPACE,
-          longitude: 100.533953//LONGITUDE + SPACE,
-        },
-        {
-          latitude: 13.748057,//LATITUDE - SPACE,
-          longitude: 100.534392//LONGITUDE + SPACE,
-        },
          
-      ],
-      polygonCentralWorld: [
+       denColor: "",
+       fillColor:"rgba(200, 0, 0, 0.5)",
+      
+      
+    };
+     this.onRegionChange = this.onRegionChange.bind(this) //อย่าลืมประกาศทุกฟังก์ชั่นนะ
+  }
+
+  
+
+  
+    onRegionChange(region) {
+      this.setState({ region });
+    }
+    
+ 
+  render() {
+    let denColor = this.state.denColor;
+    if(denColor == "low") 
+
+    return (
+         
+      <View style={styles.container}>
+        <MapView
+          region={this.state.region}
+          style={styles.map}
+          onRegionChange={this.onRegionChange}
+          initialRegion={this.state.region}
+        // initialRegion={region}
+          >
+             <MapView.Polygon
+              coordinates={polygonParagon.coordinates}
+              fillColor="rgba(200, 0, 0, 0.5)" //red
+              strokeColor="rgba(200,0,0,0.9)"
+              strokeWidth={2} //ความหนาของเส้นรอบรูป
+              //onPress={this.recordEvent('polygonParagon::onPress')}
+                          
+            />
+
+            <MapView.Polygon
+              coordinates={polygonCentralWorld.coordinates}
+              fillColor="rgba(0, 200, 0, 0.5)"//green
+              strokeColor="rgba(0,200,0,0.9)"
+              strokeWidth={2} //ความหนาของเส้นรอบรูป
+            />
+            
+
+            <MapView.Polygon
+              coordinates={polygonSiamCenter.coordinates}
+              fillColor="rgba(0, 200, 0, 0.5)"
+              strokeColor="rgba(0,200,0,0.9)"
+              strokeWidth={2} //ความหนาของเส้นรอบรูป
+            />
+             <MapView.Polygon
+              coordinates={polygonMBK.coordinates}
+              fillColor="rgba(255, 255, 0, 0.5)" //yellow
+              strokeColor="rgba(255,255,0,0.9)"
+              strokeWidth={2} //ความหนาของเส้นรอบรูป
+            />
+            <MapView.Polygon
+              coordinates={polygonSiamDis.coordinates}
+              fillColor="rgba(0, 200, 0, 0.5)"
+              strokeColor="rgba(0,200,0,0.9)"
+              strokeWidth={2} //ความหนาของเส้นรอบรูป
+            />
+          </MapView>
+        
+    </View>
+    
+
+    
+    );
+}
+}
+
+FlowMap.propTypes = {
+  provider: MapView.ProviderPropType,
+};
+
+ const polygonParagon = {
+      coordinates : [
+        { 
+          latitude: 13.747784 ,
+          longitude: 100.535947
+        },
+        {
+          latitude: 13.745545,
+          longitude: 100.535503
+        },
+        {
+          latitude: 13.745864,
+          longitude: 100.533953
+        },
+        {
+          latitude: 13.748057,
+          longitude: 100.534392
+        },
+      ]
+  }
+  const polygonCentralWorld = {
+        coordinates : [
         {
           latitude: 13.747930 ,
           longitude: 100.540131
@@ -82,10 +164,10 @@ export default class FlowMap extends Component {
           latitude: 13.748188 ,
           longitude: 100.538364
         },
-
-
       ],
-      polygonSiamCenter: [
+  }
+   const  polygonSiamCenter = {
+     coordinates : [
         {
           latitude: 13.746368 ,
           longitude: 100.533590
@@ -103,7 +185,9 @@ export default class FlowMap extends Component {
           longitude: 100.532084
         },
       ],
-      polygonMBK: [
+   }
+     const polygonMBK = { 
+       coordinates :[
         {
            latitude: 13.743162,
            longitude:100.529276
@@ -128,8 +212,10 @@ export default class FlowMap extends Component {
            latitude: 13.746050, 
            longitude: 100.529724
         },
-      ],
-      polygonSiamDis: [
+      ]
+     }
+     const polygonSiamDis = {
+        coordinates : [
          {
            latitude: 13.746793, 
            longitude: 100.531030 
@@ -154,114 +240,8 @@ export default class FlowMap extends Component {
            latitude: 13.747057,
            longitude:  100.531084
         },
-        
-
-      ],
-      
-      
-    };
-     this.onRegionChange = this.onRegionChange.bind(this) //อย่าลืมประกาศทุกฟังก์ชั่นนะ
-     // this.recordEvent = this.recordEvent.bind(this)
-     // this.onActionSelected = this.onActionSelected.bind(this)
-  }
-
-  
-    onRegionChange(region) {
-      this.setState({ region });
+        ],
     }
-    // makeEvent(e, name) {
-    //     return {
-    //       id: id++,
-    //       name,
-    //       data: e.nativeEvent ? e.nativeEvent : e,
-    //     };
-    //   }
-    // recordEvent(name) {
-    //   return e => {
-    //      if (e instanceof SyntheticEvent && typeof e.persist === 'function') {
-    //      e.persist();
-    //    }
-    //    this.setState(prevState => ({
-    //       events: [
-    //         this.makeEvent(e, name),
-    //         ...prevState.events.slice(0, 10),
-    //       ],
-       
-    //  }));
-    //   };
-    // }
- 
-    
-
-
-
-  render() {
-
-    const {polygonParagon} = this.state;
-    const {polygonCentralWorld} = this.state;
-    const {polygonSiamCenter} = this.state;
-    const {polygonMBK} = this.state;
-    const {polygonSiamDis} = this.state;
-    return (
-         
-      <View style={styles.container}>
-        <MapView
-          region={this.state.region}
-          style={styles.map}
-          onRegionChange={this.onRegionChange}
-          initialRegion={this.state.region}
-        // initialRegion={region}
-          >
-             <MapView.Polygon
-              coordinates={polygonParagon}
-              fillColor="rgba(200, 0, 0, 0.5)"
-              strokeColor="rgba(200,0,0,0.9)"
-              strokeWidth={2} //ความหนาของเส้นรอบรูป
-              //onPress={this.recordEvent('polygonParagon::onPress')}
-                          
-            />
-
-            <MapView.Polygon
-              coordinates={polygonCentralWorld}
-              fillColor="rgba(0, 200, 0, 0.5)"
-              strokeColor="rgba(0,200,0,0.9)"
-              strokeWidth={2} //ความหนาของเส้นรอบรูป
-            />
-            
-
-            <MapView.Polygon
-              coordinates={polygonSiamCenter}
-              fillColor="rgba(0, 200, 0, 0.5)"
-              strokeColor="rgba(0,200,0,0.9)"
-              strokeWidth={2} //ความหนาของเส้นรอบรูป
-            />
-             <MapView.Polygon
-              coordinates={polygonMBK}
-              fillColor="rgba(255, 255, 0, 0.5)"
-              strokeColor="rgba(255,255,0,0.9)"
-              strokeWidth={2} //ความหนาของเส้นรอบรูป
-            />
-            <MapView.Polygon
-              coordinates={polygonSiamDis}
-              fillColor="rgba(0, 200, 0, 0.5)"
-              strokeColor="rgba(0,200,0,0.9)"
-              strokeWidth={2} //ความหนาของเส้นรอบรูป
-            />
-          </MapView>
-        
-    </View>
-    
-
-    
-    );
-}
-}
-
-FlowMap.propTypes = {
-  provider: MapView.ProviderPropType,
-};
-
-
 
 const styles = StyleSheet.create({
   container: {
@@ -286,12 +266,7 @@ const styles = StyleSheet.create({
     width: 200,
     alignItems: 'stretch',
   },
-   bubble: {
-    backgroundColor: 'rgba(255,255,255,0.7)',
-    paddingHorizontal: 18,
-    paddingVertical: 12,
-    borderRadius: 20,
-  },
+ 
 
 });
 
