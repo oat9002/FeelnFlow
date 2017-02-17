@@ -38,9 +38,9 @@ export default class FlowMap extends Component {
         latitudeDelta: LATITUDE_DELTA,
         longitudeDelta: LONGITUDE_DELTA,
       },
-         
-       denColor: "",
-       fillColor:"rgba(200, 0, 0, 0.5)",
+     
+     
+     denColor: ""
       
       
     };
@@ -48,17 +48,33 @@ export default class FlowMap extends Component {
   }
 
   
-
-  
     onRegionChange(region) {
       this.setState({ region });
     }
-    
+    // makeEvent(e, name) {
+    //     return {
+    //       id: id++,
+    //       name,
+    //       data: e.nativeEvent ? e.nativeEvent : e,
+    //     };
+    //   }
+    // recordEvent(name) {
+    //   return e => {
+    //      if (e instanceof SyntheticEvent && typeof e.persist === 'function') {
+    //      e.persist();
+    //    }
+    //    this.setState(prevState => ({
+    //       events: [
+    //         this.makeEvent(e, name),
+    //         ...prevState.events.slice(0, 10),
+    //       ],
+       
+    //  }));
+    //   };
+    // }
+   
  
   render() {
-    let denColor = this.state.denColor;
-    if(denColor == "low") 
-
     return (
          
       <View style={styles.container}>
