@@ -13,6 +13,7 @@ import {
   ToolbarAndroid} from 'react-native';
 import Main from './Main';
 import MapView from 'react-native-maps';
+import FlowCallout from './FlowCallout';
 
 
 
@@ -25,6 +26,7 @@ const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 const SPACE = 0.01;
 let id = 0;
+const CALLOUT_WIDTH = 200;
 
 
 export default class FlowMap extends Component {
@@ -38,7 +40,8 @@ export default class FlowMap extends Component {
         latitudeDelta: LATITUDE_DELTA,
         longitudeDelta: LONGITUDE_DELTA,
       },
-      denColor: "rgba(0, 200, 0, 0.5)"    
+      denColor: "rgba(0, 200, 0, 0.5)",
+      denStrokeColor : "rgba(0, 200, 0, 0.5)" 
     };
      this.onRegionChange = this.onRegionChange.bind(this) //อย่าลืมประกาศทุกฟังก์ชั่นนะ
      this.onChangeDenColor = this.onChangeDenColor.bind(this)
@@ -54,12 +57,14 @@ export default class FlowMap extends Component {
       //this.setState({denColor})
       if(density == 'low'){
         this.setState({
-          denColor: "rgba(0, 200, 0, 0.5)"
+          denColor: "rgba(0, 200, 0, 0.5)",
+          denStrokeColor : "rgba(0, 200, 0, 0.9)" 
         });
       }
       if(density == 'medium'){
          this.setState({
-          denColor: "rgba(255, 255, 0, 0.5)"
+          denColor: "rgba(255, 255, 0, 0.5)",
+          denStrokeColor : "rgba(255, 255, 0, 0.9)" 
         });
       }
       if(density == 'high'){
@@ -115,11 +120,44 @@ export default class FlowMap extends Component {
              <MapView.Polygon
               coordinates={polygonParagon.coordinates}
               fillColor=  {this.state.denColor}//red
-              strokeColor="rgba(200,0,0,0.9)"
+              strokeColor={this.state.denStrokeColor}
               strokeWidth={2} //ความหนาของเส้นรอบรูป
               //onPress={this.recordEvent('polygonParagon::onPress')}
                           
             />
+            <MapView.Marker 
+              coordinate={circle.center}
+                        centerOffset={{ x: 10, y: 60 }}
+                        anchor={{ x: 0.69, y: 1 }}
+                        image={require('./pics/increase_arrow.png')}>
+                        <MapView.Callout style={styles.plainView}>
+                            <FlowCallout 
+                                width={CALLOUT_WIDTH}
+                                place = "Siam Paragon"
+                                currentDensity = "medium"
+                                nextDensity = "high"
+
+                            />
+                        </MapView.Callout>
+             </MapView.Marker>
+             <MapView.Marker 
+                        coordinate = {siamDis.coordinate}
+                        centerOffset={{ x: 10, y: 60 }}
+                        anchor={{ x: 0.69, y: 1 }}
+                      
+                        image={require('./pics/decrease_arrow.png')}>
+                        <MapView.Callout style={styles.plainView}>
+                            <FlowCallout 
+                                width={CALLOUT_WIDTH}
+                                place = "Siam Paragon"
+                                currentDensity = "medium"
+                                nextDensity = "high"
+
+                            />
+                        </MapView.Callout>
+                    </MapView.Marker>
+                    
+
 
             <MapView.Polygon
               coordinates={polygonCentralWorld.coordinates}
@@ -143,8 +181,8 @@ export default class FlowMap extends Component {
             />
             <MapView.Polygon
               coordinates={polygonSiamDis.coordinates}
-              fillColor="rgba(0, 200, 0, 0.5)"
-              strokeColor="rgba(0,200,0,0.9)"
+              fillColor="rgba(200,0,0,0.5)"
+              strokeColor="rgba(200,0,0,0.9)"
               strokeWidth={2} //ความหนาของเส้นรอบรูป
             />
           </MapView>
@@ -161,15 +199,22 @@ FlowMap.propTypes = {
   provider: MapView.ProviderPropType,
 };
 
-const green = {
-  fillColor : "rgba(0, 200, 0, 0.5)"
+const circle = {
+    center: {
+        latitude:  13.746784,
+        longitude: 100.534947,
+    },
+    radius: 100
 }
-const yellow = {
-  fillColor : "rgba(255, 255, 0, 0.5)"
+const siamDis = {
+    coordinate: {
+        latitude: 13.746570,
+        longitude: 100.531453,
+    }
+    
 }
-const red = {
-  fillColor : "rgba(200,0,0,0.5)"
-}
+
+
 
  const polygonParagon = {
       coordinates : [
@@ -319,6 +364,9 @@ const styles = StyleSheet.create({
     width: 200,
     alignItems: 'stretch',
   },
+   plainView: {
+        width: CALLOUT_WIDTH,
+    },
  
  
 
