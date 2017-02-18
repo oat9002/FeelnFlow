@@ -38,10 +38,7 @@ export default class FlowMap extends Component {
         latitudeDelta: LATITUDE_DELTA,
         longitudeDelta: LONGITUDE_DELTA,
       },
-       
-     denColor: 'yellow'
-      
-      
+      denColor: "rgba(0, 200, 0, 0.5)"    
     };
      this.onRegionChange = this.onRegionChange.bind(this) //อย่าลืมประกาศทุกฟังก์ชั่นนะ
      this.onChangeDenColor = this.onChangeDenColor.bind(this)
@@ -53,18 +50,30 @@ export default class FlowMap extends Component {
      
     }
 
-    onChangeDenColor(denColor){
+    onChangeDenColor(density){
       //this.setState({denColor})
-       if(denColor == 'green'){
-        return green
+      if(density == 'low'){
+        this.setState({
+          denColor: "rgba(0, 200, 0, 0.5)"
+        });
       }
-      if(denColor == 'yellow'){
-        return yellow
+      if(density == 'medium'){
+         this.setState({
+          denColor: "rgba(255, 255, 0, 0.5)"
+        });
       }
-      if(denColor == 'red'){
-        return red
+      if(density == 'high'){
+         this.setState({
+          denColor: "rgba(200,0,0,0.5)"
+        });
       }
     }
+
+    
+    componentDidMount() {
+      this.onChangeDenColor('medium')
+    }
+    
 
     // makeEvent(e, name) {
     //     return {
