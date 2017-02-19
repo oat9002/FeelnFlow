@@ -37,15 +37,15 @@ export default class Sentiment extends Component {
                     closedDrawerOffset={-3}
                    >
                         <SentimentMap />
-                         <Hamburger 
-                            active = {this.state.active}
-                            type='cross'
-                            onPress={() => {
-                                this.setState({
-                                    drawer: !this.state.drawer,
-                                    active: !this.state.active
-                                })
-                            }} 
+                        <Hamburger 
+                        active = {this.state.active}
+                        type='cross'
+                        onPress={() => {
+                            this.setState({
+                                drawer: !this.state.drawer,
+                                active: !this.state.active
+                            })
+                        }} 
                         />
                 </Drawer>
             </View>
