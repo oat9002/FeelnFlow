@@ -33,59 +33,62 @@ export default class SentimentMap extends Component {
 
     maxPercentEmotion(place) {
         let emo = 1;
-        let max = place.joy;
-        if(max < place.sadness) {
-            max = place.sadness
-            emo = 2
+        let max = parseFloat(place.joy);
+        if(max < parseFloat(place.sadness)) {
+            max = parseFloat(place.sadness);
+            emo = 2;
         }
-        if(max < place.fear) {
-            max = place.fear
-            emo = 3
+        if(max < parseFloat(place.fear)) {
+            max = parseFloat(place.fear);
+            emo = 3;
         }
-        if(max < place.anger) {
-            max = place.anger
-            emo = 4
+        if(max < parseFloat(place.anger)) {
+            max = parseFloat(place.anger);
+            emo = 4;
         }
-        if(max < place.disgust) {
-            max = place.disgust
-            emo = 5
+        if(max < parseFloat(place.disgust)) {
+            max = parseFloat(place.disgust);
+            emo = 5;
         }
-        if(max < place.surprise) {
-            max = place.surprise
-            emo = 6
+        if(max < parseFloat(place.surprise)) {
+            max = parseFloat(place.surprise);
+            emo = 6;
         }
-        if(max < place.anticipation) {
-            max = place.anticipation
-            emo = 7
+        if(max < parseFloat(place.anticipation)) {
+            max = parseFloat(place.anticipation);
+            emo = 7;
         }
-        if(max < place.acceptance) {
-            max = place.acceptance
-            emo = 8
+        if(max < parseFloat(place.acceptance)) {
+            max = parseFloat(place.acceptance);
+            emo = 8;
         }
         switch(emo) {
-            case 1:  return require('./pics/emo_rep/1.png');
-            case 2:  return require('./pics/emo_rep/2.png');
-            case 3:  return require('./pics/emo_rep/3.png');
-            case 4:  return require('./pics/emo_rep/4.png');
-            case 5:  return require('./pics/emo_rep/5.png');
-            case 6:  return require('./pics/emo_rep/6.png');
-            case 7:  return require('./pics/emo_rep/7.png');
-            case 8:  return require('./pics/emo_rep/8.png');
+            case 1:  return {pic: require('./pics/emo_rep/1_joy.png'), background: 'rgba(255, 164, 42, 0.3)'};
+            case 2:  return {pic: require('./pics/emo_rep/2_sadness.png'), background: 'rgba(16, 150, 189, 0.3)'};
+            case 3:  return {pic: require('./pics/emo_rep/3_fear.png'), background: 'rgba(133, 208, 141, 0.3)'};
+            case 4:  return {pic: require('./pics/emo_rep/4_anger.png'), background: 'rgba(255, 67, 63, 0.3)'};
+            case 5:  return {pic: require('./pics/emo_rep/5_disgust.png'), background: 'rgba(129, 16, 147, 0.3)'};
+            case 6:  return {pic: require('./pics/emo_rep/6_surprise.png'), background: 'rgba(102, 164, 123, 0.3)'};
+            case 7:  return {pic: require('./pics/emo_rep/7_anticipation.png'), background: 'rgba(255, 124, 120, 0.3)'};
+            case 8:  return {pic: require('./pics/emo_rep/8_acceptance.png'), background: 'rgba(193, 208, 73, 0.3)'};
         }
     }
 
     componentWillMount() {
-        let url = 'http://203.151.85.73:5006/predicted'; 
-        fetch(url)
-        .then((response) => response.json()) 
-        .then((responseJson) => {
-            this.setState({
-                places: responseJson 
-            });
-        })
-        .catch((error) => { 
-            console.error(error); 
-        }) 
+        this.interval = setInterval(() =>{
+            let url = 'http://203.151.85.73:5006/predicted'; 
+            fetch(url)
+            .then((response) => response.json()) 
+            .then((responseJson) => {
+                this.setState({
+                    places: responseJson 
+                });
+            })
+            .catch((error) => { 
+                console.error(error); 
+            }) 
+        }
+        , 5000);
     }
 
     onRegionChange(region) {
@@ -105,7 +108,7 @@ export default class SentimentMap extends Component {
                             <MapView.Circle 
                                 center={{latitude: parseFloat(p.latitude), longitude: parseFloat(p.longitude)}} 
                                 radius={100} 
-                                fillColor="rgba(255, 236, 94, 0.5)"
+                                fillColor={this.maxPercentEmotion(p).background}
                                 key={idx} 
                             />
                         ))
@@ -115,7 +118,7 @@ export default class SentimentMap extends Component {
                             <MapView.Marker 
                                     coordinate={{latitude: parseFloat(p.latitude), longitude: parseFloat(p.longitude)}}
                                     centerOffset={{ x: 50, y: 60 }}
-                                    image={this.maxPercentEmotion(p)}
+                                    image={this.maxPercentEmotion(p).pic}
                                     key={idx}>
                                     <MapView.Callout style={styles.plainView}>
                                         <SentimentCallout 
