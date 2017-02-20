@@ -39,6 +39,7 @@ export default class FlowMap extends Component {
     this.ll =  ["13.746118609021641,100.53312443782482","13.746753840963278,100.53132812725471","13.744888431893822,100.53014708594891","13.746307025032005,100.53976065447212","13.74601902837004,100.53435495832393"]
     this.denColor = ["rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)"] ,
     this.denStrokeColor = ["rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)"] 
+    this.nextDensity = ["","","","",""] 
     this.state = {
       
       region: {
@@ -106,7 +107,23 @@ export default class FlowMap extends Component {
               let colorJson = this.onChangeDenColor(this.density[i])          
               this.denColor[i] = colorJson.denColor
               this.denStrokeColor[i] = colorJson.denStrokeColor
+              
           })
+          .catch((error) => {
+              console.error(error);
+          })
+
+        }
+         for(let i=0;i<this.ll.length;i++){
+        
+          let url = 'http://203.151.85.73:5050/crowdflow/density?time=5MIN&ll='+this.ll[i];
+          fetch(url)
+          .then((response) => response.json())
+          .then((responseJson) => {
+              let denArr =[]
+              denArr = responseJson.density
+              this.nextDensity[i] = denArr[0].density
+            })
           .catch((error) => {
               console.error(error);
           })
@@ -146,15 +163,14 @@ render() {
                                 width={CALLOUT_WIDTH}
                                 place = {this.placeName[4]}
                                 currentDensity = {this.density[4]}
-                                nextDensity = "high"
+                                nextDensity = {this.nextDensity[4]}
 
                             />
                         </MapView.Callout>
              </MapView.Marker>  
 
 
-       
-            
+             
 
             <MapView.Polygon
               coordinates={polygonSiamCenter.coordinates}
@@ -174,7 +190,7 @@ render() {
                                 width={CALLOUT_WIDTH}
                                 place = {this.placeName[0]}
                                 currentDensity = {this.density[0]}
-                                nextDensity = "high"
+                                nextDensity = {this.nextDensity[0]}
 
                             />
                         </MapView.Callout>
@@ -197,7 +213,7 @@ render() {
                                 width={CALLOUT_WIDTH}
                                 place = {this.placeName[2]}
                                 currentDensity = {this.density[2]}
-                                nextDensity = "high"
+                                nextDensity = {this.nextDensity[2]}
 
                             />
                         </MapView.Callout>
@@ -219,7 +235,7 @@ render() {
                           width={CALLOUT_WIDTH}
                           place = {this.placeName[1]}
                           currentDensity = {this.density[1]}
-                          nextDensity = "high"
+                          nextDensity = {this.nextDensity[1]}
 
                       />
                   </MapView.Callout>
@@ -241,7 +257,7 @@ render() {
                                 width={CALLOUT_WIDTH}
                                 place = {this.placeName[3]}
                                 currentDensity = {this.density[3]}
-                                nextDensity = "high"
+                                nextDensity = {this.nextDensity[3]}
 
                             />
                         </MapView.Callout>
