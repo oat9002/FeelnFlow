@@ -15,6 +15,8 @@ import Main from './Main';
 import MapView from 'react-native-maps';
 import FlowCallout from './FlowCallout';
 
+import api from './api'
+
 
 
 const { width, height } = Dimensions.get('window');
@@ -32,19 +34,24 @@ const CALLOUT_WIDTH = 200;
 export default class FlowMap extends Component {
   constructor(props) {
     super(props);
-
+    this.density =  ["","","","",""] 
+    this.placeName = ["Siam Center","Siam Discovery","MBK Center","CentralWorld","Siam Paragon "]
+    this.ll =  ["13.746118609021641,100.53312443782482","13.746753840963278,100.53132812725471","13.744888431893822,100.53014708594891","13.746307025032005,100.53976065447212","13.74601902837004,100.53435495832393"]
+    this.denColor = ["rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)"] ,
+    this.denStrokeColor = ["rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)"] 
     this.state = {
+      
       region: {
         latitude: LATITUDE,
         longitude: LONGITUDE,
         latitudeDelta: LATITUDE_DELTA,
         longitudeDelta: LONGITUDE_DELTA,
       },
-      denColor: "rgba(0, 200, 0, 0.5)",
-      denStrokeColor : "rgba(0, 200, 0, 0.5)" 
+      
     };
      this.onRegionChange = this.onRegionChange.bind(this) //อย่าลืมประกาศทุกฟังก์ชั่นนะ
      this.onChangeDenColor = this.onChangeDenColor.bind(this)
+     this.llToCenter = this.llToCenter.bind(this)
   }
 
   
@@ -53,60 +60,64 @@ export default class FlowMap extends Component {
      
     }
 
-    onChangeDenColor(density){
+    onChangeDenColor(densityValue){
       //this.setState({denColor})
-      if(density == 'low'){
-        this.setState({
+      if(densityValue == 'LOW'){
+          return {
           denColor: "rgba(0, 200, 0, 0.5)",
           denStrokeColor : "rgba(0, 200, 0, 0.9)" 
-        });
+        }
       }
-      if(density == 'medium'){
-         this.setState({
+      if(densityValue == 'MEDIUM'){
+          return{
           denColor: "rgba(255, 255, 0, 0.5)",
           denStrokeColor : "rgba(255, 255, 0, 0.9)" 
-        });
+        }
       }
-      if(density == 'high'){
-         this.setState({
-          denColor: "rgba(200,0,0,0.5)"
-        });
+      if(densityValue == 'HIGH'){
+         return{
+          denColor: "rgba(200,0,0,0.5)",
+          denStrokeColor : "rgba(200, 200, 0, 0.9)" 
+        }
       }
     }
 
-    
-    componentDidMount() {
-      this.onChangeDenColor('medium')
+    llToCenter(ll){
+      let llSplit = [];
+      llSplit = ll.split(",");
+      return ({
+        latitude: parseFloat(llSplit[0]),
+        longitude: parseFloat(llSplit[1])
+      });
     }
-    
 
-    // makeEvent(e, name) {
-    //     return {
-    //       id: id++,
-    //       name,
-    //       data: e.nativeEvent ? e.nativeEvent : e,
-    //     };
-    //   }
-    // recordEvent(name) {
-    //   return e => {
-    //      if (e instanceof SyntheticEvent && typeof e.persist === 'function') {
-    //      e.persist();
-    //    }
-    //    this.setState(prevState => ({
-    //       events: [
-    //         this.makeEvent(e, name),
-    //         ...prevState.events.slice(0, 10),
-    //       ],
+    
+    componentWillMount() {
+
+       for(let i=0;i<this.ll.length;i++){
+        
+          let url = 'http://203.151.85.73:5050/crowdflow/density?time=NOW&ll='+this.ll[i];
+          fetch(url)
+          .then((response) => response.json())
+          .then((responseJson) => {
+              let denArr =[]
+              denArr = responseJson.density
+              this.density[i] = denArr[0].density
+              let colorJson = this.onChangeDenColor(this.density[i])          
+              this.denColor[i] = colorJson.denColor
+              this.denStrokeColor[i] = colorJson.denStrokeColor
+          })
+          .catch((error) => {
+              console.error(error);
+          })
+
+        }
+
        
-    //  }));
-    //   };
-    // }
-   
- 
-  render() {
-   
 
-
+    }
+  
+render() {
     return (
          
       <View style={styles.container}>
@@ -119,29 +130,41 @@ export default class FlowMap extends Component {
           >
              <MapView.Polygon
               coordinates={polygonParagon.coordinates}
-              fillColor=  {this.state.denColor}//red
-              strokeColor={this.state.denStrokeColor}
+              fillColor=  {this.denColor[4]}
+              strokeColor={this.denStrokeColor[4]}
               strokeWidth={2} //ความหนาของเส้นรอบรูป
               //onPress={this.recordEvent('polygonParagon::onPress')}
                           
             />
-            <MapView.Marker 
-              coordinate={circle.center}
+            <MapView.Marker //Paragon
+              coordinate={this.llToCenter(this.ll[4])}
                         centerOffset={{ x: 10, y: 60 }}
                         anchor={{ x: 0.69, y: 1 }}
                         image={require('./pics/increase_arrow.png')}>
                         <MapView.Callout style={styles.plainView}>
                             <FlowCallout 
                                 width={CALLOUT_WIDTH}
-                                place = "Siam Paragon"
-                                currentDensity = "medium"
+                                place = {this.placeName[4]}
+                                currentDensity = {this.density[4]}
                                 nextDensity = "high"
 
                             />
                         </MapView.Callout>
-             </MapView.Marker>
-             <MapView.Marker 
-                        coordinate = {siamDis.coordinate}
+             </MapView.Marker>  
+
+
+       
+            
+
+            <MapView.Polygon
+              coordinates={polygonSiamCenter.coordinates}
+              fillColor={this.denColor[0]}
+              strokeColor={this.denStrokeColor[0]}
+              strokeWidth={2} //ความหนาของเส้นรอบรูป
+            />
+
+            <MapView.Marker 
+                        coordinate = {this.llToCenter(this.ll[0])}
                         centerOffset={{ x: 10, y: 60 }}
                         anchor={{ x: 0.69, y: 1 }}
                       
@@ -149,44 +172,83 @@ export default class FlowMap extends Component {
                         <MapView.Callout style={styles.plainView}>
                             <FlowCallout 
                                 width={CALLOUT_WIDTH}
-                                place = "Siam Paragon"
-                                currentDensity = "medium"
+                                place = {this.placeName[0]}
+                                currentDensity = {this.density[0]}
                                 nextDensity = "high"
 
                             />
                         </MapView.Callout>
-                    </MapView.Marker>
-                    
+              </MapView.Marker>
 
-
-            <MapView.Polygon
-              coordinates={polygonCentralWorld.coordinates}
-              fillColor="rgba(0, 200, 0, 0.5)"//green
-              strokeColor="rgba(0,200,0,0.9)"
-              strokeWidth={2} //ความหนาของเส้นรอบรูป
-            />
-            
-
-            <MapView.Polygon
-              coordinates={polygonSiamCenter.coordinates}
-              fillColor="rgba(0, 200, 0, 0.5)"
-              strokeColor="rgba(0,200,0,0.9)"
-              strokeWidth={2} //ความหนาของเส้นรอบรูป
-            />
              <MapView.Polygon
               coordinates={polygonMBK.coordinates}
-              fillColor="rgba(255, 255, 0, 0.5)" //yellow
-              strokeColor="rgba(255,255,0,0.9)"
+              fillColor={this.denColor[2]}
+              strokeColor={this.denStrokeColor[2]}
               strokeWidth={2} //ความหนาของเส้นรอบรูป
             />
+            <MapView.Marker 
+                        coordinate = {this.llToCenter(this.ll[2])}
+                        centerOffset={{ x: 10, y: 60 }}
+                        anchor={{ x: 0.69, y: 1 }}
+                      
+                        image={require('./pics/decrease_arrow.png')}>
+                        <MapView.Callout style={styles.plainView}>
+                            <FlowCallout 
+                                width={CALLOUT_WIDTH}
+                                place = {this.placeName[2]}
+                                currentDensity = {this.density[2]}
+                                nextDensity = "high"
+
+                            />
+                        </MapView.Callout>
+            </MapView.Marker>
+
             <MapView.Polygon
               coordinates={polygonSiamDis.coordinates}
-              fillColor="rgba(200,0,0,0.5)"
-              strokeColor="rgba(200,0,0,0.9)"
+              fillColor={this.denColor[1]}
+              strokeColor={this.denStrokeColor[1]}
               strokeWidth={2} //ความหนาของเส้นรอบรูป
             />
+            <MapView.Marker 
+                  coordinate = {this.llToCenter(this.ll[1])}
+                  centerOffset={{ x: 10, y: 60 }}
+                  anchor={{ x: 0.69, y: 1 }}
+                  image={require('./pics/decrease_arrow.png')}>
+                  <MapView.Callout style={styles.plainView}>
+                      <FlowCallout 
+                          width={CALLOUT_WIDTH}
+                          place = {this.placeName[1]}
+                          currentDensity = {this.density[1]}
+                          nextDensity = "high"
+
+                      />
+                  </MapView.Callout>
+            </MapView.Marker>
+                 <MapView.Polygon
+              coordinates={polygonCentralWorld.coordinates}
+              fillColor={this.denColor[3]}
+              strokeColor={this.denStrokeColor[3]}
+              strokeWidth={2} //ความหนาของเส้นรอบรูป
+            />
+            <MapView.Marker 
+                        coordinate = {this.llToCenter(this.ll[3])}
+                        centerOffset={{ x: 10, y: 60 }}
+                        anchor={{ x: 0.69, y: 1 }}
+                      
+                        image={require('./pics/decrease_arrow.png')}>
+                        <MapView.Callout style={styles.plainView}>
+                            <FlowCallout 
+                                width={CALLOUT_WIDTH}
+                                place = {this.placeName[3]}
+                                currentDensity = {this.density[3]}
+                                nextDensity = "high"
+
+                            />
+                        </MapView.Callout>
+                </MapView.Marker>
           </MapView>
-        
+          
+          
     </View>
     
 
