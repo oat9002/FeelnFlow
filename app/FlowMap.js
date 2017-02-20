@@ -78,7 +78,7 @@ export default class FlowMap extends Component {
       if(densityValue == 'HIGH'){
          return{
           denColor: "rgba(200,0,0,0.5)",
-          denStrokeColor : "rgba(200, 200, 0, 0.9)" 
+          denStrokeColor : "rgba(200, 0, 0, 0.9)" 
         }
       }
     }
@@ -157,7 +157,7 @@ render() {
               coordinate={this.llToCenter(this.ll[4])}
                         centerOffset={{ x: 10, y: 60 }}
                         anchor={{ x: 0.69, y: 1 }}
-                        image={require('./pics/increase_arrow.png')}>
+                        image={require('./pics/Blank.png')}>
                         <MapView.Callout style={styles.plainView}>
                             <FlowCallout 
                                 width={CALLOUT_WIDTH}
@@ -184,7 +184,7 @@ render() {
                         centerOffset={{ x: 10, y: 60 }}
                         anchor={{ x: 0.69, y: 1 }}
                       
-                        image={require('./pics/decrease_arrow.png')}>
+                        image={require('./pics/Blank.png')}>
                         <MapView.Callout style={styles.plainView}>
                             <FlowCallout 
                                 width={CALLOUT_WIDTH}
@@ -207,7 +207,7 @@ render() {
                         centerOffset={{ x: 10, y: 60 }}
                         anchor={{ x: 0.69, y: 1 }}
                       
-                        image={require('./pics/decrease_arrow.png')}>
+                        image={require('./pics/Blank.png')}>
                         <MapView.Callout style={styles.plainView}>
                             <FlowCallout 
                                 width={CALLOUT_WIDTH}
@@ -229,7 +229,7 @@ render() {
                   coordinate = {this.llToCenter(this.ll[1])}
                   centerOffset={{ x: 10, y: 60 }}
                   anchor={{ x: 0.69, y: 1 }}
-                  image={require('./pics/decrease_arrow.png')}>
+                  image={require('./pics/Blank.png')}>
                   <MapView.Callout style={styles.plainView}>
                       <FlowCallout 
                           width={CALLOUT_WIDTH}
@@ -251,7 +251,7 @@ render() {
                         centerOffset={{ x: 10, y: 60 }}
                         anchor={{ x: 0.69, y: 1 }}
                       
-                        image={require('./pics/decrease_arrow.png')}>
+                        image={require('./pics/Blank.png')}>
                         <MapView.Callout style={styles.plainView}>
                             <FlowCallout 
                                 width={CALLOUT_WIDTH}
