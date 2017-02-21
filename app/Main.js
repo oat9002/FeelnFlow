@@ -18,8 +18,8 @@ class Main extends Component {
     return (
       <Image source={require("./pics/bg_croped_blur.png")} style={styles.container}>
         <View>
-          <Text style={[styles.title, styles.basefont]}>feeln4</Text>
-          <Text style={[styles.second_title, styles.basefont]}>Sentimental & Crowd Flow</Text>
+          <Text style={[styles.title, styles.basefont]}>CARAVAN</Text>
+          <Text style={[styles.second_title, styles.basefont]}>Crowd Flow</Text>
           <Text style={[styles.second_title, styles.basefont]}>Prediction</Text>
           <Text style={[styles.second_title, styles.basefont]}>System</Text>
         </View>
@@ -29,7 +29,7 @@ class Main extends Component {
         </View>
         <View style={styles.button}>
           <View>
-            <Button onPress={this.navigate.bind(this,'Sentiment')} title="Sentiment"></Button>
+           
           </View>
           <View style={{marginTop: 10}}>
             <Button  onPress={this.navigate.bind(this,'FlowMap')} title="Crowd Flow"></Button>

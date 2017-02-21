@@ -34,12 +34,12 @@ const CALLOUT_WIDTH = 200;
 export default class FlowMap extends Component {
   constructor(props) {
     super(props);
-    this.density =  ["","","","",""] 
-    this.placeName = ["Siam Center","Siam Discovery","MBK Center","CentralWorld","Siam Paragon "]
+    this.density =  ["","","","","",""] 
+    this.placeName = ["Siam Center","Siam Discovery","MBK Center","CentralWorld","Siam Paragon ","Siam One(Random)"]
     this.ll =  ["13.746118609021641,100.53312443782482","13.746753840963278,100.53132812725471","13.744888431893822,100.53014708594891","13.746307025032005,100.53976065447212","13.74601902837004,100.53435495832393"]
-    this.denColor = ["rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)"] ,
-    this.denStrokeColor = ["rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)"] 
-    this.nextDensity = ["","","","",""] 
+    this.denColor = ["rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)"] ,
+    this.denStrokeColor = ["rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)"] 
+    this.nextDensity = ["","","","","",""] 
     this.state = {
       
       region: {
@@ -98,6 +98,7 @@ export default class FlowMap extends Component {
        for(let i=0;i<this.ll.length;i++){
         
           let url = 'http://203.151.85.73:5050/crowdflow/density?time=NOW&ll='+this.ll[i];
+          // let url = 'http://203.151.85.73:5050/crowdflow/random?time=NOW&ll='+this.ll[i];
           fetch(url)
           .then((response) => response.json())
           .then((responseJson) => {
@@ -129,8 +130,31 @@ export default class FlowMap extends Component {
           })
 
         }
-
-       
+        let url1 = 'http://203.151.85.73:5050/crowdflow/random';
+          fetch(url1)
+          .then((response) => response.json())
+          .then((responseJson) => {
+              let denArr =[]
+              denArr = responseJson.density
+              this.density[5] = denArr[0].density
+              let colorJson = this.onChangeDenColor(this.density[5])          
+              this.denColor[5] = colorJson.denColor
+              this.denStrokeColor[5] = colorJson.denStrokeColor
+            })
+          .catch((error) => {
+              console.error(error);
+          })
+        let url2 = 'http://203.151.85.73:5050/crowdflow/random';
+          fetch(url2)
+          .then((response) => response.json())
+          .then((responseJson) => {
+              let denArr =[]
+              denArr = responseJson.density
+              this.nextDensity[5] = denArr[0].density
+            })
+          .catch((error) => {
+              console.error(error);
+          })
 
     }
   
@@ -240,7 +264,7 @@ render() {
                       />
                   </MapView.Callout>
             </MapView.Marker>
-                 <MapView.Polygon
+             <MapView.Polygon
               coordinates={polygonCentralWorld.coordinates}
               fillColor={this.denColor[3]}
               strokeColor={this.denStrokeColor[3]}
@@ -258,6 +282,28 @@ render() {
                                 place = {this.placeName[3]}
                                 currentDensity = {this.density[3]}
                                 nextDensity = {this.nextDensity[3]}
+
+                            />
+                        </MapView.Callout>
+                </MapView.Marker>
+
+            <MapView.Polygon
+              coordinates={polygonSiamOne.coordinates}
+              fillColor={this.denColor[5]}
+              strokeColor={this.denStrokeColor[5]}
+              strokeWidth={2} //ความหนาของเส้นรอบรูป
+            />
+            <MapView.Marker 
+                        coordinate = {this.llToCenter("13.745047, 100.533526")}
+                        centerOffset={{ x: 10, y: 60 }}
+                        anchor={{ x: 0.69, y: 1 }}
+                        image={require('./pics/Blank.png')}>
+                        <MapView.Callout style={styles.plainView}>
+                            <FlowCallout 
+                                width={CALLOUT_WIDTH}
+                                place = {this.placeName[5]}
+                                currentDensity = {this.density[5]}
+                                nextDensity = {this.nextDensity[5]}
 
                             />
                         </MapView.Callout>
@@ -418,6 +464,26 @@ const siamDis = {
         },
         ],
     }
+    const  polygonSiamOne = {
+     coordinates : [
+        {
+          latitude: 13.745449, 
+          longitude: 100.532977
+        },
+        {
+          latitude: 13.745256, 
+          longitude: 100.534266
+        },
+        {
+          latitude: 13.744391, 
+          longitude: 100.534164
+        },
+        {
+          latitude: 13.744620, 
+          longitude: 100.532807
+        },
+      ],
+   }
 
 const styles = StyleSheet.create({
   container: {
