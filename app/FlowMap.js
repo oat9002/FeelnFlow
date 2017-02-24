@@ -53,6 +53,7 @@ export default class FlowMap extends Component {
      this.onRegionChange = this.onRegionChange.bind(this) //อย่าลืมประกาศทุกฟังก์ชั่นนะ
      this.onChangeDenColor = this.onChangeDenColor.bind(this)
      this.llToCenter = this.llToCenter.bind(this)
+     this.getFromServer = this.getFromServer.bind(this)
   }
 
   
@@ -94,12 +95,16 @@ export default class FlowMap extends Component {
 
     
     componentWillMount() {
+      
+      this.timer = setInterval(()=>this.getFromServer(),60*1000)       
+    }
 
+    async getFromServer(){
        for(let i=0;i<this.ll.length;i++){
         
           let url = 'http://203.151.85.73:5050/crowdflow/density?time=NOW&ll='+this.ll[i];
           // let url = 'http://203.151.85.73:5050/crowdflow/random?time=NOW&ll='+this.ll[i];
-          fetch(url)
+          fetch(url,{method:"GET"})
           .then((response) => response.json())
           .then((responseJson) => {
               let denArr =[]
@@ -118,7 +123,7 @@ export default class FlowMap extends Component {
          for(let i=0;i<this.ll.length;i++){
         
           let url = 'http://203.151.85.73:5050/crowdflow/density?time=5MIN&ll='+this.ll[i];
-          fetch(url)
+          fetch(url,{method:"GET"})
           .then((response) => response.json())
           .then((responseJson) => {
               let denArr =[]
@@ -131,7 +136,7 @@ export default class FlowMap extends Component {
 
         }
         let url1 = 'http://203.151.85.73:5050/crowdflow/random';
-          fetch(url1)
+          fetch(url1,{method:"GET"})
           .then((response) => response.json())
           .then((responseJson) => {
               let denArr =[]
@@ -145,7 +150,7 @@ export default class FlowMap extends Component {
               console.error(error);
           })
         let url2 = 'http://203.151.85.73:5050/crowdflow/random';
-          fetch(url2)
+          fetch(url2,{method:"GET"})
           .then((response) => response.json())
           .then((responseJson) => {
               let denArr =[]
@@ -155,7 +160,6 @@ export default class FlowMap extends Component {
           .catch((error) => {
               console.error(error);
           })
-
     }
   
 render() {
