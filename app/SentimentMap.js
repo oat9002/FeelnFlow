@@ -24,9 +24,81 @@ export default class SentimentMap extends Component {
                 longitude: LONGITUDE,
                 latitudeDelta: LATITUDE_DELTA,
                 longitudeDelta: LONGITUDE_DELTA,
-            }
+            },
+            places: []
         };
         this.onRegionChange = this.onRegionChange.bind(this);
+        this.maxPercentEmotion = this.maxPercentEmotion.bind(this);
+    }
+
+    maxPercentEmotion(place) {
+        let emo = 1;
+        let max = parseFloat(place.joy);
+        if(max < parseFloat(place.sadness)) {
+            max = parseFloat(place.sadness);
+            emo = 2;
+        }
+        if(max < parseFloat(place.fear)) {
+            max = parseFloat(place.fear);
+            emo = 3;
+        }
+        if(max < parseFloat(place.anger)) {
+            max = parseFloat(place.anger);
+            emo = 4;
+        }
+        if(max < parseFloat(place.disgust)) {
+            max = parseFloat(place.disgust);
+            emo = 5;
+        }
+        if(max < parseFloat(place.surprise)) {
+            max = parseFloat(place.surprise);
+            emo = 6;
+        }
+        if(max < parseFloat(place.anticipation)) {
+            max = parseFloat(place.anticipation);
+            emo = 7;
+        }
+        if(max < parseFloat(place.acceptance)) {
+            max = parseFloat(place.acceptance);
+            emo = 8;
+        }
+        switch(emo) {
+            case 1:  return {pic: require('./pics/emo_rep/1_joy.png'), background: 'rgba(255, 164, 42, 0.3)'};
+            case 2:  return {pic: require('./pics/emo_rep/2_sadness.png'), background: 'rgba(16, 150, 189, 0.3)'};
+            case 3:  return {pic: require('./pics/emo_rep/3_fear.png'), background: 'rgba(133, 208, 141, 0.3)'};
+            case 4:  return {pic: require('./pics/emo_rep/4_anger.png'), background: 'rgba(255, 67, 63, 0.3)'};
+            case 5:  return {pic: require('./pics/emo_rep/5_disgust.png'), background: 'rgba(129, 16, 147, 0.3)'};
+            case 6:  return {pic: require('./pics/emo_rep/6_surprise.png'), background: 'rgba(102, 164, 123, 0.3)'};
+            case 7:  return {pic: require('./pics/emo_rep/7_anticipation.png'), background: 'rgba(255, 124, 120, 0.3)'};
+            case 8:  return {pic: require('./pics/emo_rep/8_acceptance.png'), background: 'rgba(193, 208, 73, 0.3)'};
+        }
+    }
+
+    componentWillMount() {
+        let url = 'http://203.151.85.73:5006/predicted'; 
+        fetch(url)
+        .then((response) => response.json()) 
+        .then((responseJson) => {
+            this.setState({
+                places: responseJson 
+            });
+        })
+        .catch((error) => { 
+            console.error(error); 
+        }) 
+        this.interval = setInterval(() =>{
+            fetch(url)
+            .then((response) => response.json()) 
+            .then((responseJson) => {
+                this.setState({
+                    places: responseJson 
+                });
+            })
+            .catch((error) => { 
+                console.error(error); 
+            }) 
+        }
+        , 600000);
     }
 
     onRegionChange(region) {
@@ -41,44 +113,44 @@ export default class SentimentMap extends Component {
                     style={styles.map}
                     onRegionChange={this.onRegionChange}
                     initialRegion={this.state.region}>
-                    <MapView.Circle
-                        center={circle.center} 
-                        radius={circle.radius} 
-                        fillColor="rgba(255, 236, 94, 0.5)" 
-                    />
-                    <MapView.Marker 
-                        coordinate={circle.center}
-                        centerOffset={{ x: 10, y: 60 }}
-                        anchor={{ x: 0.69, y: 1 }}
-                        image={require('./pics/emo_black.png')}>
-                        <MapView.Callout style={styles.plainView}>
-                            <SentimentCallout 
-                                width={CALLOUT_WIDTH}
-                                joy={8}
-                                sadness={40}
-                                fear={5}
-                                anger={10}
-                                surprise={23}
-                                disgust={4}
-                                anticipation={1}
-                                acceptance={20}
+                    {
+                        this.state.places.map((p, idx) => (
+                            <MapView.Circle 
+                                center={{latitude: parseFloat(p.latitude), longitude: parseFloat(p.longitude)}} 
+                                radius={100} 
+                                fillColor={this.maxPercentEmotion(p).background}
+                                key={idx} 
                             />
-                        </MapView.Callout>
-                    </MapView.Marker>
+                        ))
+                    }
+                    {
+                        this.state.places.map((p, idx) => (
+                            <MapView.Marker 
+                                    coordinate={{latitude: parseFloat(p.latitude), longitude: parseFloat(p.longitude)}}
+                                    centerOffset={{ x: 50, y: 60 }}
+                                    image={this.maxPercentEmotion(p).pic}
+                                    key={idx}>
+                                    <MapView.Callout style={styles.plainView}>
+                                        <SentimentCallout 
+                                            width={CALLOUT_WIDTH}
+                                            joy={p.joy}
+                                            sadness={p.sadness}
+                                            fear={p.fear}
+                                            anger={p.anger}
+                                            surprise={p.surprise}
+                                            disgust={p.disgust}
+                                            anticipation={p.anticipation}
+                                            acceptance={p.acceptance}
+                                        />
+                                    </MapView.Callout>
+                                </MapView.Marker>
+                        ))
+                    }
                 </MapView>
             </View>
         );
     }
 }
-
-const circle = {
-    center: {
-        latitude:  13.746784,
-        longitude: 100.534947,
-    },
-    radius: 100
-}
-
 
 const styles = StyleSheet.create({
     container: {

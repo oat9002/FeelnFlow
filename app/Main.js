@@ -17,11 +17,8 @@ class Main extends Component {
  render() {
     return (
       <Image source={require("./pics/bg_croped_blur.png")} style={styles.container}>
-        <View>
-          <Text style={[styles.title, styles.basefont]}>CARAVAN</Text>
-          <Text style={[styles.second_title, styles.basefont]}>Crowd Flow</Text>
-          <Text style={[styles.second_title, styles.basefont]}>Prediction</Text>
-          <Text style={[styles.second_title, styles.basefont]}>System</Text>
+        <View style={[styles.center, {marginRight: 30, marginTop: 20}]}>
+          <Text style={[styles.title, styles.basefont]}>FEELN4</Text>
         </View>
         <View style={[styles.center, {flexDirection: 'row'}]}>
           <Image source={require("./pics/people_white.png")}></Image>
@@ -56,6 +53,7 @@ const styles = StyleSheet.create({
     marginLeft: 30,
     marginTop: 50,
     fontSize: 60,
+    fontWeight: 'bold',
     color: 'black'
   },
   second_title: {
