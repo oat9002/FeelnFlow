@@ -75,8 +75,18 @@ export default class SentimentMap extends Component {
     }
 
     componentWillMount() {
+        let url = 'http://203.151.85.73:5006/predicted'; 
+        fetch(url)
+        .then((response) => response.json()) 
+        .then((responseJson) => {
+            this.setState({
+                places: responseJson 
+            });
+        })
+        .catch((error) => { 
+            console.error(error); 
+        }) 
         this.interval = setInterval(() =>{
-            let url = 'http://203.151.85.73:5006/predicted'; 
             fetch(url)
             .then((response) => response.json()) 
             .then((responseJson) => {
@@ -88,7 +98,7 @@ export default class SentimentMap extends Component {
                 console.error(error); 
             }) 
         }
-        , 5000);
+        , 600000);
     }
 
     onRegionChange(region) {
