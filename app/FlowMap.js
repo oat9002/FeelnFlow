@@ -35,8 +35,17 @@ export default class FlowMap extends Component {
   constructor(props) {
     super(props);
     this.density =  ["","","","","",""] 
-    this.placeName = ["Siam Center","Siam Discovery","MBK Center","CentralWorld","Siam Paragon ","Siam One(Random)"]
-    this.ll =  ["13.746118609021641,100.53312443782482","13.746753840963278,100.53132812725471","13.744888431893822,100.53014708594891","13.746307025032005,100.53976065447212","13.74601902837004,100.53435495832393"]
+     this.placeName = ["Siam Center",
+                      "Siam Discovery",
+                      "MBK Center",
+                      "CentralWorld",
+                      "Siam Paragon ",
+                      "Siam One(Random)"]
+    this.ll =  ["13.746201178781293,100.53315739798029",
+                "13.746497917923502,100.53154785754697",
+                "13.745527540601762,100.53004271558788",
+                "13.746127692402823,100.53990349222255",
+                "13.746102858783594,100.53440439922444"]
     this.denColor = ["rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)"] ,
     this.denStrokeColor = ["rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)"] 
     this.nextDensity = ["","","","","",""] 
