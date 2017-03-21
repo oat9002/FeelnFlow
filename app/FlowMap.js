@@ -41,7 +41,7 @@ export default class FlowMap extends Component {
                       "CentralWorld",
                       "Siam Paragon ",
                       "Siam One(Random)"]
-    this.ll =  ["13.746201178781293,100.53315739798029",//0
+    this.ll =  ["13.746497917923502,100.53154785754697",//0
                 "13.746497917923502,100.53154785754697",//1
                 "13.74497311302548,100.53022399050144",//2
                 "13.746105899795232,100.53996392364537",//5
@@ -112,26 +112,30 @@ export default class FlowMap extends Component {
 
     async getFromServer(){
 
-      //  for(let i=0;i<this.ll.length;i++){
+       for(let i=0;i<this.ll.length;i++){
         
-      //     let url = 'http://203.151.85.73:5050/crowdflow/getAllPlace'
-      //     // let url = 'http://203.151.85.73:5050/crowdflow/random?time=NOW&ll='+this.ll[i];
-      //     fetch(url,{method:"GET"})
-      //     .then((response) => response.json())
-      //     .then((responseJson) => {
-      //         let placeArr =[]
-      //         placeArr = responseJson.places
-      //         this.lat[i] = placeArr[i].lat
-      //         this.lng[i] = placeArr[i].lng
+          let url = 'http://203.151.85.73:5050/crowdflow/getAllPlace'
+          // let url = 'http://203.151.85.73:5050/crowdflow/random?time=NOW&ll='+this.ll[i];
+          fetch(url,{method:"GET"})
+          .then((response) => response.json())
+          .then((responseJson) => {
+              let placeArr =[]
+              placeArr = responseJson.places
+              this.lat[i] = placeArr[i].lat
+              this.lng[i] = placeArr[i].lng
+              this.ll[0] = this.lat[0]+","+this.lng[0]
+
+              
             
               
-      //     })
-      //     .catch((error) => {
-      //         console.error(error);
-      //     })
+          })
+          .catch((error) => {
+              console.error(error);
+          })
 
-      //   }
+        }
 
+        
        for(let i=0;i<this.ll.length;i++){
         
           let url = 'http://203.151.85.73:5050/crowdflow/density?time=NOW&ll='+this.ll[i];
@@ -346,7 +350,7 @@ render() {
                 </MapView.Marker>
           </MapView>
           
-          
+          <Text>{this.lat[0]}lllllllll</Text>
     </View>
     
 
