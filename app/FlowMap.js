@@ -41,11 +41,13 @@ export default class FlowMap extends Component {
                       "CentralWorld",
                       "Siam Paragon ",
                       "Siam One(Random)"]
-    this.ll =  ["13.746201178781293,100.53315739798029",
-                "13.746497917923502,100.53154785754697",
-                "13.745527540601762,100.53004271558788",
-                "13.746127692402823,100.53990349222255",
-                "13.746102858783594,100.53440439922444"]
+    this.ll =  ["13.746201178781293,100.53315739798029",//0
+                "13.746497917923502,100.53154785754697",//1
+                "13.74497311302548,100.53022399050144",//2
+                "13.746105899795232,100.53996392364537",//5
+                "13.746007080235009,100.53422860947697"]//9
+    this.lat = ["","","","","","","","","","","","","","","",""]
+    this.lng = ["","","","","","","","","","","","","","","",""]
     this.denColor = ["rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)"] ,
     this.denStrokeColor = ["rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)"] 
     this.nextDensity = ["","","","","",""] 
@@ -109,6 +111,27 @@ export default class FlowMap extends Component {
     }
 
     async getFromServer(){
+
+      //  for(let i=0;i<this.ll.length;i++){
+        
+      //     let url = 'http://203.151.85.73:5050/crowdflow/getAllPlace'
+      //     // let url = 'http://203.151.85.73:5050/crowdflow/random?time=NOW&ll='+this.ll[i];
+      //     fetch(url,{method:"GET"})
+      //     .then((response) => response.json())
+      //     .then((responseJson) => {
+      //         let placeArr =[]
+      //         placeArr = responseJson.places
+      //         this.lat[i] = placeArr[i].lat
+      //         this.lng[i] = placeArr[i].lng
+            
+              
+      //     })
+      //     .catch((error) => {
+      //         console.error(error);
+      //     })
+
+      //   }
+
        for(let i=0;i<this.ll.length;i++){
         
           let url = 'http://203.151.85.73:5050/crowdflow/density?time=NOW&ll='+this.ll[i];
