@@ -34,7 +34,7 @@ const CALLOUT_WIDTH = 200;
 export default class FlowMap extends Component {
   constructor(props) {
     super(props);
-    this.density =  ["","","","","",""] 
+    this.density =  ["","","","","","","","","","","",""] 
      this.placeName = ["Siam Center",
                       "Siam Discovery",
                       "MBK Center",
@@ -48,8 +48,8 @@ export default class FlowMap extends Component {
                 "13.746007080235009,100.53422860947697"]//9
     this.lat = ["","","","","","","","","","","","","","","",""]
     this.lng = ["","","","","","","","","","","","","","","",""]
-    this.denColor = ["rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)"] ,
-    this.denStrokeColor = ["rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)"] 
+    this.denColor = ["rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)"] ,
+    this.denStrokeColor = ["rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)"] 
     this.nextDensity = ["","","","","",""] 
     this.state = {
       
@@ -59,6 +59,7 @@ export default class FlowMap extends Component {
         latitudeDelta: LATITUDE_DELTA,
         longitudeDelta: LONGITUDE_DELTA,
       },
+      places: []
       
     };
      this.onRegionChange = this.onRegionChange.bind(this) //อย่าลืมประกาศทุกฟังก์ชั่นนะ
@@ -115,7 +116,6 @@ export default class FlowMap extends Component {
        for(let i=0;i<this.ll.length;i++){
         
           let url = 'http://203.151.85.73:5050/crowdflow/getAllPlace'
-          // let url = 'http://203.151.85.73:5050/crowdflow/random?time=NOW&ll='+this.ll[i];
           fetch(url,{method:"GET"})
           .then((response) => response.json())
           .then((responseJson) => {
@@ -124,7 +124,9 @@ export default class FlowMap extends Component {
               this.lat[i] = placeArr[i].lat
               this.lng[i] = placeArr[i].lng
               this.ll[0] = this.lat[0]+","+this.lng[0]
-
+              this.setState({
+                  places: responseJson.places
+              });
               
             
               
@@ -136,11 +138,10 @@ export default class FlowMap extends Component {
         }
 
         
-       for(let i=0;i<this.ll.length;i++){
+       for(let i=0;i<12;i++){
         
-          let url = 'http://203.151.85.73:5050/crowdflow/density?time=NOW&ll='+this.ll[i];
-          // let url = 'http://203.151.85.73:5050/crowdflow/random?time=NOW&ll='+this.ll[i];
-          fetch(url,{method:"GET"})
+          let url = 'http://203.151.85.73:5050/crowdflow/density?time=NOW&ll='+this.state.places[i].lat+','+this.state.places[i].lng;
+           fetch(url,{method:"GET"})
           .then((response) => response.json())
           .then((responseJson) => {
               let denArr =[]
@@ -156,9 +157,9 @@ export default class FlowMap extends Component {
           })
 
         }
-         for(let i=0;i<this.ll.length;i++){
+         for(let i=0;i<12;i++){
         
-          let url = 'http://203.151.85.73:5050/crowdflow/density?time=5MIN&ll='+this.ll[i];
+          let url = 'http://203.151.85.73:5050/crowdflow/density?time=5MIN&ll='+this.state.places[i].lat+','+this.state.places[i].lng;
           fetch(url,{method:"GET"})
           .then((response) => response.json())
           .then((responseJson) => {
@@ -177,10 +178,10 @@ export default class FlowMap extends Component {
           .then((responseJson) => {
               let denArr =[]
               denArr = responseJson.density
-              this.density[5] = denArr[0].density
-              let colorJson = this.onChangeDenColor(this.density[5])          
-              this.denColor[5] = colorJson.denColor
-              this.denStrokeColor[5] = colorJson.denStrokeColor
+              this.density[10] = denArr[0].density
+              let colorJson = this.onChangeDenColor(this.density[10])          
+              this.denColor[10] = colorJson.denColor
+              this.denStrokeColor[10] = colorJson.denStrokeColor
             })
           .catch((error) => {
               console.error(error);
@@ -191,7 +192,7 @@ export default class FlowMap extends Component {
           .then((responseJson) => {
               let denArr =[]
               denArr = responseJson.density
-              this.nextDensity[5] = denArr[0].density
+              this.nextDensity[10] = denArr[0].density
             })
           .catch((error) => {
               console.error(error);
@@ -206,35 +207,7 @@ render() {
           region={this.state.region}
           style={styles.map}
           onRegionChange={this.onRegionChange}
-          initialRegion={this.state.region}
-        // initialRegion={region}
-          >
-             <MapView.Polygon
-              coordinates={polygonParagon.coordinates}
-              fillColor=  {this.denColor[4]}
-              strokeColor={this.denStrokeColor[4]}
-              strokeWidth={2} //ความหนาของเส้นรอบรูป
-              //onPress={this.recordEvent('polygonParagon::onPress')}
-                          
-            />
-            <MapView.Marker //Paragon
-              coordinate={this.llToCenter(this.ll[4])}
-                        centerOffset={{ x: 10, y: 60 }}
-                        anchor={{ x: 0.69, y: 1 }}
-                        image={require('./pics/Blank.png')}>
-                        <MapView.Callout style={styles.plainView}>
-                            <FlowCallout 
-                                width={CALLOUT_WIDTH}
-                                place = {this.placeName[4]}
-                                currentDensity = {this.density[4]}
-                                nextDensity = {this.nextDensity[4]}
-
-                            />
-                        </MapView.Callout>
-             </MapView.Marker>  
-
-
-             
+          initialRegion={this.state.region}>
 
             <MapView.Polygon
               coordinates={polygonSiamCenter.coordinates}
@@ -242,115 +215,67 @@ render() {
               strokeColor={this.denStrokeColor[0]}
               strokeWidth={2} //ความหนาของเส้นรอบรูป
             />
-
-            <MapView.Marker 
-                        coordinate = {this.llToCenter(this.ll[0])}
-                        centerOffset={{ x: 10, y: 60 }}
-                        anchor={{ x: 0.69, y: 1 }}
-                      
-                        image={require('./pics/Blank.png')}>
-                        <MapView.Callout style={styles.plainView}>
-                            <FlowCallout 
-                                width={CALLOUT_WIDTH}
-                                place = {this.placeName[0]}
-                                currentDensity = {this.density[0]}
-                                nextDensity = {this.nextDensity[0]}
-
-                            />
-                        </MapView.Callout>
-              </MapView.Marker>
-
-             <MapView.Polygon
-              coordinates={polygonMBK.coordinates}
-              fillColor={this.denColor[2]}
-              strokeColor={this.denStrokeColor[2]}
-              strokeWidth={2} //ความหนาของเส้นรอบรูป
-            />
-            <MapView.Marker 
-                        coordinate = {this.llToCenter(this.ll[2])}
-                        centerOffset={{ x: 10, y: 60 }}
-                        anchor={{ x: 0.69, y: 1 }}
-                      
-                        image={require('./pics/Blank.png')}>
-                        <MapView.Callout style={styles.plainView}>
-                            <FlowCallout 
-                                width={CALLOUT_WIDTH}
-                                place = {this.placeName[2]}
-                                currentDensity = {this.density[2]}
-                                nextDensity = {this.nextDensity[2]}
-
-                            />
-                        </MapView.Callout>
-            </MapView.Marker>
-
             <MapView.Polygon
               coordinates={polygonSiamDis.coordinates}
               fillColor={this.denColor[1]}
               strokeColor={this.denStrokeColor[1]}
               strokeWidth={2} //ความหนาของเส้นรอบรูป
             />
-            <MapView.Marker 
-                  coordinate = {this.llToCenter(this.ll[1])}
-                  centerOffset={{ x: 10, y: 60 }}
-                  anchor={{ x: 0.69, y: 1 }}
-                  image={require('./pics/Blank.png')}>
-                  <MapView.Callout style={styles.plainView}>
-                      <FlowCallout 
-                          width={CALLOUT_WIDTH}
-                          place = {this.placeName[1]}
-                          currentDensity = {this.density[1]}
-                          nextDensity = {this.nextDensity[1]}
-
-                      />
-                  </MapView.Callout>
-            </MapView.Marker>
-             <MapView.Polygon
-              coordinates={polygonCentralWorld.coordinates}
-              fillColor={this.denColor[3]}
-              strokeColor={this.denStrokeColor[3]}
-              strokeWidth={2} //ความหนาของเส้นรอบรูป
-            />
-            <MapView.Marker 
-                        coordinate = {this.llToCenter(this.ll[3])}
-                        centerOffset={{ x: 10, y: 60 }}
-                        anchor={{ x: 0.69, y: 1 }}
-                      
-                        image={require('./pics/Blank.png')}>
-                        <MapView.Callout style={styles.plainView}>
-                            <FlowCallout 
-                                width={CALLOUT_WIDTH}
-                                place = {this.placeName[3]}
-                                currentDensity = {this.density[3]}
-                                nextDensity = {this.nextDensity[3]}
-
-                            />
-                        </MapView.Callout>
-                </MapView.Marker>
-
             <MapView.Polygon
-              coordinates={polygonSiamOne.coordinates}
+              coordinates={polygonMBK.coordinates}
+              fillColor={this.denColor[2]}
+              strokeColor={this.denStrokeColor[2]}
+              strokeWidth={2} //ความหนาของเส้นรอบรูป
+            />          
+           
+            <MapView.Polygon
+              coordinates={polygonCentralWorld.coordinates}
               fillColor={this.denColor[5]}
               strokeColor={this.denStrokeColor[5]}
               strokeWidth={2} //ความหนาของเส้นรอบรูป
             />
-            <MapView.Marker 
-                        coordinate = {this.llToCenter("13.745047, 100.533526")}
-                        centerOffset={{ x: 10, y: 60 }}
-                        anchor={{ x: 0.69, y: 1 }}
-                        image={require('./pics/Blank.png')}>
-                        <MapView.Callout style={styles.plainView}>
-                            <FlowCallout 
-                                width={CALLOUT_WIDTH}
-                                place = {this.placeName[5]}
-                                currentDensity = {this.density[5]}
-                                nextDensity = {this.nextDensity[5]}
+            <MapView.Polygon
+              coordinates={polygonParagon.coordinates}
+              fillColor=  {this.denColor[9]}
+              strokeColor={this.denStrokeColor[9]}
+              strokeWidth={2} //ความหนาของเส้นรอบรูป
+            />
 
-                            />
-                        </MapView.Callout>
-                </MapView.Marker>
-          </MapView>
+            <MapView.Polygon
+              coordinates={polygonSiamOne.coordinates}
+              fillColor={this.denColor[10]}
+              strokeColor={this.denStrokeColor[10]}
+              strokeWidth={2} //ความหนาของเส้นรอบรูป
+            />
           
-          <Text>{this.lat[0]}lllllllll</Text>
+          {
+              this.state.places.map((p,idx) =>(
+                 <MapView.Marker 
+                   coordinate={{latitude: parseFloat(p.lat), longitude: parseFloat(p.lng)}}
+                   centerOffset={{ x: 10, y: 60 }}
+                   anchor={{ x: 0.69, y: 1 }}
+                   image={require('./pics/Blank.png')}>
+                   <MapView.Callout style={styles.plainView}>
+                       <FlowCallout 
+                          width={CALLOUT_WIDTH}
+                          place = {p.name}
+                          currentDensity = {this.density[idx]}
+                          nextDensity = {this.nextDensity[idx]}
+                       />
+                    </MapView.Callout>
+                 </MapView.Marker>  
+
+              ))
+              
+          }
+        
+        
+
+           
+          </MapView>
+         
+          
+          <Text>{this.density[9]}lllllllll</Text>
     </View>
     
 
@@ -505,6 +430,27 @@ const siamDis = {
         ],
     }
     const  polygonSiamOne = {
+     coordinates : [
+        {
+          latitude: 13.745449, 
+          longitude: 100.532977
+        },
+        {
+          latitude: 13.745256, 
+          longitude: 100.534266
+        },
+        {
+          latitude: 13.744391, 
+          longitude: 100.534164
+        },
+        {
+          latitude: 13.744620, 
+          longitude: 100.532807
+        },
+      ],
+   }
+
+   const  polygonBTSsiam = {
      coordinates : [
         {
           latitude: 13.745449, 
