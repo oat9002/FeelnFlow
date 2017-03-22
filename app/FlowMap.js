@@ -78,6 +78,26 @@ export default class FlowMap extends Component {
         }
       }
     }
+
+    showArrow(den,nextDen){
+        if(den=='LOW'){
+            if(nextDen=='LOW') return require('./pics/arrow/Blank.png')
+            else if(nextDen=='MEDIUM')  return require('./pics/arrow/arrow_up_yellow.png')
+            else if(nextDen=='HIGH') return require('./pics/arrow/arrow_up_red.png')
+            
+        }
+        else if(den == 'MEDIUM'){
+            if(nextDen=='LOW') return require('./pics/arrow/arrow_down_green.png')
+            else if(nextDen=='MEDIUM')  return require('./pics/arrow/Blank.png')
+            else if(nextDen=='HIGH') return require('./pics/arrow/arrow_up_red.png')
+        }
+        else if(den == 'HIGH'){
+            if(nextDen=='LOW') return require('./pics/arrow/arrow_down_green.png')
+            else if(nextDen=='MEDIUM')  return require('./pics/arrow/arrow_down_yellow.png')
+            else if(nextDen=='HIGH') return require('./pics/arrow/Blank.png')
+        }
+
+    }
     
     componentWillMount() {
       
@@ -234,7 +254,8 @@ render() {
                    coordinate={{latitude: parseFloat(p.lat), longitude: parseFloat(p.lng)}}
                    centerOffset={{ x: 10, y: 60 }}
                    anchor={{ x: 0.69, y: 1 }}
-                   image={require('./pics/Blank.png')}>
+                   //image={require('./pics/arrow/arrow_up_red.png')}>
+                   image={this.showArrow(this.density[idx],this.nextDensity[idx])}>
                    <MapView.Callout style={styles.plainView}>
                        <FlowCallout 
                           width={CALLOUT_WIDTH}
