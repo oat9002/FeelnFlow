@@ -14,10 +14,7 @@ import {
 import Main from './Main';
 import MapView from 'react-native-maps';
 import FlowCallout from './FlowCallout';
-
 import api from './api'
-
-
 
 const { width, height } = Dimensions.get('window');
 
@@ -35,19 +32,6 @@ export default class FlowMap extends Component {
   constructor(props) {
     super(props);
     this.density =  ["","","","","","","","","","","",""] 
-     this.placeName = ["Siam Center",
-                      "Siam Discovery",
-                      "MBK Center",
-                      "CentralWorld",
-                      "Siam Paragon ",
-                      "Siam One(Random)"]
-    this.ll =  ["13.746497917923502,100.53154785754697",//0
-                "13.746497917923502,100.53154785754697",//1
-                "13.74497311302548,100.53022399050144",//2
-                "13.746105899795232,100.53996392364537",//5
-                "13.746007080235009,100.53422860947697"]//9
-    this.lat = ["","","","","","","","","","","","","","","",""]
-    this.lng = ["","","","","","","","","","","","","","","",""]
     this.denColor = ["rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)"] ,
     this.denStrokeColor = ["rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)"] 
     this.nextDensity = ["","","","","",""] 
@@ -64,7 +48,6 @@ export default class FlowMap extends Component {
     };
      this.onRegionChange = this.onRegionChange.bind(this) //อย่าลืมประกาศทุกฟังก์ชั่นนะ
      this.onChangeDenColor = this.onChangeDenColor.bind(this)
-     this.llToCenter = this.llToCenter.bind(this)
      this.getFromServer = this.getFromServer.bind(this)
   }
 
@@ -95,16 +78,6 @@ export default class FlowMap extends Component {
         }
       }
     }
-
-    llToCenter(ll){
-      let llSplit = [];
-      llSplit = ll.split(",");
-      return ({
-        latitude: parseFloat(llSplit[0]),
-        longitude: parseFloat(llSplit[1])
-      });
-    }
-
     
     componentWillMount() {
       
@@ -112,8 +85,6 @@ export default class FlowMap extends Component {
     }
 
     async getFromServer(){
-
-       for(let i=0;i<this.ll.length;i++){
         
           let url = 'http://203.151.85.73:5050/crowdflow/getAllPlace'
           fetch(url,{method:"GET"})
@@ -121,9 +92,6 @@ export default class FlowMap extends Component {
           .then((responseJson) => {
               let placeArr =[]
               placeArr = responseJson.places
-              this.lat[i] = placeArr[i].lat
-              this.lng[i] = placeArr[i].lng
-              this.ll[0] = this.lat[0]+","+this.lng[0]
               this.setState({
                   places: responseJson.places
               });
@@ -135,7 +103,7 @@ export default class FlowMap extends Component {
               console.error(error);
           })
 
-        }
+        
 
         
        for(let i=0;i<12;i++){
@@ -243,11 +211,23 @@ render() {
 
             <MapView.Polygon
               coordinates={polygonSiamOne.coordinates}
+              fillColor={this.denColor[9]}
+              strokeColor={this.denStrokeColor[9]}
+              strokeWidth={2} //ความหนาของเส้นรอบรูป
+            />
+             <MapView.Polygon
+              coordinates={polygonBTSnationalStadium.coordinates}
               fillColor={this.denColor[10]}
               strokeColor={this.denStrokeColor[10]}
               strokeWidth={2} //ความหนาของเส้นรอบรูป
             />
-          
+            
+            <MapView.Polygon
+              coordinates={polygonBTSsiam.coordinates}
+              fillColor={this.denColor[11]}
+              strokeColor={this.denStrokeColor[11]}
+              strokeWidth={2} //ความหนาของเส้นรอบรูป
+            />
           {
               this.state.places.map((p,idx) =>(
                  <MapView.Marker 
@@ -453,20 +433,40 @@ const siamDis = {
    const  polygonBTSsiam = {
      coordinates : [
         {
-          latitude: 13.745449, 
-          longitude: 100.532977
+          latitude: 13.745508,
+          longitude: 100.535137 
         },
         {
-          latitude: 13.745256, 
-          longitude: 100.534266
+          latitude: 13.745369, 
+          longitude: 100.535106
         },
         {
-          latitude: 13.744391, 
-          longitude: 100.534164
+          latitude: 13.745669, 
+          longitude: 100.533258
         },
         {
-          latitude: 13.744620, 
-          longitude: 100.532807
+          latitude: 13.745806,
+          longitude:  100.533289 
+        },
+      ],
+   }
+    const  polygonBTSnationalStadium = {
+     coordinates : [
+        {
+          latitude: 13.746277, 
+          longitude: 100.529724 
+        },
+        {
+          latitude: 13.746489, 
+          longitude: 100.529762
+        },
+        {
+          latitude: 13.746726,
+          longitude:  100.528395 
+        },
+        {
+          latitude: 13.746533,
+          longitude:  100.528349
         },
       ],
    }
