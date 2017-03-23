@@ -10,7 +10,8 @@ import {
    StyleSheet, 
    Dimensions,
   DrawerLayoutAndroid, 
-  ToolbarAndroid} from 'react-native';
+  ToolbarAndroi,
+} from 'react-native';
 import Main from './Main';
 import MapView from 'react-native-maps';
 import FlowCallout from './FlowCallout';
@@ -79,7 +80,7 @@ export default class FlowMap extends Component {
       }
     }
 
-    showArrow(den,nextDen){
+    showArrowDensity(den,nextDen){
         if(den=='LOW'){
             if(nextDen=='LOW') return require('./pics/arrow/Blank.png')
             else if(nextDen=='MEDIUM')  return require('./pics/arrow/arrow_up_yellow.png')
@@ -201,45 +202,45 @@ render() {
               coordinates={polygonSiamCenter.coordinates}
               fillColor={this.denColor[0]}
               strokeColor={this.denStrokeColor[0]}
-              strokeWidth={2} //ความหนาของเส้นรอบรูป
+              strokeWidth={2} 
             />
             <MapView.Polygon
               coordinates={polygonSiamDis.coordinates}
               fillColor={this.denColor[1]}
               strokeColor={this.denStrokeColor[1]}
-              strokeWidth={2} //ความหนาของเส้นรอบรูป
+              strokeWidth={2} 
             />
             <MapView.Polygon
               coordinates={polygonMBK.coordinates}
               fillColor={this.denColor[2]}
               strokeColor={this.denStrokeColor[2]}
-              strokeWidth={2} //ความหนาของเส้นรอบรูป
+              strokeWidth={2} 
             />          
            
             <MapView.Polygon
               coordinates={polygonCentralWorld.coordinates}
               fillColor={this.denColor[5]}
               strokeColor={this.denStrokeColor[5]}
-              strokeWidth={2} //ความหนาของเส้นรอบรูป
+              strokeWidth={2} 
             />
             <MapView.Polygon
               coordinates={polygonParagon.coordinates}
               fillColor=  {this.denColor[9]}
               strokeColor={this.denStrokeColor[9]}
-              strokeWidth={2} //ความหนาของเส้นรอบรูป
+              strokeWidth={2} 
             />
 
             <MapView.Polygon
               coordinates={polygonSiamOne.coordinates}
               fillColor={this.denColor[9]}
               strokeColor={this.denStrokeColor[9]}
-              strokeWidth={2} //ความหนาของเส้นรอบรูป
+              strokeWidth={2} 
             />
              <MapView.Polygon
               coordinates={polygonBTSnationalStadium.coordinates}
               fillColor={this.denColor[10]}
               strokeColor={this.denStrokeColor[10]}
-              strokeWidth={2} //ความหนาของเส้นรอบรูป
+              strokeWidth={2} 
             />
             
             <MapView.Polygon
@@ -248,6 +249,7 @@ render() {
               strokeColor={this.denStrokeColor[11]}
               strokeWidth={2} //ความหนาของเส้นรอบรูป
             />
+            
           {
               this.state.places.map((p,idx) =>(
                  <MapView.Marker 
@@ -255,7 +257,7 @@ render() {
                    centerOffset={{ x: 10, y: 60 }}
                    anchor={{ x: 0.69, y: 1 }}
                    //image={require('./pics/arrow/arrow_up_red.png')}>
-                   image={this.showArrow(this.density[idx],this.nextDensity[idx])}>
+                   image={this.showArrowDensity(this.density[idx],this.nextDensity[idx])}>
                    <MapView.Callout style={styles.plainView}>
                        <FlowCallout 
                           width={CALLOUT_WIDTH}
@@ -269,13 +271,20 @@ render() {
               ))
               
           }
+          <MapView.Polyline
+              coordinates={[{latitude: 13.746967,longitude: 100.537137},{latitude:13.748489,longitude: 100.537266}]}
+              geodesic = {true}
+              strokeWidth = {3}
+              strokeColor = "#e16136"
+              
+          />
         
         
 
            
           </MapView>
          
-          
+         
           <Text>{this.density[9]}lllllllll</Text>
     </View>
     
