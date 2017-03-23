@@ -126,24 +126,24 @@ export default class SentimentMap extends Component {
                     {
                         this.state.places.map((p, idx) => (
                             <MapView.Marker 
-                                    coordinate={{latitude: parseFloat(p.latitude), longitude: parseFloat(p.longitude)}}
-                                    centerOffset={{ x: 50, y: 60 }}
-                                    image={this.maxPercentEmotion(p).pic}
-                                    key={idx}>
-                                    <MapView.Callout style={styles.plainView}>
-                                        <SentimentCallout 
-                                            width={CALLOUT_WIDTH}
-                                            joy={p.joy}
-                                            sadness={p.sadness}
-                                            fear={p.fear}
-                                            anger={p.anger}
-                                            surprise={p.surprise}
-                                            disgust={p.disgust}
-                                            anticipation={p.anticipation}
-                                            acceptance={p.acceptance}
-                                        />
-                                    </MapView.Callout>
-                                </MapView.Marker>
+                                coordinate={{latitude: parseFloat(p.latitude), longitude: parseFloat(p.longitude)}}
+                                centerOffset={{ x: 50, y: 60 }}
+                                image={this.maxPercentEmotion(p).pic}
+                                key={idx}>
+                                <MapView.Callout style={styles.plainView}>
+                                    <SentimentCallout 
+                                        width={CALLOUT_WIDTH}
+                                        joy={p.joy}
+                                        sadness={p.sadness}
+                                        fear={p.fear}
+                                        anger={p.anger}
+                                        surprise={p.surprise}
+                                        disgust={p.disgust}
+                                        anticipation={p.anticipation}
+                                        acceptance={p.acceptance}
+                                    />
+                                </MapView.Callout>
+                            </MapView.Marker>
                         ))
                     }
                 </MapView>

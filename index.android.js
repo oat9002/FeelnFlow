@@ -7,7 +7,7 @@
 import React, { Component } from 'react';
 import { AppRegistry,Navigator } from 'react-native';
 import Main from './app/Main';
-import MyScene from './app/MyScene';
+import FlowMap from './app/FlowMap';
 import Sentiment from './app/Sentiment';
 
 export default class feeln4 extends Component {
@@ -20,8 +20,8 @@ export default class feeln4 extends Component {
     if(route.name == 'Main') {
       return <Main navigator={navigator} route={route}/>
     }
-    else if(route.name == 'MyScene') {
-      return <MyScene navigator={navigator} route={route}/>
+    else if(route.name == 'FlowMap') {
+      return <FlowMap navigator={navigator} route={route}/>
     }
     else if(route.name == 'Sentiment') {
       return <Sentiment navigator={navigator} route={route}/>
