@@ -146,6 +146,10 @@ export default class SentimentMap extends Component {
                                 </MapView.Marker>
                         ))
                     }
+
+                    {
+                        
+                    }
                 </MapView>
             </View>
         );
