@@ -359,6 +359,27 @@ render() {
                     )
                 ))
             }
+
+          {
+            this.places.map((p,idx) =>(
+              (this.state.nextPlaces[idx] == "None") ?(
+                <MapView.Circle
+                  center={{latitude:13.74497311302548,longitude: 100.53022399050144}} 
+                  radius={0}
+                  fillColor = "#e16136"
+                                  
+                />
+                ):(
+                  <MapView.Circle
+                  center={{latitude: this.state.nextPlaces[idx].lat, longitude: this.state.nextPlaces[idx].lng}} 
+                  radius={10}
+                  fillColor = "#e16136"
+                                  
+                />
+                )
+               
+            ))
+          } 
             
                     
               
