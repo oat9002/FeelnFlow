@@ -38,8 +38,6 @@ export default class FlowMap extends Component {
     this.denStrokeColor = ["rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)"] 
     this.nextDensity = ["","","","","",""] 
     this.places =[]
-    //this.nextPlace = []
-    this.checkNextPlace = [true,false,false,false,false,false,false,false,false,false,false,false]
     this.state = {
       
       region: {
@@ -56,7 +54,6 @@ export default class FlowMap extends Component {
      this.onRegionChange = this.onRegionChange.bind(this) //อย่าลืมประกาศทุกฟังก์ชั่นนะ
      this.onChangeDenColor = this.onChangeDenColor.bind(this)
      this.getFromServer = this.getFromServer.bind(this)
-     this.getLatLngNextPlace = this.getLatLngNextPlace.bind(this)
   }
 
   
@@ -106,30 +103,8 @@ export default class FlowMap extends Component {
         }
 
     }
-    
-
-    //  checkNextPlaceFn(){
-    //   for(let i =0;i<12;i++){
-    //     if(this.nextPlace[i] == "Not found"){
-    //       this.checkNextPlace[i] = false;
-    //     }
-    //     else this.checkNextPlace[i] = true;
-      
-    // }
-    // }
-    getLatLngNextPlace(){
-        for(let i =0;i<12;i++){
-          if(this.state.nextPlaces[i] != "None")
-          return  [{
-                    latitude: this.state.nextPlaces[i].lat,
-                    longitude: this.state.nextPlaces[i].lng},
-                   { 
-                     latitude: this.places[i].lat,
-                     longitude: this.places[i].lng} ]
-        }
-    }
-
-    componentWillMount() {
+        
+     componentWillMount() {
 
        let url = 'http://203.151.85.73:5050/crowdflow/getAllPlace'
           fetch(url,{method:"GET"})
@@ -154,16 +129,10 @@ export default class FlowMap extends Component {
     }
 
      getFromServer(){
-
-
-      //FLOW
-         //for(let i=0;i<12;i++){
-        
           let url = 'http://203.151.85.73:5050/crowdflow/flow?time=5MIN';
           fetch(url,{method:"GET"})
           .then((response) => response.json())
           .then((responseJson) => {
-              
               if(responseJson){
                 let flowArr = []
                 flowArr = responseJson.crowdFlow
@@ -172,42 +141,20 @@ export default class FlowMap extends Component {
                     let p = this.places[i]
                     for(let j=0;j<12;j++){
                         let c = flowArr[j]
-                        // this.setState({test: c})
-                        
                        if(c && c.place.lat == p.lat && c.place.lng == p.lng){
-   
-                          // if(!crowdFlow.nextPlace[0]){
-                          //   this.setState({test: "no next"})
-                            
-                          //   crowdFlow.nextPlace[0] = {"name" :"None"}
-                          // }
-                          // if(c.nextPlace[0]!="None")
-                            newNextPlace.push(c.nextPlace[0])
-                          // else
-                          //   newNextPlace.push({})
-                          this.setState({test: "IN loopppp"})
-
-                        }
+                           newNextPlace.push(c.nextPlace[0])
+                       }
                     }
                 }
                 
                 this.setState({nextPlaces : newNextPlace})
-                 this.setState({test: this.state.nextPlaces[0].date})
-
-                 // this.checkNextPlace[5] = true;
-                    // this.checkNextPlaceFn()
-                }
-              
-              
-              
+             }
             })
           .catch((error) => {
               console.error(error);
           })
 
-      //  }
-               
-       for(let i=0;i<12;i++){
+      for(let i=0;i<12;i++){
         
           let url = 'http://203.151.85.73:5050/crowdflow/density?time=NOW&ll='+this.places[i].lat+','+this.places[i].lng;
            fetch(url,{method:"GET"})
@@ -242,12 +189,6 @@ export default class FlowMap extends Component {
           })
 
         }
-
-        
-
-
-
-
         let url1 = 'http://203.151.85.73:5050/crowdflow/random';
           fetch(url1,{method:"GET"})
           .then((response) => response.json())
@@ -346,7 +287,7 @@ render() {
                           coordinates={[{latitude:13.74497311302548,longitude: 100.53022399050144},{latitude:13.74601377826572,longitude: 100.53440439922444}]}
                           geodesic = {true}
                           strokeWidth = {0}
-                          strokeColor = "#e16136"
+                          strokeColor = " #8a2be2"
                         />
                   ):(
                      <MapView.Polyline
@@ -354,7 +295,7 @@ render() {
                           //coordinates={[{latitude:13.745844972517325,longitude: 100.53954639826303},{latitude:13.74601377826572,longitude: 100.53440439922444}]}
                           geodesic = {true}
                           strokeWidth = {3}
-                          strokeColor = "#e16136"
+                          strokeColor = " #8a2be2"
                         />
                     )
                 ))
@@ -366,22 +307,21 @@ render() {
                 <MapView.Circle
                   center={{latitude:13.74497311302548,longitude: 100.53022399050144}} 
                   radius={0}
-                  fillColor = "#e16136"
+                  fillColor = "#8a2be2"
                                   
                 />
                 ):(
                   <MapView.Circle
                   center={{latitude: this.state.nextPlaces[idx].lat, longitude: this.state.nextPlaces[idx].lng}} 
                   radius={10}
-                  fillColor = "#e16136"
+                  fillColor = "#8a2be2"
                                   
                 />
                 )
                
             ))
           } 
-            
-                    
+                       
               
           {
               this.places.map((p,idx) =>(
@@ -428,19 +368,7 @@ render() {
               
           }
 
-          
-         
-         
-
-   
-
-  
-       
-         
-         
-        
-      
-
+     
       </MapView>
          
          
@@ -457,18 +385,7 @@ FlowMap.propTypes = {
   provider: MapView.ProviderPropType,
 };
 
-
-const siamDis = {
-    coordinate: {
-        latitude: 13.746570,
-        longitude: 100.531453,
-    }
-    
-}
-
-
-
- const polygonParagon = {
+const polygonParagon = {
       coordinates : [
         { 
           latitude: 13.747784 ,
@@ -680,9 +597,6 @@ const styles = StyleSheet.create({
    plainView: {
         width: CALLOUT_WIDTH,
     },
- 
- 
-
 });
 
 
