@@ -2,8 +2,10 @@
 
 import React, { Component, PropTypes } from 'react';
 import { View, Text, TouchableHighlight, Navigator, TouchableOpacity, StyleSheet, Dimensions, BackAndroid, Platform } from 'react-native';
+import PopupDialog, { SlideAnimation } from 'react-native-popup-dialog';
 import MapView from 'react-native-maps'; 
 import SentimentCallout from './SentimentCallout';
+import SentimentPercentage from './SentimentPercentage';
 
 
 const { width, height } = Dimensions.get('window');
@@ -25,10 +27,25 @@ export default class SentimentMap extends Component {
                 latitudeDelta: LATITUDE_DELTA,
                 longitudeDelta: LONGITUDE_DELTA,
             },
-            places: []
+            places: [],
+            predicted_texts: [],
+            emo_percentage: {
+                joy: '',
+                sadness: '',
+                fear: '',
+                angry: '',
+                surprise: '',
+                disgust: '',
+                anticipation: '',
+                acceptance: ''
+            }, 
+            showDialog: false,
         };
         this.onRegionChange = this.onRegionChange.bind(this);
         this.maxPercentEmotion = this.maxPercentEmotion.bind(this);
+        this.getPredictedEmotionSummary = this.getPredictedEmotionSummary.bind(this);
+        this.getSampleTextFromServer = this.getSampleTextFromServer.bind(this);
+        this.clickCallout = this.clickCallout.bind(this);
     }
 
     maxPercentEmotion(place) {
@@ -75,37 +92,80 @@ export default class SentimentMap extends Component {
     }
 
     componentWillMount() {
-        let url = 'http://203.151.85.73:5006/predicted'; 
+        this.getPredictedEmotionSummary();
+        this.timeout = setTimeout(() => {}, 5*1000);
+        this.interval = setInterval(() => {
+            this.getPredictedEmotionSummary();
+        }
+        , 60*1000);
+    }
+
+    getPredictedEmotionSummary() {
+        let url = 'http://203.151.85.73:5005/predicted'; 
+        fetch(url)
+        .then((response) => response.json()) 
+        .then((responseJson) => {
+            // this.getSampleTextFromServer(responseJson.predicted.id);
+            this.setState({
+                places: responseJson.predicted.predicted 
+            });
+        })
+        .catch((error) => { 
+            console.error(error); 
+        })
+    }
+
+    getSampleTextFromServer(predictedId) {
+        let url = 'http://203.151.85.73:5005/sample_text?predicted_id=' + predictedId;
         fetch(url)
         .then((response) => response.json()) 
         .then((responseJson) => {
             this.setState({
-                places: responseJson 
+                predicted_texts: responseJson.predicted_texts
             });
         })
         .catch((error) => { 
             console.error(error); 
         }) 
-        this.interval = setInterval(() =>{
-            fetch(url)
-            .then((response) => response.json()) 
-            .then((responseJson) => {
-                this.setState({
-                    places: responseJson 
-                });
-            })
-            .catch((error) => { 
-                console.error(error); 
-            }) 
+    }
+
+    getSampleText(latitude, longitude) {
+        if(this.state.predicted_texts.predicted_texts != null) {
+            this.state.predicted_texts.predicted_texts.map((inst, idx) => {
+                if(inst.latitude == latitude && inst.longitude == longitude) {
+                    return inst.showed_texts;
+                }
+            });
         }
-        , 600000);
+        else {
+           return ['no'];
+        }
     }
 
     onRegionChange(region) {
         this.setState({ region });
     }
 
+    clickCallout(joy, sadness, fear, angry, surprise, disgust, anticipation, acceptance) {
+        this.setState({
+            joy: joy,
+            sadness: sadness,
+            fear: fear,
+            angry: angry,
+            surprise: surprise,
+            disgust: disgust,
+            anticipation: anticipation,
+            acceptance: acceptance
+        });
+        this.popupDialog.show();
+    }
+
     render() {
+        let _selected_texts = [];
+        for(let i = 0; i < this.state.places.length;i++) {
+            _selected_texts.push(this.getSampleText(this.state.places[i].latitude, this.state.places[i].longitude));
+        }
+
         return (
             <View style={styles.container}>
                 <MapView 
@@ -130,23 +190,31 @@ export default class SentimentMap extends Component {
                                 centerOffset={{ x: 50, y: 60 }}
                                 image={this.maxPercentEmotion(p).pic}
                                 key={idx}>
-                                <MapView.Callout style={styles.plainView}>
-                                    <SentimentCallout 
-                                        width={CALLOUT_WIDTH}
-                                        joy={p.joy}
-                                        sadness={p.sadness}
-                                        fear={p.fear}
-                                        anger={p.anger}
-                                        surprise={p.surprise}
-                                        disgust={p.disgust}
-                                        anticipation={p.anticipation}
-                                        acceptance={p.acceptance}
-                                    />
+                                <MapView.Callout style={styles.plainView} onPress={this.clickCallout(p.joy, p.sadness, p.fear, p.anger, p.surprise, p.disgust, p.anticipation, p.acceptance)}>
+                                    <SentimentCallout texts={p.predicted_texts}></SentimentCallout>
+                                    {/*{this.getSampleText(p.latitude, p.longitude)}*/}
                                 </MapView.Callout>
                             </MapView.Marker>
                         ))
                     }
                 </MapView>
+                <PopupDialog
+                    ref={(popupDialog) => { this.popupDialog = popupDialog; }}
+                    dialogAnimation = { new SlideAnimation({ slideFrom: 'bottom' }) }
+                >
+                    <View><Text>asdf</Text></View>
+                    {/*<SentimentPercentage 
+                        width={CALLOUT_WIDTH}
+                        joy={this.state.joy}
+                        sadness={this.state.sadness}
+                        fear={this.state.fear}
+                        angry={this.state.anger}
+                        surprise={this.state.surprise}
+                        disgust={this.state.disgust}
+                        anticipation={this.state.anticipation}
+                        acceptance={this.state.acceptance}
+                    />*/}
+                </PopupDialog>
             </View>
         );
     }
