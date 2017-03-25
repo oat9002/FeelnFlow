@@ -56,7 +56,7 @@ export default class FlowMap extends Component {
      this.onRegionChange = this.onRegionChange.bind(this) //อย่าลืมประกาศทุกฟังก์ชั่นนะ
      this.onChangeDenColor = this.onChangeDenColor.bind(this)
      this.getFromServer = this.getFromServer.bind(this)
-     //this.checkNextPlaceFn = this.checkNextPlaceFn.bind(this)
+     this.getLatLngNextPlace = this.getLatLngNextPlace.bind(this)
   }
 
   
@@ -106,6 +106,7 @@ export default class FlowMap extends Component {
         }
 
     }
+    
 
     //  checkNextPlaceFn(){
     //   for(let i =0;i<12;i++){
@@ -116,7 +117,17 @@ export default class FlowMap extends Component {
       
     // }
     // }
-
+    getLatLngNextPlace(){
+        for(let i =0;i<12;i++){
+          if(this.state.nextPlaces[i] != "None")
+          return  [{
+                    latitude: this.state.nextPlaces[i].lat,
+                    longitude: this.state.nextPlaces[i].lng},
+                   { 
+                     latitude: this.places[i].lat,
+                     longitude: this.places[i].lng} ]
+        }
+    }
 
     componentWillMount() {
 
@@ -327,7 +338,30 @@ render() {
               strokeColor={this.denStrokeColor[11]}
               strokeWidth={2} //ความหนาของเส้นรอบรูป
             />
-         
+             {
+                this.places.map((p,idx) =>(
+                    (this.state.nextPlaces[idx] == "None") ?(
+                        <MapView.Polyline
+                          //coordinates={[{latitude:parseFloat(p.lat),longitude: parseFloat(p.lng)},{latitude:this.state.nextPlaces[idx].lat,longitude: this.state.nextPlaces[idx].lng}]}
+                          coordinates={[{latitude:13.74497311302548,longitude: 100.53022399050144},{latitude:13.74601377826572,longitude: 100.53440439922444}]}
+                          geodesic = {true}
+                          strokeWidth = {0}
+                          strokeColor = "#e16136"
+                        />
+                  ):(
+                     <MapView.Polyline
+                          coordinates={[{latitude:parseFloat(p.lat),longitude: parseFloat(p.lng)},{latitude:this.state.nextPlaces[idx].lat,longitude: this.state.nextPlaces[idx].lng}]}
+                          //coordinates={[{latitude:13.745844972517325,longitude: 100.53954639826303},{latitude:13.74601377826572,longitude: 100.53440439922444}]}
+                          geodesic = {true}
+                          strokeWidth = {3}
+                          strokeColor = "#e16136"
+                        />
+                    )
+                ))
+            }
+            
+                    
+              
           {
               this.places.map((p,idx) =>(
                  (this.state.nextPlaces[idx] != "None") ?(
