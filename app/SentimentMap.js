@@ -1,8 +1,8 @@
 'use strict';
 
 import React, { Component, PropTypes } from 'react';
-import { View, Text, TouchableHighlight, Navigator, Button, StyleSheet, Dimensions, BackAndroid, Platform, Modal } from 'react-native';
-import PopupDialog, { SlideAnimation } from 'react-native-popup-dialog';
+import { View, Text, TouchableHighlight, Navigator, Button, StyleSheet, Dimensions, BackAndroid, Platform } from 'react-native';
+import PopupDialog, { SlideAnimation, DialogTitle, DialogButton } from 'react-native-popup-dialog';
 import MapView from 'react-native-maps'; 
 import SentimentCallout from './SentimentCallout';
 import SentimentPercentage from './SentimentPercentage';
@@ -15,7 +15,7 @@ const LONGITUDE = 100.535947; //100.77809506218118;
 const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 const SPACE = 0.01;
-const CALLOUT_WIDTH = 200;
+const CALLOUT_WIDTH = width * 0.7;
 
 export default class SentimentMap extends Component {
     constructor(props) {
@@ -49,6 +49,7 @@ export default class SentimentMap extends Component {
 
     maxPercentEmotion(place) {
         let emo = 1;
+        let maxEmo = [];
         let max = parseFloat(place.joy);
         if(max < parseFloat(place.sadness)) {
             max = parseFloat(place.sadness);
@@ -198,6 +199,16 @@ export default class SentimentMap extends Component {
                 <PopupDialog
                     ref={(popupDialog) => { this.popupDialog = popupDialog; }}
                     width={0.8}
+                    dialogTitle={<DialogTitle title="How they feel" />}
+                    actions={[
+                        <DialogButton
+                            text="CLOSE"
+                            onPress={() => {
+                                this.popupDialog.dismiss();
+                            }}
+                            key="button-close-dialog"
+                        />,
+                    ]}
                 >
                     <SentimentPercentage 
                         width={CALLOUT_WIDTH}

@@ -6,9 +6,6 @@ export default class SentimentPercentage extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <View>
-                    <Text style={{fontWeight: 'bold'}}>How they feel</Text>
-                </View>
                 <View style={styles.emotion_container}>
                     <Text style={{width: this.props.width * 0.7, color: 'rgb(255, 164, 42)'}}>Joy</Text>
                     <Text style={{width: this.props.width * 0.3, textAlign: 'right', color: 'rgb(255, 164, 42)'}}>{this.props.joy}%</Text>
@@ -49,7 +46,8 @@ export default class SentimentPercentage extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        marginLeft: 20
     },
     line: {
         height: 0.3,

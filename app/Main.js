@@ -1,9 +1,10 @@
 'use strict';
 
 import React, { Component, PropTypes } from 'react';
-import { StyleSheet, View , Text , Image , Button,Navigator, TouchableOpacity} from 'react-native';
+import { StyleSheet, View , Text , Image ,Navigator, TouchableOpacity} from 'react-native';
 // import { BlurView, VibrancyView } from 'react-native-blur';
 // import { Container, Content} from 'native-base';
+import Button from './Button'
 import FlowMap from './FlowMap';
 
 class Main extends Component {
@@ -24,12 +25,12 @@ class Main extends Component {
           <Image source={require("./pics/people_white.png")}></Image>
           <Image source={require("./pics/emo_white.png")}></Image>
         </View>
-        <View style={styles.button}>
+        <View style={styles.buttonView}>
           <View>
             <Button onPress={this.navigate.bind(this,'Sentiment')} title="Sentiment"></Button>
           </View>
           <View style={{marginTop: 10}}>
-            <Button  onPress={this.navigate.bind(this,'FlowMap')} title="Crowd Flow"></Button>
+            <Button onPress={this.navigate.bind(this,'FlowMap')} title="Crowd Flow"></Button>
           </View>
         </View>
       </Image>
@@ -65,10 +66,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
-  button: {
+  buttonView: {
     marginBottom: 60,
-    marginHorizontal: 100
-  }
+    marginHorizontal: 100,
+  },
 });
 
 export default Main;
