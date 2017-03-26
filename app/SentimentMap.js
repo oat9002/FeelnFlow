@@ -1,7 +1,7 @@
 'use strict';
 
 import React, { Component, PropTypes } from 'react';
-import { View, Text, TouchableHighlight, Navigator, TouchableOpacity, StyleSheet, Dimensions, BackAndroid, Platform } from 'react-native';
+import { View, Text, TouchableHighlight, Navigator, Button, StyleSheet, Dimensions, BackAndroid, Platform, Modal } from 'react-native';
 import PopupDialog, { SlideAnimation } from 'react-native-popup-dialog';
 import MapView from 'react-native-maps'; 
 import SentimentCallout from './SentimentCallout';
@@ -39,7 +39,6 @@ export default class SentimentMap extends Component {
                 anticipation: '',
                 acceptance: ''
             }, 
-            showDialog: false,
         };
         this.onRegionChange = this.onRegionChange.bind(this);
         this.maxPercentEmotion = this.maxPercentEmotion.bind(this);
@@ -93,7 +92,6 @@ export default class SentimentMap extends Component {
 
     componentWillMount() {
         this.getPredictedEmotionSummary();
-        this.timeout = setTimeout(() => {}, 5*1000);
         this.interval = setInterval(() => {
             this.getPredictedEmotionSummary();
         }
@@ -146,26 +144,22 @@ export default class SentimentMap extends Component {
         this.setState({ region });
     }
 
-    clickCallout(joy, sadness, fear, angry, surprise, disgust, anticipation, acceptance) {
-        this.setState({
-            joy: joy,
-            sadness: sadness,
-            fear: fear,
-            angry: angry,
-            surprise: surprise,
-            disgust: disgust,
-            anticipation: anticipation,
-            acceptance: acceptance
-        });
+    clickCallout(emo) {
+        let temp = {
+            joy: emo.joy,
+            sadness: emo.sadness,
+            fear: emo.fear,
+            angry: emo.anger,
+            surprise: emo.surprise,
+            disgust: emo.disgust,
+            anticipation: emo.anticipation,
+            acceptance: emo.acceptance
+        }
+        this.setState({emo_percentage: temp, modalVisible: true});
         this.popupDialog.show();
     }
 
     render() {
-        let _selected_texts = [];
-        for(let i = 0; i < this.state.places.length;i++) {
-            _selected_texts.push(this.getSampleText(this.state.places[i].latitude, this.state.places[i].longitude));
-        }
-
         return (
             <View style={styles.container}>
                 <MapView 
@@ -190,9 +184,8 @@ export default class SentimentMap extends Component {
                                 centerOffset={{ x: 50, y: 60 }}
                                 image={this.maxPercentEmotion(p).pic}
                                 key={idx}>
-                                <MapView.Callout style={styles.plainView} onPress={this.clickCallout(p.joy, p.sadness, p.fear, p.anger, p.surprise, p.disgust, p.anticipation, p.acceptance)}>
+                                <MapView.Callout style={styles.plainView} onPress={()=>{this.clickCallout(p);}}>
                                     <SentimentCallout texts={p.predicted_texts}></SentimentCallout>
-                                    {/*{this.getSampleText(p.latitude, p.longitude)}*/}
                                 </MapView.Callout>
                             </MapView.Marker>
                         ))
@@ -200,20 +193,19 @@ export default class SentimentMap extends Component {
                 </MapView>
                 <PopupDialog
                     ref={(popupDialog) => { this.popupDialog = popupDialog; }}
-                    dialogAnimation = { new SlideAnimation({ slideFrom: 'bottom' }) }
+                    width={0.8}
                 >
-                    <View><Text>asdf</Text></View>
-                    {/*<SentimentPercentage 
+                    <SentimentPercentage 
                         width={CALLOUT_WIDTH}
-                        joy={this.state.joy}
-                        sadness={this.state.sadness}
-                        fear={this.state.fear}
-                        angry={this.state.anger}
-                        surprise={this.state.surprise}
-                        disgust={this.state.disgust}
-                        anticipation={this.state.anticipation}
-                        acceptance={this.state.acceptance}
-                    />*/}
+                        joy={this.state.emo_percentage.joy}
+                        sadness={this.state.emo_percentage.sadness}
+                        fear={this.state.emo_percentage.fear}
+                        angry={this.state.emo_percentage.angry}
+                        surprise={this.state.emo_percentage.surprise}
+                        disgust={this.state.emo_percentage.disgust}
+                        anticipation={this.state.emo_percentage.anticipation}
+                        acceptance={this.state.emo_percentage.acceptance}
+                    />
                 </PopupDialog>
             </View>
         );

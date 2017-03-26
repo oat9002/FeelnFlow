@@ -27,7 +27,8 @@ export default class Sentiment extends Component {
 
         return (
             <View style={style.container}>
-                <Drawer 
+                <SentimentMap />
+                {/*<Drawer 
                     type="static"
                     open={this.state.drawer}
                     content={<SentimentDrawer />}
@@ -47,7 +48,7 @@ export default class Sentiment extends Component {
                             })
                         }} 
                         />
-                </Drawer>
+                </Drawer>*/}
             </View>
         );
     }

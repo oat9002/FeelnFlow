@@ -2,20 +2,6 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet} from 'react-native';
 
 export default class SentimentCallout extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            toggle: false
-        };
-        this.toggle = this.toggle.bind(this);
-    }
-
-    toggle() {
-        this.setState({
-            toggle: !this.state.toggle
-        });
-    }
-
     render() {
         return (
             <View style={styles.container}>
@@ -24,13 +10,12 @@ export default class SentimentCallout extends Component {
                 </View>
                 <View style={styles.emotion_container}>
                     { 
-                        this.props.texts != null ? (
+                        this.props.texts.length != 0 ? (
                             this.props.texts.map((t, idx) => (
                                 <Text key={idx}>{t}</Text>
-                            ))
-                            
+                            ))  
                         ) : (
-                            <Text>test</Text>
+                            <Text>There is no exmaple texts. Please wait for 5 minutes.</Text>
                         )  
                     }
                 </View>  
