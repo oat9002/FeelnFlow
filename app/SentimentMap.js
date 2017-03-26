@@ -15,7 +15,7 @@ const LONGITUDE = 100.535947; //100.77809506218118;
 const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 const SPACE = 0.01;
-const CALLOUT_WIDTH = width * 0.7;
+const CALLOUT_WIDTH = 200;
 
 export default class SentimentMap extends Component {
     constructor(props) {
@@ -39,7 +39,6 @@ export default class SentimentMap extends Component {
                 anticipation: '',
                 acceptance: ''
             }, 
-            modalVisible: false
         };
         this.onRegionChange = this.onRegionChange.bind(this);
         this.maxPercentEmotion = this.maxPercentEmotion.bind(this);

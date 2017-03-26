@@ -15,12 +15,9 @@ export default class SentimentCallout extends Component {
                                 <Text key={idx}>{t}</Text>
                             ))  
                         ) : (
-                            <Text>There is no exmaple texts. Please wait.</Text>
+                            <Text>There is no exmaple texts. Please wait for 5 minutes.</Text>
                         )  
                     }
-                </View>
-                <View>
-                     <Text style={{color: "rgb(0, 102, 255)"}}>Click to see percentage</Text>
                 </View>  
             </View>    
         );
@@ -30,7 +27,7 @@ export default class SentimentCallout extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'space-between',
+        justifyContent: 'space-between'
     },
     line: {
         height: 0.3,
