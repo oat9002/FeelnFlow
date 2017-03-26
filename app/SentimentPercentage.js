@@ -47,7 +47,8 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'space-between',
-        marginLeft: 20
+        marginLeft: 20,
+        marginTop: 10
     },
     line: {
         height: 0.3,

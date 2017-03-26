@@ -15,9 +15,12 @@ export default class SentimentCallout extends Component {
                                 <Text key={idx}>{t}</Text>
                             ))  
                         ) : (
-                            <Text>There is no exmaple texts. Please wait for 5 minutes.</Text>
+                            <Text>There is no exmaple texts. Please wait.</Text>
                         )  
                     }
+                </View>
+                <View>
+                    <Text style={{color: "rgb(0, 89, 255)"}}>Click to see percentage</Text>
                 </View>  
             </View>    
         );
