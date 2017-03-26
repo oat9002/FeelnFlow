@@ -1,9 +1,11 @@
 'use strict';
 
 import React, { Component, PropTypes } from 'react';
-import { View, Text, TouchableHighlight, Navigator, TouchableOpacity, StyleSheet, Dimensions, BackAndroid, Platform } from 'react-native';
+import { View, Text, TouchableHighlight, Navigator, Button, StyleSheet, Dimensions, BackAndroid, Platform, Modal } from 'react-native';
+import PopupDialog, { SlideAnimation } from 'react-native-popup-dialog';
 import MapView from 'react-native-maps'; 
 import SentimentCallout from './SentimentCallout';
+import SentimentPercentage from './SentimentPercentage';
 
 
 const { width, height } = Dimensions.get('window');
@@ -25,10 +27,24 @@ export default class SentimentMap extends Component {
                 latitudeDelta: LATITUDE_DELTA,
                 longitudeDelta: LONGITUDE_DELTA,
             },
-            places: []
+            places: [],
+            predicted_texts: [],
+            emo_percentage: {
+                joy: '',
+                sadness: '',
+                fear: '',
+                angry: '',
+                surprise: '',
+                disgust: '',
+                anticipation: '',
+                acceptance: ''
+            }, 
         };
         this.onRegionChange = this.onRegionChange.bind(this);
         this.maxPercentEmotion = this.maxPercentEmotion.bind(this);
+        this.getPredictedEmotionSummary = this.getPredictedEmotionSummary.bind(this);
+        this.getSampleTextFromServer = this.getSampleTextFromServer.bind(this);
+        this.clickCallout = this.clickCallout.bind(this);
     }
 
     maxPercentEmotion(place) {
@@ -75,34 +91,72 @@ export default class SentimentMap extends Component {
     }
 
     componentWillMount() {
-        let url = 'http://203.151.85.73:5006/predicted'; 
+        this.getPredictedEmotionSummary();
+        this.interval = setInterval(() => {
+            this.getPredictedEmotionSummary();
+        }
+        , 60*1000);
+    }
+
+    getPredictedEmotionSummary() {
+        let url = 'http://203.151.85.73:5005/predicted'; 
+        fetch(url)
+        .then((response) => response.json()) 
+        .then((responseJson) => {
+            // this.getSampleTextFromServer(responseJson.predicted.id);
+            this.setState({
+                places: responseJson.predicted.predicted 
+            });
+        })
+        .catch((error) => { 
+            console.error(error); 
+        })
+    }
+
+    getSampleTextFromServer(predictedId) {
+        let url = 'http://203.151.85.73:5005/sample_text?predicted_id=' + predictedId;
         fetch(url)
         .then((response) => response.json()) 
         .then((responseJson) => {
             this.setState({
-                places: responseJson 
+                predicted_texts: responseJson.predicted_texts
             });
         })
         .catch((error) => { 
             console.error(error); 
         }) 
-        this.interval = setInterval(() =>{
-            fetch(url)
-            .then((response) => response.json()) 
-            .then((responseJson) => {
-                this.setState({
-                    places: responseJson 
-                });
-            })
-            .catch((error) => { 
-                console.error(error); 
-            }) 
+    }
+
+    getSampleText(latitude, longitude) {
+        if(this.state.predicted_texts.predicted_texts != null) {
+            this.state.predicted_texts.predicted_texts.map((inst, idx) => {
+                if(inst.latitude == latitude && inst.longitude == longitude) {
+                    return inst.showed_texts;
+                }
+            });
         }
-        , 600000);
+        else {
+           return ['no'];
+        }
     }
 
     onRegionChange(region) {
         this.setState({ region });
+    }
+
+    clickCallout(emo) {
+        let temp = {
+            joy: emo.joy,
+            sadness: emo.sadness,
+            fear: emo.fear,
+            angry: emo.anger,
+            surprise: emo.surprise,
+            disgust: emo.disgust,
+            anticipation: emo.anticipation,
+            acceptance: emo.acceptance
+        }
+        this.setState({emo_percentage: temp, modalVisible: true});
+        this.popupDialog.show();
     }
 
     render() {
@@ -130,18 +184,8 @@ export default class SentimentMap extends Component {
                                 centerOffset={{ x: 50, y: 60 }}
                                 image={this.maxPercentEmotion(p).pic}
                                 key={idx}>
-                                <MapView.Callout style={styles.plainView}>
-                                    <SentimentCallout 
-                                        width={CALLOUT_WIDTH}
-                                        joy={p.joy}
-                                        sadness={p.sadness}
-                                        fear={p.fear}
-                                        anger={p.anger}
-                                        surprise={p.surprise}
-                                        disgust={p.disgust}
-                                        anticipation={p.anticipation}
-                                        acceptance={p.acceptance}
-                                    />
+                                <MapView.Callout style={styles.plainView} onPress={()=>{this.clickCallout(p);}}>
+                                    <SentimentCallout texts={p.predicted_texts}></SentimentCallout>
                                 </MapView.Callout>
                             </MapView.Marker>
                         ))
@@ -151,6 +195,22 @@ export default class SentimentMap extends Component {
                         
                     }
                 </MapView>
+                <PopupDialog
+                    ref={(popupDialog) => { this.popupDialog = popupDialog; }}
+                    width={0.8}
+                >
+                    <SentimentPercentage 
+                        width={CALLOUT_WIDTH}
+                        joy={this.state.emo_percentage.joy}
+                        sadness={this.state.emo_percentage.sadness}
+                        fear={this.state.emo_percentage.fear}
+                        angry={this.state.emo_percentage.angry}
+                        surprise={this.state.emo_percentage.surprise}
+                        disgust={this.state.emo_percentage.disgust}
+                        anticipation={this.state.emo_percentage.anticipation}
+                        acceptance={this.state.emo_percentage.acceptance}
+                    />
+                </PopupDialog>
             </View>
         );
     }

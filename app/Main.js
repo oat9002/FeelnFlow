@@ -26,11 +26,10 @@ class Main extends Component {
         </View>
         <View style={styles.button}>
           <View>
-           
+            <Button onPress={this.navigate.bind(this,'Sentiment')} title="Sentiment"></Button>
           </View>
           <View style={{marginTop: 10}}>
             <Button  onPress={this.navigate.bind(this,'FlowMap')} title="Crowd Flow"></Button>
-            <Button  onPress={this.navigate.bind(this,'Sentiment')} title="Sentimental"></Button>
           </View>
         </View>
       </Image>
