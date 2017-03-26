@@ -2,15 +2,16 @@
 
 import React, { Component, PropTypes } from 'react';
 import { 
-   View,
-   Text, 
-   TouchableHighlight, 
-   Navigator, 
-   TouchableOpacity, 
-   StyleSheet, 
-   Dimensions,
-  DrawerLayoutAndroid, 
-  ToolbarAndroi,
+    View,
+    Text, 
+    TouchableHighlight, 
+    Navigator, 
+    TouchableOpacity, 
+    StyleSheet, 
+    Dimensions,
+    DrawerLayoutAndroid, 
+    ToolbarAndroi,
+    Image, 
 } from 'react-native';
 import Main from './Main';
 import MapView from 'react-native-maps';
@@ -284,9 +285,62 @@ render() {
           region={this.state.region}
           style={styles.map}
           onRegionChange={this.onRegionChange}
-          initialRegion={this.state.region}>
-          
-            <MapView.Polygon
+          initialRegion={this.state.region}
+          loadingEnabled={true}
+          showsScale = {true}
+          //showsTraffic = {true}
+        >
+
+             {
+                this.places.map((p,idx) =>(
+                    (this.state.nextPlaces[idx] == "None") ?(
+                        <MapView.Polyline
+                          //coordinates={[{latitude:parseFloat(p.lat),longitude: parseFloat(p.lng)},{latitude:this.state.nextPlaces[idx].lat,longitude: this.state.nextPlaces[idx].lng}]}
+                          key = {idx}
+                          coordinates={[{latitude:13.74497311302548,longitude: 100.53022399050144},{latitude:13.74601377826572,longitude: 100.53440439922444}]}
+                          geodesic = {true}
+                          strokeWidth = {0}
+                          strokeColor = "#8a2be2"
+                        />
+                  ):(
+                     <MapView.Polyline
+                          key = {idx}
+                          coordinates={[{latitude:parseFloat(p.lat),longitude: parseFloat(p.lng)},{latitude:this.state.nextPlaces[idx].lat,longitude: this.state.nextPlaces[idx].lng}]}
+                          //coordinates={[{latitude:13.745844972517325,longitude: 100.53954639826303},{latitude:13.74601377826572,longitude: 100.53440439922444}]}
+                          geodesic = {true}
+                          strokeWidth = {3}
+                          strokeColor = "#8a2be2"
+                          
+                        />
+                    )
+                ))
+            }
+
+          {
+            this.places.map((p,idx) =>(
+              (this.state.nextPlaces[idx] == "None") ?(
+                <MapView.Circle
+                  key = {idx}
+                  center={{latitude:13.74497311302548,longitude: 100.53022399050144}} 
+                  radius={0}
+                  fillColor = "#8a2be2"
+                                  
+                />
+                ):(
+                  <MapView.Circle
+                  key = {idx}
+                  center={{latitude: this.state.nextPlaces[idx].lat, longitude: this.state.nextPlaces[idx].lng}} 
+                  radius={15}
+                  fillColor = "#8a2be2"
+                  strokeColor = "#8a2be2"
+                  zIndex = {10}
+                                  
+                />
+                )
+               
+            ))
+          } 
+          <MapView.Polygon
               coordinates={polygonSiamCenter.coordinates}
               fillColor={this.denColor[0]}
               strokeColor={this.denStrokeColor[0]}
@@ -320,12 +374,7 @@ render() {
               strokeColor={this.denStrokeColor[9]}
               strokeWidth={2} 
             />
-            <MapView.Polygon
-              coordinates={polygonSiamOne.coordinates}
-              fillColor={this.denColor[9]}
-              strokeColor={this.denStrokeColor[9]}
-              strokeWidth={2} 
-            />
+           
              <MapView.Polygon
               coordinates={polygonBTSnationalStadium.coordinates}
               fillColor={this.denColor[10]}
@@ -338,48 +387,6 @@ render() {
               strokeColor={this.denStrokeColor[11]}
               strokeWidth={2} //ความหนาของเส้นรอบรูป
             />
-             {
-                this.places.map((p,idx) =>(
-                    (this.state.nextPlaces[idx] == "None") ?(
-                        <MapView.Polyline
-                          //coordinates={[{latitude:parseFloat(p.lat),longitude: parseFloat(p.lng)},{latitude:this.state.nextPlaces[idx].lat,longitude: this.state.nextPlaces[idx].lng}]}
-                          coordinates={[{latitude:13.74497311302548,longitude: 100.53022399050144},{latitude:13.74601377826572,longitude: 100.53440439922444}]}
-                          geodesic = {true}
-                          strokeWidth = {0}
-                          strokeColor = "#8a2be2"
-                        />
-                  ):(
-                     <MapView.Polyline
-                          coordinates={[{latitude:parseFloat(p.lat),longitude: parseFloat(p.lng)},{latitude:this.state.nextPlaces[idx].lat,longitude: this.state.nextPlaces[idx].lng}]}
-                          //coordinates={[{latitude:13.745844972517325,longitude: 100.53954639826303},{latitude:13.74601377826572,longitude: 100.53440439922444}]}
-                          geodesic = {true}
-                          strokeWidth = {3}
-                          strokeColor = "#8a2be2"
-                        />
-                    )
-                ))
-            }
-
-          {
-            this.places.map((p,idx) =>(
-              (this.state.nextPlaces[idx] == "None") ?(
-                <MapView.Circle
-                  center={{latitude:13.74497311302548,longitude: 100.53022399050144}} 
-                  radius={0}
-                  fillColor = "#8a2be2"
-                                  
-                />
-                ):(
-                  <MapView.Circle
-                  center={{latitude: this.state.nextPlaces[idx].lat, longitude: this.state.nextPlaces[idx].lng}} 
-                  radius={10}
-                  fillColor = "#8a2be2"
-                                  
-                />
-                )
-               
-            ))
-          } 
             
                     
               
@@ -387,6 +394,7 @@ render() {
               this.places.map((p,idx) =>(
                  (this.state.nextPlaces[idx] != "None") ?(
                  <MapView.Marker 
+                   key = {idx}
                    coordinate={{latitude: parseFloat(p.lat), longitude: parseFloat(p.lng)}}
                    centerOffset={{ x: 10, y: 60 }}
                    anchor={{ x: 0.69, y: 1 }}
@@ -408,6 +416,7 @@ render() {
                    
                  ):(
                    <MapView.Marker 
+                   key = {idx}
                    coordinate={{latitude: parseFloat(p.lat), longitude: parseFloat(p.lng)}}
                    centerOffset={{ x: 10, y: 60 }}
                    anchor={{ x: 0.69, y: 1 }}
@@ -419,7 +428,7 @@ render() {
                           place = {p.name}
                           currentDensity = {this.density[idx]}
                           nextDensity = {this.nextDensity[idx]}
-                          nextPlace = {p.lat}
+                          //nextPlace = {p.lat}
                        />
                     </MapView.Callout>
                  </MapView.Marker>  
@@ -427,27 +436,20 @@ render() {
               ))
               
           }
-
-          
          
-         
-
-   
-
-  
-       
-         
-         
-        
-      
-
-      </MapView>
+          </MapView>
+          <View style={styles.legendContainer}>
+            <Image
+               source={require('./pics/arrow/symbol.png') } 
+               style={styles.legend}
+               resizeMode='contain' />
+              
+         </View>
          
          
           <Text>{this.state.test}</Text>
     </View>
     
-
     
     );
 }
@@ -592,26 +594,7 @@ const siamDis = {
         },
         ],
     }
-    const  polygonSiamOne = {
-     coordinates : [
-        {
-          latitude: 13.745449, 
-          longitude: 100.532977
-        },
-        {
-          latitude: 13.745256, 
-          longitude: 100.534266
-        },
-        {
-          latitude: 13.744391, 
-          longitude: 100.534164
-        },
-        {
-          latitude: 13.744620, 
-          longitude: 100.532807
-        },
-      ],
-   }
+    
 
    const  polygonBTSsiam = {
      coordinates : [
@@ -679,7 +662,28 @@ const styles = StyleSheet.create({
   },
    plainView: {
         width: CALLOUT_WIDTH,
-    },
+  },
+    legendContainer: {
+    position: 'absolute',
+    left: 200,
+    right: 0,
+    bottom: 0,
+    height: 65,
+    width: 210,
+    flex: 1,
+    alignItems: 'center',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    backgroundColor: 'transparent'
+},
+  legend: {
+    top: 0,
+    right: 0,
+    height: 60,
+    width: 180,
+    flexDirection: 'row',
+    resizeMode: 'cover'
+}
  
  
 
