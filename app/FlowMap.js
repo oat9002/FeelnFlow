@@ -346,7 +346,7 @@ render() {
                           coordinates={[{latitude:13.74497311302548,longitude: 100.53022399050144},{latitude:13.74601377826572,longitude: 100.53440439922444}]}
                           geodesic = {true}
                           strokeWidth = {0}
-                          strokeColor = "#e16136"
+                          strokeColor = "#8a2be2"
                         />
                   ):(
                      <MapView.Polyline
@@ -354,7 +354,7 @@ render() {
                           //coordinates={[{latitude:13.745844972517325,longitude: 100.53954639826303},{latitude:13.74601377826572,longitude: 100.53440439922444}]}
                           geodesic = {true}
                           strokeWidth = {3}
-                          strokeColor = "#e16136"
+                          strokeColor = "#8a2be2"
                         />
                     )
                 ))
@@ -366,14 +366,14 @@ render() {
                 <MapView.Circle
                   center={{latitude:13.74497311302548,longitude: 100.53022399050144}} 
                   radius={0}
-                  fillColor = "#e16136"
+                  fillColor = "#8a2be2"
                                   
                 />
                 ):(
                   <MapView.Circle
                   center={{latitude: this.state.nextPlaces[idx].lat, longitude: this.state.nextPlaces[idx].lng}} 
                   radius={10}
-                  fillColor = "#e16136"
+                  fillColor = "#8a2be2"
                                   
                 />
                 )
