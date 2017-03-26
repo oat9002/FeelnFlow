@@ -80,14 +80,14 @@ export default class SentimentMap extends Component {
             emo = 8;
         }
         switch(emo) {
-            case 1:  return {pic: require('./pics/emo_rep/1_joy.png'), background: 'rgba(255, 164, 42, 0.3)'};
-            case 2:  return {pic: require('./pics/emo_rep/2_sadness.png'), background: 'rgba(16, 150, 189, 0.3)'};
-            case 3:  return {pic: require('./pics/emo_rep/3_fear.png'), background: 'rgba(133, 208, 141, 0.3)'};
-            case 4:  return {pic: require('./pics/emo_rep/4_anger.png'), background: 'rgba(255, 67, 63, 0.3)'};
-            case 5:  return {pic: require('./pics/emo_rep/5_disgust.png'), background: 'rgba(129, 16, 147, 0.3)'};
-            case 6:  return {pic: require('./pics/emo_rep/6_surprise.png'), background: 'rgba(102, 164, 123, 0.3)'};
-            case 7:  return {pic: require('./pics/emo_rep/7_anticipation.png'), background: 'rgba(255, 124, 120, 0.3)'};
-            case 8:  return {pic: require('./pics/emo_rep/8_acceptance.png'), background: 'rgba(193, 208, 73, 0.3)'};
+            case 1:  return {pic: require('./pics/emo_rep/new/1_joy.png'), background: 'rgba(255, 164, 42, 0.3)'};
+            case 2:  return {pic: require('./pics/emo_rep/new/2_sadness.png'), background: 'rgba(16, 150, 189, 0.3)'};
+            case 3:  return {pic: require('./pics/emo_rep/new/3_fear.png'), background: 'rgba(133, 208, 141, 0.3)'};
+            case 4:  return {pic: require('./pics/emo_rep/new/4_anger.png'), background: 'rgba(255, 67, 63, 0.3)'};
+            case 5:  return {pic: require('./pics/emo_rep/new/5_disgust.png'), background: 'rgba(129, 16, 147, 0.3)'};
+            case 6:  return {pic: require('./pics/emo_rep/new/6_surprise.png'), background: 'rgba(102, 164, 123, 0.3)'};
+            case 7:  return {pic: require('./pics/emo_rep/new/7_anticipation.png'), background: 'rgba(255, 124, 120, 0.3)'};
+            case 8:  return {pic: require('./pics/emo_rep/new/8_acceptance.png'), background: 'rgba(193, 208, 73, 0.3)'};
         }
     }
 
