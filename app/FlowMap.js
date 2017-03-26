@@ -17,6 +17,7 @@ import MapView from 'react-native-maps';
 import FlowCallout from './FlowCallout';
 import api from './api'
 
+
 const { width, height } = Dimensions.get('window');
 
 const ASPECT_RATIO = width / height;
@@ -36,6 +37,7 @@ export default class FlowMap extends Component {
     this.denColor = ["rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)"] ,
     this.denStrokeColor = ["rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)"] 
     this.nextDensity = ["","","","","",""] 
+    this.places =[]
     this.state = {
       
       region: {
@@ -44,7 +46,9 @@ export default class FlowMap extends Component {
         latitudeDelta: LATITUDE_DELTA,
         longitudeDelta: LONGITUDE_DELTA,
       },
-      places: []
+      test: "1234",
+      nextPlaces : ["None","None","None","None","None","None","None","None","None","None","None","None"]
+     
       
     };
      this.onRegionChange = this.onRegionChange.bind(this) //อย่าลืมประกาศทุกฟังก์ชั่นนะ
@@ -99,37 +103,60 @@ export default class FlowMap extends Component {
         }
 
     }
-    
-    componentWillMount() {
-      
-      this.timer = setInterval(()=>this.getFromServer(),60*1000)       
-    }
-
-    async getFromServer(){
         
-          let url = 'http://203.151.85.73:5050/crowdflow/getAllPlace'
+     componentWillMount() {
+
+       let url = 'http://203.151.85.73:5050/crowdflow/getAllPlace'
           fetch(url,{method:"GET"})
           .then((response) => response.json())
           .then((responseJson) => {
-              let placeArr =[]
-              placeArr = responseJson.places
-              this.setState({
-                  places: responseJson.places
-              });
+             if(responseJson){
+                 this.setState({test: "cangetPlace"})
+              }
+              this.places = responseJson.places
+
+              this.getFromServer()
               
-            
+              // for(let i =this.places.length-1;i>=0;i--){
+              //     this.nextPlace.push(responseJson.places[i]);
+              // }     
               
           })
           .catch((error) => {
               console.error(error);
           })
+      this.timer = setInterval(()=>this.getFromServer(),60*1000)       
+    }
 
-        
+     getFromServer(){
+          let url = 'http://203.151.85.73:5050/crowdflow/flow?time=5MIN';
+          fetch(url,{method:"GET"})
+          .then((response) => response.json())
+          .then((responseJson) => {
+              if(responseJson){
+                let flowArr = []
+                flowArr = responseJson.crowdFlow
+                let newNextPlace = []
+                for(let i=0;i<12;i++){
+                    let p = this.places[i]
+                    for(let j=0;j<12;j++){
+                        let c = flowArr[j]
+                       if(c && c.place.lat == p.lat && c.place.lng == p.lng){
+                           newNextPlace.push(c.nextPlace[0])
+                       }
+                    }
+                }
+                
+                this.setState({nextPlaces : newNextPlace})
+             }
+            })
+          .catch((error) => {
+              console.error(error);
+          })
 
+      for(let i=0;i<12;i++){
         
-       for(let i=0;i<12;i++){
-        
-          let url = 'http://203.151.85.73:5050/crowdflow/density?time=NOW&ll='+this.state.places[i].lat+','+this.state.places[i].lng;
+          let url = 'http://203.151.85.73:5050/crowdflow/density?time=NOW&ll='+this.places[i].lat+','+this.places[i].lng;
            fetch(url,{method:"GET"})
           .then((response) => response.json())
           .then((responseJson) => {
@@ -148,10 +175,11 @@ export default class FlowMap extends Component {
         }
          for(let i=0;i<12;i++){
         
-          let url = 'http://203.151.85.73:5050/crowdflow/density?time=5MIN&ll='+this.state.places[i].lat+','+this.state.places[i].lng;
+          let url = 'http://203.151.85.73:5050/crowdflow/density?time=5MIN&ll='+this.places[i].lat+','+this.places[i].lng;
           fetch(url,{method:"GET"})
           .then((response) => response.json())
           .then((responseJson) => {
+          
               let denArr =[]
               denArr = responseJson.density
               this.nextDensity[i] = denArr[0].density
@@ -189,6 +217,7 @@ export default class FlowMap extends Component {
     }
   
 render() {
+    
     return (
          
       <View style={styles.container}>
@@ -197,12 +226,15 @@ render() {
           style={styles.map}
           onRegionChange={this.onRegionChange}
           initialRegion={this.state.region}>
-
+          
             <MapView.Polygon
               coordinates={polygonSiamCenter.coordinates}
               fillColor={this.denColor[0]}
               strokeColor={this.denStrokeColor[0]}
-              strokeWidth={2} 
+              strokeWidth={2}
+              onPress = {() => {
+                    this.setState({test: "4321"})
+              }} 
             />
             <MapView.Polygon
               coordinates={polygonSiamDis.coordinates}
@@ -229,7 +261,6 @@ render() {
               strokeColor={this.denStrokeColor[9]}
               strokeWidth={2} 
             />
-
             <MapView.Polygon
               coordinates={polygonSiamOne.coordinates}
               fillColor={this.denColor[9]}
@@ -241,17 +272,60 @@ render() {
               fillColor={this.denColor[10]}
               strokeColor={this.denStrokeColor[10]}
               strokeWidth={2} 
-            />
-            
+            />            
             <MapView.Polygon
               coordinates={polygonBTSsiam.coordinates}
               fillColor={this.denColor[11]}
               strokeColor={this.denStrokeColor[11]}
               strokeWidth={2} //ความหนาของเส้นรอบรูป
             />
-            
+             {
+                this.places.map((p,idx) =>(
+                    (this.state.nextPlaces[idx] == "None") ?(
+                        <MapView.Polyline
+                          //coordinates={[{latitude:parseFloat(p.lat),longitude: parseFloat(p.lng)},{latitude:this.state.nextPlaces[idx].lat,longitude: this.state.nextPlaces[idx].lng}]}
+                          coordinates={[{latitude:13.74497311302548,longitude: 100.53022399050144},{latitude:13.74601377826572,longitude: 100.53440439922444}]}
+                          geodesic = {true}
+                          strokeWidth = {0}
+                          strokeColor = " #8a2be2"
+                        />
+                  ):(
+                     <MapView.Polyline
+                          coordinates={[{latitude:parseFloat(p.lat),longitude: parseFloat(p.lng)},{latitude:this.state.nextPlaces[idx].lat,longitude: this.state.nextPlaces[idx].lng}]}
+                          //coordinates={[{latitude:13.745844972517325,longitude: 100.53954639826303},{latitude:13.74601377826572,longitude: 100.53440439922444}]}
+                          geodesic = {true}
+                          strokeWidth = {3}
+                          strokeColor = " #8a2be2"
+                        />
+                    )
+                ))
+            }
+
           {
-              this.state.places.map((p,idx) =>(
+            this.places.map((p,idx) =>(
+              (this.state.nextPlaces[idx] == "None") ?(
+                <MapView.Circle
+                  center={{latitude:13.74497311302548,longitude: 100.53022399050144}} 
+                  radius={0}
+                  fillColor = "#8a2be2"
+                                  
+                />
+                ):(
+                  <MapView.Circle
+                  center={{latitude: this.state.nextPlaces[idx].lat, longitude: this.state.nextPlaces[idx].lng}} 
+                  radius={10}
+                  fillColor = "#8a2be2"
+                                  
+                />
+                )
+               
+            ))
+          } 
+                       
+              
+          {
+              this.places.map((p,idx) =>(
+                 (this.state.nextPlaces[idx] != "None") ?(
                  <MapView.Marker 
                    coordinate={{latitude: parseFloat(p.lat), longitude: parseFloat(p.lng)}}
                    centerOffset={{ x: 10, y: 60 }}
@@ -264,28 +338,41 @@ render() {
                           place = {p.name}
                           currentDensity = {this.density[idx]}
                           nextDensity = {this.nextDensity[idx]}
+                          // {(this.state.nextPlace[0].nextPlace.length > 0 )?(
+                          nextPlace = {this.state.nextPlaces[idx].name}
+                          // }
+                          
+                       />
+                    </MapView.Callout>
+                 </MapView.Marker>
+                   
+                 ):(
+                   <MapView.Marker 
+                   coordinate={{latitude: parseFloat(p.lat), longitude: parseFloat(p.lng)}}
+                   centerOffset={{ x: 10, y: 60 }}
+                   anchor={{ x: 0.69, y: 1 }}
+                   //image={require('./pics/arrow/arrow_up_red.png')}>
+                   image={this.showArrowDensity(this.density[idx],this.nextDensity[idx])}>
+                   <MapView.Callout style={styles.plainView}>
+                       <FlowCallout 
+                          width={CALLOUT_WIDTH}
+                          place = {p.name}
+                          currentDensity = {this.density[idx]}
+                          nextDensity = {this.nextDensity[idx]}
+                          nextPlace = {p.lat}
                        />
                     </MapView.Callout>
                  </MapView.Marker>  
-
+                 )    
               ))
               
           }
-          <MapView.Polyline
-              coordinates={[{latitude: 13.746967,longitude: 100.537137},{latitude:13.748489,longitude: 100.537266}]}
-              geodesic = {true}
-              strokeWidth = {3}
-              strokeColor = "#e16136"
-              
-          />
-        
-        
 
-           
-          </MapView>
+     
+      </MapView>
          
          
-          <Text>{this.density[9]}lllllllll</Text>
+          <Text>{this.state.test}</Text>
     </View>
     
 
@@ -298,24 +385,7 @@ FlowMap.propTypes = {
   provider: MapView.ProviderPropType,
 };
 
-const circle = {
-    center: {
-        latitude:  13.746784,
-        longitude: 100.534947,
-    },
-    radius: 100
-}
-const siamDis = {
-    coordinate: {
-        latitude: 13.746570,
-        longitude: 100.531453,
-    }
-    
-}
-
-
-
- const polygonParagon = {
+const polygonParagon = {
       coordinates : [
         { 
           latitude: 13.747784 ,
@@ -527,9 +597,6 @@ const styles = StyleSheet.create({
    plainView: {
         width: CALLOUT_WIDTH,
     },
- 
- 
-
 });
 
 

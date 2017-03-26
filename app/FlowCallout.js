@@ -60,6 +60,9 @@ export default class FlowCallout extends Component {
                     <Text style={{width: this.props.width * 0.7,fontWeight: 'bold'}}>Next Density : </Text>
                     {nextDen}
                 </View>
+                 <View>
+                    <Text style={{fontWeight: 'bold'}}>nextPlace : {this.props.nextPlace}</Text>
+                </View>
             </View>    
         );
     }

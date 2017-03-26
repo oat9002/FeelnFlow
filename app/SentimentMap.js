@@ -191,6 +191,10 @@ export default class SentimentMap extends Component {
                             </MapView.Marker>
                         ))
                     }
+
+                    {
+                        
+                    }
                 </MapView>
                 <PopupDialog
                     ref={(popupDialog) => { this.popupDialog = popupDialog; }}
