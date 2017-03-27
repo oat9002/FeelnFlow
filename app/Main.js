@@ -1,11 +1,11 @@
 'use strict';
 
 import React, { Component, PropTypes } from 'react';
-import { StyleSheet, View , Text , Image ,Navigator, TouchableOpacity} from 'react-native';
-// import { BlurView, VibrancyView } from 'react-native-blur';
-// import { Container, Content} from 'native-base';
+import { StyleSheet, View , Text , Image ,Navigator, TouchableOpacity, Dimensions} from 'react-native';
 import Button from './Button'
 import FlowMap from './FlowMap';
+
+const { width, height } = Dimensions.get('window');
 
 class Main extends Component {
  navigate(routeName){
@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
   },
   buttonView: {
     marginBottom: 60,
-    marginHorizontal: 100,
+    marginHorizontal: width *0.25,
   },
 });
 

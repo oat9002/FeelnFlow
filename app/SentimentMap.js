@@ -10,9 +10,9 @@ import SentimentPercentage from './SentimentPercentage';
 
 const { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
-const LATITUDE = 13.747784; //13.728844053377617;
-const LONGITUDE = 100.535947; //100.77809506218118;
-const LATITUDE_DELTA = 0.0922;
+const LATITUDE = 13.745849; //13.728844053377617;
+const LONGITUDE = 100.533315; //100.77809506218118;
+const LATITUDE_DELTA = 0.02;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 const SPACE = 0.01;
 const CALLOUT_WIDTH = width * 0.7;
@@ -167,7 +167,8 @@ export default class SentimentMap extends Component {
                     region={this.state.region}
                     style={styles.map}
                     onRegionChange={this.onRegionChange}
-                    initialRegion={this.state.region}>
+                    initialRegion={this.state.region}
+                    loadingEnabled={true}>
                     {
                         this.state.places.map((p, idx) => (
                             <MapView.Circle 
@@ -182,7 +183,6 @@ export default class SentimentMap extends Component {
                         this.state.places.map((p, idx) => (
                             <MapView.Marker 
                                 coordinate={{latitude: parseFloat(p.latitude), longitude: parseFloat(p.longitude)}}
-                                centerOffset={{ x: 50, y: 60 }}
                                 image={this.maxPercentEmotion(p).pic}
                                 key={idx}>
                                 <MapView.Callout style={styles.plainView} onPress={()=>{this.clickCallout(p);}}>
