@@ -10,9 +10,9 @@ import SentimentPercentage from './SentimentPercentage';
 
 const { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
-const LATITUDE = 13.747784; //13.728844053377617;
-const LONGITUDE = 100.535947; //100.77809506218118;
-const LATITUDE_DELTA = 0.0922;
+const LATITUDE = 13.745849; //13.728844053377617;
+const LONGITUDE = 100.533315; //100.77809506218118;
+const LATITUDE_DELTA = 0.02;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 const SPACE = 0.01;
 const CALLOUT_WIDTH = width * 0.7;
@@ -80,14 +80,14 @@ export default class SentimentMap extends Component {
             emo = 8;
         }
         switch(emo) {
-            case 1:  return {pic: require('./pics/emo_rep/1_joy.png'), background: 'rgba(255, 164, 42, 0.3)'};
-            case 2:  return {pic: require('./pics/emo_rep/2_sadness.png'), background: 'rgba(16, 150, 189, 0.3)'};
-            case 3:  return {pic: require('./pics/emo_rep/3_fear.png'), background: 'rgba(133, 208, 141, 0.3)'};
-            case 4:  return {pic: require('./pics/emo_rep/4_anger.png'), background: 'rgba(255, 67, 63, 0.3)'};
-            case 5:  return {pic: require('./pics/emo_rep/5_disgust.png'), background: 'rgba(129, 16, 147, 0.3)'};
-            case 6:  return {pic: require('./pics/emo_rep/6_surprise.png'), background: 'rgba(102, 164, 123, 0.3)'};
-            case 7:  return {pic: require('./pics/emo_rep/7_anticipation.png'), background: 'rgba(255, 124, 120, 0.3)'};
-            case 8:  return {pic: require('./pics/emo_rep/8_acceptance.png'), background: 'rgba(193, 208, 73, 0.3)'};
+            case 1:  return {pic: require('./pics/emo_rep/new/1_joy.png'), background: 'rgba(255, 164, 42, 0.3)'};
+            case 2:  return {pic: require('./pics/emo_rep/new/2_sadness.png'), background: 'rgba(16, 150, 189, 0.3)'};
+            case 3:  return {pic: require('./pics/emo_rep/new/3_fear.png'), background: 'rgba(133, 208, 141, 0.3)'};
+            case 4:  return {pic: require('./pics/emo_rep/new/4_anger.png'), background: 'rgba(255, 67, 63, 0.3)'};
+            case 5:  return {pic: require('./pics/emo_rep/new/5_disgust.png'), background: 'rgba(129, 16, 147, 0.3)'};
+            case 6:  return {pic: require('./pics/emo_rep/new/6_surprise.png'), background: 'rgba(102, 164, 123, 0.3)'};
+            case 7:  return {pic: require('./pics/emo_rep/new/7_anticipation.png'), background: 'rgba(255, 124, 120, 0.3)'};
+            case 8:  return {pic: require('./pics/emo_rep/new/8_acceptance.png'), background: 'rgba(193, 208, 73, 0.3)'};
         }
     }
 
@@ -167,7 +167,8 @@ export default class SentimentMap extends Component {
                     region={this.state.region}
                     style={styles.map}
                     onRegionChange={this.onRegionChange}
-                    initialRegion={this.state.region}>
+                    initialRegion={this.state.region}
+                    loadingEnabled={true}>
                     {
                         this.state.places.map((p, idx) => (
                             <MapView.Circle 
@@ -182,7 +183,6 @@ export default class SentimentMap extends Component {
                         this.state.places.map((p, idx) => (
                             <MapView.Marker 
                                 coordinate={{latitude: parseFloat(p.latitude), longitude: parseFloat(p.longitude)}}
-                                centerOffset={{ x: 50, y: 60 }}
                                 image={this.maxPercentEmotion(p).pic}
                                 key={idx}>
                                 <MapView.Callout style={styles.plainView} onPress={()=>{this.clickCallout(p);}}>
