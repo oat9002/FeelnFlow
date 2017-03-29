@@ -60,7 +60,8 @@ export default class FlowMap extends Component {
      this.onRegionChange = this.onRegionChange.bind(this) //อย่าลืมประกาศทุกฟังก์ชั่นนะ
      this.onChangeDenColor = this.onChangeDenColor.bind(this)
      this.getFromServer = this.getFromServer.bind(this)
-   
+     this.showArrowDensity = this.showArrowDensity.bind(this)
+    
   }
 
 
@@ -92,23 +93,65 @@ export default class FlowMap extends Component {
       }
     }
 
-    showArrowDensity(den,nextDen){
-        if(den=='LOW'){
-            if(nextDen=='LOW') return require('./pics/arrow/Blank.png')
-            else if(nextDen=='MEDIUM')  return require('./pics/arrow/arrow_up_yellow.png')
-            else if(nextDen=='HIGH') return require('./pics/arrow/arrow_up_red.png')
+    showArrowDensity(i,select){
+      if(select=='NOW'){
+        if(this.density[i]=='LOW'){
+            if(this.next5Density[i]=='LOW') return require('./pics/arrow/Blank.png')
+            else if(this.next5Density[i]=='MEDIUM')  return require('./pics/arrow/arrow_up_yellow.png')
+            else if(this.next5Density[i]=='HIGH') return require('./pics/arrow/arrow_up_red.png')
             
         }
-        else if(den == 'MEDIUM'){
-            if(nextDen=='LOW') return require('./pics/arrow/arrow_down_green.png')
-            else if(nextDen=='MEDIUM')  return require('./pics/arrow/Blank.png')
-            else if(nextDen=='HIGH') return require('./pics/arrow/arrow_up_red.png')
+        else if(this.density[i] == 'MEDIUM'){
+            if(this.next5Density[i]=='LOW') return require('./pics/arrow/arrow_down_green.png')
+            else if(this.next5Density[i]=='MEDIUM')  return require('./pics/arrow/Blank.png')
+            else if(this.next5Density[i]=='HIGH') return require('./pics/arrow/arrow_up_red.png')
         }
-        else if(den == 'HIGH'){
-            if(nextDen=='LOW') return require('./pics/arrow/arrow_down_green.png')
-            else if(nextDen=='MEDIUM')  return require('./pics/arrow/arrow_down_yellow.png')
-            else if(nextDen=='HIGH') return require('./pics/arrow/Blank.png')
+        else if(this.density[i] == 'HIGH'){
+            if(this.next5Density[i]=='LOW') return require('./pics/arrow/arrow_down_green.png')
+            else if(this.next5Density[i]=='MEDIUM')  return require('./pics/arrow/arrow_down_yellow.png')
+            else if(this.next5Density[i]=='HIGH') return require('./pics/arrow/Blank.png')
         }
+      }
+      if(select=='5MIN'){
+        if(this.next5Density[i]=='LOW'){
+            if(this.next10Density[i]=='LOW') return require('./pics/arrow/Blank.png')
+            else if(this.next10Density[i]=='MEDIUM')  return require('./pics/arrow/arrow_up_yellow.png')
+            else if(this.next10Density[i]=='HIGH') return require('./pics/arrow/arrow_up_red.png')
+            
+        }
+        else if(this.next5Density[i] == 'MEDIUM'){
+            if(this.next10Density[i]=='LOW') return require('./pics/arrow/arrow_down_green.png')
+            else if(this.next10Density[i]=='MEDIUM')  return require('./pics/arrow/Blank.png')
+            else if(this.next10Density[i]=='HIGH') return require('./pics/arrow/arrow_up_red.png')
+        }
+        else if(this.next5Density[i] == 'HIGH'){
+            if(this.next10Density[i]=='LOW') return require('./pics/arrow/arrow_down_green.png')
+            else if(this.next10Density[i]=='MEDIUM')  return require('./pics/arrow/arrow_down_yellow.png')
+            else if(this.next10Density[i]=='HIGH') return require('./pics/arrow/Blank.png')
+        }
+      }
+       if(select=='10MIN'){
+        if(this.next10Density[i]=='LOW'){
+            if(this.next15Density[i]=='LOW') return require('./pics/arrow/Blank.png')
+            else if(this.next15Density[i]=='MEDIUM')  return require('./pics/arrow/arrow_up_yellow.png')
+            else if(this.next15Density[i]=='HIGH') return require('./pics/arrow/arrow_up_red.png')
+            
+        }
+        else if(this.next10Density[i] == 'MEDIUM'){
+            if(this.next15Density[i]=='LOW') return require('./pics/arrow/arrow_down_green.png')
+            else if(this.next15Density[i]=='MEDIUM')  return require('./pics/arrow/Blank.png')
+            else if(this.next15Density[i]=='HIGH') return require('./pics/arrow/arrow_up_red.png')
+        }
+        else if(this.next10Density[i] == 'HIGH'){
+            if(this.next15Density[i]=='LOW') return require('./pics/arrow/arrow_down_green.png')
+            else if(this.next15Density[i]=='MEDIUM')  return require('./pics/arrow/arrow_down_yellow.png')
+            else if(this.next15Density[i]=='HIGH') return require('./pics/arrow/Blank.png')
+        }
+      }
+       if(select=='15MIN'){
+       return require('./pics/arrow/Blank.png')
+      }
+        
 
     }
         
@@ -141,7 +184,7 @@ export default class FlowMap extends Component {
                 let flowArr = []
                 flowArr = responseJson.crowdFlow
                 let newNextPlace = []
-                for(let i=0;i<12;i++){
+                for(let i=0;i<7;i++){
                     let p = this.places[i]
                     for(let j=0;j<12;j++){
                         let c = flowArr[j]
@@ -159,7 +202,7 @@ export default class FlowMap extends Component {
           })
     
 //Fetch Density NOW          
-          for(let i=0;i<12;i++){
+          for(let i=0;i<7;i++){
           
             let url = 'http://203.151.85.73:5050/crowdflow/density?time=NOW&ll='+this.places[i].lat+','+this.places[i].lng;
             fetch(url,{method:"GET"})
@@ -179,7 +222,7 @@ export default class FlowMap extends Component {
 
           }
 //Fetch Density 5MIN
-         for(let i=0;i<12;i++){
+         for(let i=0;i<7;i++){
         
           let url = 'http://203.151.85.73:5050/crowdflow/density?time=5MIN&ll='+this.places[i].lat+','+this.places[i].lng;
           fetch(url,{method:"GET"})
@@ -196,7 +239,7 @@ export default class FlowMap extends Component {
 
         }
 //Fetch Density 10MIN
-         for(let i=0;i<12;i++){
+         for(let i=0;i<7;i++){
         
           let url = 'http://203.151.85.73:5050/crowdflow/density?time=10MIN&ll='+this.places[i].lat+','+this.places[i].lng;
           fetch(url,{method:"GET"})
@@ -213,7 +256,7 @@ export default class FlowMap extends Component {
 
         }
 //Fetch Density 15MIN
-         for(let i=0;i<12;i++){
+         for(let i=0;i<7;i++){
         
           let url = 'http://203.151.85.73:5050/crowdflow/density?time=15MIN&ll='+this.places[i].lat+','+this.places[i].lng;
           fetch(url,{method:"GET"})
@@ -245,29 +288,28 @@ render() {
       selectedOption  
     });
       if(this.state.selectedOption == "NOW"){
-           for(let i=0;i<12;i++){
-             
+           for(let i=0;i<7;i++){
              let colorJson = this.onChangeDenColor(this.density[i])          
              this.denColor[i] = colorJson.denColor
              this.denStrokeColor[i] = colorJson.denStrokeColor
           }
         }
         if(this.state.selectedOption == "5MIN"){
-          for(let i=0;i<12;i++){
+          for(let i=0;i<7;i++){
               let colorJson = this.onChangeDenColor(this.next5Density[i])          
               this.denColor[i] = colorJson.denColor
               this.denStrokeColor[i] = colorJson.denStrokeColor
            }
         }
         if(this.state.selectedOption == "10MIN"){
-          for(let i=0;i<12;i++){
+          for(let i=0;i<7;i++){
               let colorJson = this.onChangeDenColor(this.next10Density[i])          
               this.denColor[i] = colorJson.denColor
               this.denStrokeColor[i] = colorJson.denStrokeColor
            }
         }
-        if(this.state.selectedOption == "10MIN"){
-          for(let i=0;i<12;i++){
+        if(this.state.selectedOption == "15MIN"){
+          for(let i=0;i<7;i++){
               let colorJson = this.onChangeDenColor(this.next15Density[i])          
               this.denColor[i] = colorJson.denColor
               this.denStrokeColor[i] = colorJson.denStrokeColor
@@ -283,7 +325,7 @@ render() {
                 initialRegion={this.state.region}
                 loadingEnabled={true}
                 showsScale = {true}
-          //showsTraffic = {true}
+                //showsTraffic = {true}
         >
 
              {
@@ -359,32 +401,32 @@ render() {
            
             <MapView.Polygon
               coordinates={polygonCentralWorld.coordinates}
-              fillColor={this.denColor[5]}
-              strokeColor={this.denStrokeColor[5]}
+              fillColor={this.denColor[3]}
+              strokeColor={this.denStrokeColor[3]}
               strokeWidth={2} 
             />
             <MapView.Polygon
               coordinates={polygonParagon.coordinates}
-              fillColor=  {this.denColor[9]}
-              strokeColor={this.denStrokeColor[9]}
+              fillColor=  {this.denColor[4]}
+              strokeColor={this.denStrokeColor[4]}
               strokeWidth={2} 
             />
            
              <MapView.Polygon
               coordinates={polygonBTSnationalStadium.coordinates}
-              fillColor={this.denColor[10]}
-              strokeColor={this.denStrokeColor[10]}
+              fillColor={this.denColor[5]}
+              strokeColor={this.denStrokeColor[5]}
               strokeWidth={2} 
             />            
             <MapView.Polygon
               coordinates={polygonBTSsiam.coordinates}
-              fillColor={this.denColor[11]}
-              strokeColor={this.denStrokeColor[11]}
+              fillColor={this.denColor[6]}
+              strokeColor={this.denStrokeColor[6]}
               strokeWidth={2} //ความหนาของเส้นรอบรูป
             />
             
                     
-              
+   
           {
               this.places.map((p,idx) =>(
                  (this.state.nextPlaces[idx] != "None") ?(
@@ -394,7 +436,7 @@ render() {
                    centerOffset={{ x: 10, y: 60 }}
                    anchor={{ x: 0.69, y: 1 }}
                    //image={require('./pics/arrow/arrow_up_red.png')}>
-                   image={this.showArrowDensity(this.density[idx],this.next5Density[idx])}>
+                   image={this.showArrowDensity(idx,this.state.selectedOption)}>
                    <MapView.Callout style={styles.plainView}>
                        <FlowCallout 
                           width={CALLOUT_WIDTH}
@@ -416,7 +458,7 @@ render() {
                    centerOffset={{ x: 10, y: 60 }}
                    anchor={{ x: 0.69, y: 1 }}
                    //image={require('./pics/arrow/arrow_up_red.png')}>
-                   image={this.showArrowDensity(this.density[idx],this.next5Density[idx])}>
+                   image={this.showArrowDensity(idx,this.state.selectedOption)}>
                    <MapView.Callout style={styles.plainView}>
                        <FlowCallout 
                           width={CALLOUT_WIDTH}
