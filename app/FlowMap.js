@@ -122,11 +122,6 @@ export default class FlowMap extends Component {
               this.places = responseJson.places
 
               this.getFromServer()
-              
-              // for(let i =this.places.length-1;i>=0;i--){
-              //     this.nextPlace.push(responseJson.places[i]);
-              // }     
-              
           })
           .catch((error) => {
               console.error(error);
@@ -135,7 +130,7 @@ export default class FlowMap extends Component {
     }
 
      getFromServer(){
-         
+//Fetch Flow 5MIN         
           let url = 'http://203.151.85.73:5050/crowdflow/flow?time=5MIN';
           fetch(url,{method:"GET"})
           .then((response) => response.json())
@@ -607,22 +602,22 @@ const styles = StyleSheet.create({
   },
     legendContainer: {
     position: 'absolute',
-    left: 200,
+    left: 220,
     right: 0,
     bottom: 0,
-    height: 65,
-    width: 210,
-    flex: 1,
+    height: 100,//80
+    width: 220,
+    //flex: 1,
     alignItems: 'center',
-    flexDirection: 'column',
+    //flexDirection: 'column',
     justifyContent: 'center',
     backgroundColor: 'transparent'
 },
   legend: {
     top: 0,
     right: 0,
-    height: 60,
-    width: 180,
+    height: 100,//60
+    width: 220,//180
     flexDirection: 'row',
     resizeMode: 'cover'
 },
