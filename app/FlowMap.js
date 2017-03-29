@@ -190,8 +190,8 @@ export default class FlowMap extends Component {
           .then((responseJson) => {
               let denArr =[]
               denArr = responseJson.density
-              //this.nextDensity[i] = denArr[0].density
-              this.nextDensity[i] = "HIGH"
+              this.nextDensity[i] = denArr[0].density
+              //this.nextDensity[i] = "HIGH"
             })
           .catch((error) => {
               console.error(error);
@@ -222,7 +222,6 @@ render() {
         }
         if(this.state.selectedOption == "5MIN"){
           for(let i=0;i<12;i++){
-              //this.nextDensity[i] = 'HIGH'
               let colorJson = this.onChangeDenColor(this.nextDensity[i])          
               this.denColor[i] = colorJson.denColor
               this.denStrokeColor[i] = colorJson.denStrokeColor
@@ -575,7 +574,7 @@ const polygonParagon = {
         },
         {
           latitude: 13.746533,
-          longitude:  100.528349
+          longitude: 100.528349
         },
       ],
    }
@@ -629,15 +628,11 @@ const styles = StyleSheet.create({
 },
   segmentContainer: {
     position: 'absolute',
-    left: 35,
-    right: 0,
-    bottom: 550,
-    height: 65,
-    width: 300,
-    flex: 1,
+    left: 10,
+    right: 10,
+    bottom: 560,
     alignItems: 'center',
-    flexDirection: 'column',
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
     backgroundColor: 'transparent'
 },
  
