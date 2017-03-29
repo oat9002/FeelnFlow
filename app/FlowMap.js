@@ -154,6 +154,34 @@ export default class FlowMap extends Component {
         
 
     }
+    checkCurrentDensity(i,select){
+        if(select=="NOW"){
+          return this.density[i]
+        }
+        else if(select=="5MIN"){
+          return this.next5Density[i]
+        }
+        else if(select=="10MIN"){
+          return this.next10Density[i]
+        }
+        else if(select=="15MIN"){
+          return this.next15Density[i]
+        }
+    }
+    checkNextDensity(i,select){
+        if(select=="NOW"){
+          return this.next5Density[i]
+        }
+        else if(select=="5MIN"){
+          return this.next10Density[i]
+        }
+        else if(select=="10MIN"){
+          return this.next15Density[i]
+        }
+        else if(select=="15MIN"){
+          return ""
+        }
+    }
         
      componentWillMount() {
 
@@ -203,7 +231,6 @@ export default class FlowMap extends Component {
     
 //Fetch Density NOW          
           for(let i=0;i<7;i++){
-          
             let url = 'http://203.151.85.73:5050/crowdflow/density?time=NOW&ll='+this.places[i].lat+','+this.places[i].lng;
             fetch(url,{method:"GET"})
             .then((response) => response.json())
@@ -441,8 +468,8 @@ render() {
                        <FlowCallout 
                           width={CALLOUT_WIDTH}
                           place = {p.name}
-                          currentDensity = {this.density[idx]}
-                          nextDensity = {this.next5Density[idx]}
+                          currentDensity = {this.checkCurrentDensity(idx,this.state.selectedOption)}
+                          nextDensity = {this.checkNextDensity(idx,this.state.selectedOption)}
                           // {(this.state.nextPlace[0].nextPlace.length > 0 )?(
                           nextPlace = {this.state.nextPlaces[idx].name}
                           // }
@@ -463,8 +490,8 @@ render() {
                        <FlowCallout 
                           width={CALLOUT_WIDTH}
                           place = {p.name}
-                          currentDensity = {this.density[idx]}
-                          nextDensity = {this.next5Density[idx]}
+                          currentDensity = {this.checkCurrentDensity(idx,this.state.selectedOption)}
+                          nextDensity = {this.checkNextDensity(idx,this.state.selectedOption)}
                           //nextPlace = {p.lat}
                        />
                     </MapView.Callout>
