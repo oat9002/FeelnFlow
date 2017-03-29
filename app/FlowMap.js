@@ -200,6 +200,7 @@ render() {
   const options = [
       "NOW",
       "5MIN",
+      "10MIN",
       "15MIN"
   ];
 
@@ -387,6 +388,7 @@ render() {
             options={ options }
             onSelection={ setSelectedOption.bind(this) }
             selectedOption={ this.state.selectedOption }
+            direction = {"column"}
             
          />
         </View>
@@ -623,9 +625,9 @@ const styles = StyleSheet.create({
 },
   segmentContainer: {
     position: 'absolute',
-    left: 10,
-    right: 10,
-    bottom: 560,
+    left: 300,
+    right: 0,
+    bottom: 480,
     alignItems: 'center',
     justifyContent: 'flex-end',
     backgroundColor: 'transparent'
