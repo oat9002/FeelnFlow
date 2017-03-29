@@ -11,12 +11,15 @@ import {
     Dimensions,
     DrawerLayoutAndroid, 
     ToolbarAndroi,
-    Image, 
+    Image,
+    Picker,
+    Item, 
 } from 'react-native';
 import Main from './Main';
 import MapView from 'react-native-maps';
 import FlowCallout from './FlowCallout';
 import api from './api'
+import {SegmentedControls}from 'react-native-radio-buttons'
 
 
 const { width, height } = Dimensions.get('window');
@@ -48,14 +51,16 @@ export default class FlowMap extends Component {
         longitudeDelta: LONGITUDE_DELTA,
       },
       test: "1234",
-      nextPlaces : ["None","None","None","None","None","None","None","None","None","None","None","None"]
-     
+      nextPlaces : ["None","None","None","None","None","None","None","None","None","None","None","None"],
+      language : ""
       
     };
      this.onRegionChange = this.onRegionChange.bind(this) //อย่าลืมประกาศทุกฟังก์ชั่นนะ
      this.onChangeDenColor = this.onChangeDenColor.bind(this)
      this.getFromServer = this.getFromServer.bind(this)
+   
   }
+
 
   
     onRegionChange(region) {
@@ -174,22 +179,22 @@ export default class FlowMap extends Component {
           })
 
         }
-         for(let i=0;i<12;i++){
+        //  for(let i=0;i<12;i++){
         
-          let url = 'http://203.151.85.73:5050/crowdflow/density?time=5MIN&ll='+this.places[i].lat+','+this.places[i].lng;
-          fetch(url,{method:"GET"})
-          .then((response) => response.json())
-          .then((responseJson) => {
+        //   let url = 'http://203.151.85.73:5050/crowdflow/density?time=5MIN&ll='+this.places[i].lat+','+this.places[i].lng;
+        //   fetch(url,{method:"GET"})
+        //   .then((response) => response.json())
+        //   .then((responseJson) => {
           
-              let denArr =[]
-              denArr = responseJson.density
-              this.nextDensity[i] = denArr[0].density
-            })
-          .catch((error) => {
-              console.error(error);
-          })
+        //       let denArr =[]
+        //       denArr = responseJson.density
+        //       this.nextDensity[i] = denArr[0].density
+        //     })
+        //   .catch((error) => {
+        //       console.error(error);
+        //   })
 
-        }
+        // }
         let url1 = 'http://203.151.85.73:5050/crowdflow/random';
           fetch(url1,{method:"GET"})
           .then((response) => response.json())
@@ -218,11 +223,22 @@ export default class FlowMap extends Component {
     }
   
 render() {
-    
+  const options = [
+    "NOW",
+    "5MIN",
+    "15MIN"
+  ];
+
+  function setSelectedOption(selectedOption){
+    this.setState({
+      selectedOption
+    });
+  }
+
+       
     return (
-         
-      <View style={styles.container}>
-        <MapView
+           <View style={styles.container}>
+            <MapView
           region={this.state.region}
           style={styles.map}
           onRegionChange={this.onRegionChange}
@@ -378,20 +394,23 @@ render() {
               
           }
          
-          </MapView>
-          <View style={styles.legendContainer}>
+          </MapView> 
+         <View style={styles.segmentContainer}>
+          <SegmentedControls
+          options={ options }
+          onSelection={ setSelectedOption.bind(this) }
+          selectedOption={ this.state.selectedOption }
+         />
+        </View>
+         <View style={styles.legendContainer}>
             <Image
                source={require('./pics/arrow/symbol.png') } 
                style={styles.legend}
                resizeMode='contain' />
               
          </View>
-         
-         
-          <Text>{this.state.test}</Text>
-    </View>
-    
-    
+        </View>
+  
     );
 }
 }
@@ -613,7 +632,20 @@ const styles = StyleSheet.create({
     width: 180,
     flexDirection: 'row',
     resizeMode: 'cover'
-}
+},
+  segmentContainer: {
+    position: 'absolute',
+    left: 35,
+    right: 0,
+    bottom: 550,
+    height: 65,
+    width: 300,
+    flex: 1,
+    alignItems: 'center',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    backgroundColor: 'transparent'
+},
  
  
 
