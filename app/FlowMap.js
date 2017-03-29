@@ -40,7 +40,7 @@ export default class FlowMap extends Component {
     this.density =  ["","","","","","","","","","","",""] 
     this.denColor = ["rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)"] ,
     this.denStrokeColor = ["rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)"] 
-    this.nextDensity = ["","","","","",""] 
+    this.nextDensity = ["","","","","",""]
     this.places =[]
     this.state = {
       
@@ -52,7 +52,7 @@ export default class FlowMap extends Component {
       },
       test: "1234",
       nextPlaces : ["None","None","None","None","None","None","None","None","None","None","None","None"],
-      language : ""
+      selectedOption: "NOW"
       
     };
      this.onRegionChange = this.onRegionChange.bind(this) //อย่าลืมประกาศทุกฟังก์ชั่นนะ
@@ -135,6 +135,7 @@ export default class FlowMap extends Component {
     }
 
      getFromServer(){
+         
           let url = 'http://203.151.85.73:5050/crowdflow/flow?time=5MIN';
           fetch(url,{method:"GET"})
           .then((response) => response.json())
@@ -159,92 +160,84 @@ export default class FlowMap extends Component {
           .catch((error) => {
               console.error(error);
           })
+    
+//Fetch Density NOW          
+          for(let i=0;i<12;i++){
+          
+            let url = 'http://203.151.85.73:5050/crowdflow/density?time=NOW&ll='+this.places[i].lat+','+this.places[i].lng;
+            fetch(url,{method:"GET"})
+            .then((response) => response.json())
+            .then((responseJson) => {
+                let denArr =[]
+                denArr = responseJson.density
+                this.density[i] = denArr[0].density
+                let colorJson = this.onChangeDenColor(this.density[i])          
+                this.denColor[i] = colorJson.denColor
+                this.denStrokeColor[i] = colorJson.denStrokeColor
+                
+            })
+            .catch((error) => {
+                console.error(error);
+            })
 
-      for(let i=0;i<12;i++){
+          }
+//Fetch Density 5MIN
+         for(let i=0;i<12;i++){
         
-          let url = 'http://203.151.85.73:5050/crowdflow/density?time=NOW&ll='+this.places[i].lat+','+this.places[i].lng;
-           fetch(url,{method:"GET"})
+          let url = 'http://203.151.85.73:5050/crowdflow/density?time=5MIN&ll='+this.places[i].lat+','+this.places[i].lng;
+          fetch(url,{method:"GET"})
           .then((response) => response.json())
           .then((responseJson) => {
               let denArr =[]
               denArr = responseJson.density
-              this.density[i] = denArr[0].density
-              let colorJson = this.onChangeDenColor(this.density[i])          
-              this.denColor[i] = colorJson.denColor
-              this.denStrokeColor[i] = colorJson.denStrokeColor
-              
-          })
+              //this.nextDensity[i] = denArr[0].density
+              this.nextDensity[i] = "HIGH"
+            })
           .catch((error) => {
               console.error(error);
           })
 
         }
-        //  for(let i=0;i<12;i++){
-        
-        //   let url = 'http://203.151.85.73:5050/crowdflow/density?time=5MIN&ll='+this.places[i].lat+','+this.places[i].lng;
-        //   fetch(url,{method:"GET"})
-        //   .then((response) => response.json())
-        //   .then((responseJson) => {
-          
-        //       let denArr =[]
-        //       denArr = responseJson.density
-        //       this.nextDensity[i] = denArr[0].density
-        //     })
-        //   .catch((error) => {
-        //       console.error(error);
-        //   })
-
-        // }
-        let url1 = 'http://203.151.85.73:5050/crowdflow/random';
-          fetch(url1,{method:"GET"})
-          .then((response) => response.json())
-          .then((responseJson) => {
-              let denArr =[]
-              denArr = responseJson.density
-              this.density[10] = denArr[0].density
-              let colorJson = this.onChangeDenColor(this.density[10])          
-              this.denColor[10] = colorJson.denColor
-              this.denStrokeColor[10] = colorJson.denStrokeColor
-            })
-          .catch((error) => {
-              console.error(error);
-          })
-        let url2 = 'http://203.151.85.73:5050/crowdflow/random';
-          fetch(url2,{method:"GET"})
-          .then((response) => response.json())
-          .then((responseJson) => {
-              let denArr =[]
-              denArr = responseJson.density
-              this.nextDensity[10] = denArr[0].density
-            })
-          .catch((error) => {
-              console.error(error);
-          })
+       
     }
   
 render() {
   const options = [
-    "NOW",
-    "5MIN",
-    "15MIN"
+      "NOW",
+      "5MIN",
+      "15MIN"
   ];
 
   function setSelectedOption(selectedOption){
     this.setState({
-      selectedOption
+      selectedOption  
     });
+      if(this.state.selectedOption == "NOW"){
+           for(let i=0;i<12;i++){
+             
+             let colorJson = this.onChangeDenColor(this.density[i])          
+             this.denColor[i] = colorJson.denColor
+             this.denStrokeColor[i] = colorJson.denStrokeColor
+          }
+        }
+        if(this.state.selectedOption == "5MIN"){
+          for(let i=0;i<12;i++){
+              //this.nextDensity[i] = 'HIGH'
+              let colorJson = this.onChangeDenColor(this.nextDensity[i])          
+              this.denColor[i] = colorJson.denColor
+              this.denStrokeColor[i] = colorJson.denStrokeColor
+           }
+        }
   }
-
-       
     return (
            <View style={styles.container}>
             <MapView
-          region={this.state.region}
-          style={styles.map}
-          onRegionChange={this.onRegionChange}
-          initialRegion={this.state.region}
-          loadingEnabled={true}
-          showsScale = {true}
+                region={this.state.region}
+                style={styles.map}
+                onRegionChange={this.onRegionChange}
+                initialRegion={this.state.region}
+                loadingEnabled={true}
+                showsScale = {true}
           //showsTraffic = {true}
         >
 
@@ -397,9 +390,10 @@ render() {
           </MapView> 
          <View style={styles.segmentContainer}>
           <SegmentedControls
-          options={ options }
-          onSelection={ setSelectedOption.bind(this) }
-          selectedOption={ this.state.selectedOption }
+            options={ options }
+            onSelection={ setSelectedOption.bind(this) }
+            selectedOption={ this.state.selectedOption }
+            
          />
         </View>
          <View style={styles.legendContainer}>
