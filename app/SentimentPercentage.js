@@ -19,8 +19,8 @@ export default class SentimentPercentage extends Component {
                     <Text style={{width: this.props.width * 0.3, textAlign: 'right', color: 'rgb(133, 208, 141)'}}>{this.props.fear}%</Text>
                 </View>
                 <View style={styles.emotion_container}>
-                    <Text style={{width: this.props.width * 0.7, color: 'rgb(255, 67, 63)'}}>Angry</Text>
-                    <Text style={{width: this.props.width * 0.3, textAlign: 'right', color: 'rgb(255, 67, 63)'}}>{this.props.angry}%</Text>
+                    <Text style={{width: this.props.width * 0.7, color: 'rgb(255, 67, 63)'}}>Anger</Text>
+                    <Text style={{width: this.props.width * 0.3, textAlign: 'right', color: 'rgb(255, 67, 63)'}}>{this.props.anger}%</Text>
                 </View>
                 <View style={styles.emotion_container}>
                     <Text style={{width: this.props.width * 0.7, color: 'rgb(129, 16, 147)'}}>Disgust</Text>

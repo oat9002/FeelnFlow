@@ -20,6 +20,7 @@ const CALLOUT_WIDTH = width * 0.7;
 export default class SentimentMap extends Component {
     constructor(props) {
         super(props);
+        this.maxEmo = [];
         this.state = {
             region: {
                 latitude: LATITUDE,
@@ -33,61 +34,46 @@ export default class SentimentMap extends Component {
                 joy: '',
                 sadness: '',
                 fear: '',
-                angry: '',
+                anger: '',
                 surprise: '',
                 disgust: '',
                 anticipation: '',
-                acceptance: ''
+                acceptance: '',
+                maxEmo: ''
             }, 
         };
         this.onRegionChange = this.onRegionChange.bind(this);
         this.maxPercentEmotion = this.maxPercentEmotion.bind(this);
         this.getPredictedEmotionSummary = this.getPredictedEmotionSummary.bind(this);
-        this.getSampleTextFromServer = this.getSampleTextFromServer.bind(this);
         this.clickCallout = this.clickCallout.bind(this);
+        this.revertNumToEmo = this.revertNumToEmo.bind(this);
+        this.maxEmoPic = this.maxEmoPic.bind(this);
+        this.getEmoColorFromEmoText = this.getEmoColorFromEmoText.bind(this);
     }
 
-    maxPercentEmotion(place) {
+    maxPercentEmotion(place, maxEmoIdx) {
         let emo = 1;
-        let maxEmo = [];
-        let max = parseFloat(place.joy);
-        if(max < parseFloat(place.sadness)) {
-            max = parseFloat(place.sadness);
-            emo = 2;
+        if(place.max_emo_list.length > 1) {
+            rand = Math.floor(Math.random * place.max_emo_list.length);
+            emo = place.max_emo_list[rand];
         }
-        if(max < parseFloat(place.fear)) {
-            max = parseFloat(place.fear);
-            emo = 3;
+        else {
+            emo = place.max_emo_list[0];
         }
-        if(max < parseFloat(place.anger)) {
-            max = parseFloat(place.anger);
-            emo = 4;
-        }
-        if(max < parseFloat(place.disgust)) {
-            max = parseFloat(place.disgust);
-            emo = 5;
-        }
-        if(max < parseFloat(place.surprise)) {
-            max = parseFloat(place.surprise);
-            emo = 6;
-        }
-        if(max < parseFloat(place.anticipation)) {
-            max = parseFloat(place.anticipation);
-            emo = 7;
-        }
-        if(max < parseFloat(place.acceptance)) {
-            max = parseFloat(place.acceptance);
-            emo = 8;
-        }
-        switch(emo) {
-            case 1:  return {pic: require('./pics/emo_rep/new/1_joy.png'), background: 'rgba(255, 164, 42, 0.3)'};
-            case 2:  return {pic: require('./pics/emo_rep/new/2_sadness.png'), background: 'rgba(16, 150, 189, 0.3)'};
-            case 3:  return {pic: require('./pics/emo_rep/new/3_fear.png'), background: 'rgba(133, 208, 141, 0.3)'};
-            case 4:  return {pic: require('./pics/emo_rep/new/4_anger.png'), background: 'rgba(255, 67, 63, 0.3)'};
-            case 5:  return {pic: require('./pics/emo_rep/new/5_disgust.png'), background: 'rgba(129, 16, 147, 0.3)'};
-            case 6:  return {pic: require('./pics/emo_rep/new/6_surprise.png'), background: 'rgba(102, 164, 123, 0.3)'};
-            case 7:  return {pic: require('./pics/emo_rep/new/7_anticipation.png'), background: 'rgba(255, 124, 120, 0.3)'};
-            case 8:  return {pic: require('./pics/emo_rep/new/8_acceptance.png'), background: 'rgba(193, 208, 73, 0.3)'};
+        this.maxEmo[maxEmoIdx] = emo; 
+        return emo;
+    }
+
+    maxEmoPic(emo) {
+         switch(emo) {
+            case 1:  return {pic: require('./pics/emo_rep/1_joy.png'), background: 'rgba(255, 164, 42, 0.3)'};
+            case 2:  return {pic: require('./pics/emo_rep/2_sadness.png'), background: 'rgba(16, 150, 189, 0.3)'};
+            case 3:  return {pic: require('./pics/emo_rep/3_fear.png'), background: 'rgba(133, 208, 141, 0.3)'};
+            case 4:  return {pic: require('./pics/emo_rep/4_anger.png'), background: 'rgba(255, 67, 63, 0.3)'};
+            case 5:  return {pic: require('./pics/emo_rep/5_disgust.png'), background: 'rgba(129, 16, 147, 0.3)'};
+            case 6:  return {pic: require('./pics/emo_rep/6_surprise.png'), background: 'rgba(102, 164, 123, 0.3)'};
+            case 7:  return {pic: require('./pics/emo_rep/7_anticipation.png'), background: 'rgba(255, 124, 120, 0.3)'};
+            case 8:  return {pic: require('./pics/emo_rep/8_acceptance.png'), background: 'rgba(193, 208, 73, 0.3)'};
         }
     }
 
@@ -104,7 +90,6 @@ export default class SentimentMap extends Component {
         fetch(url)
         .then((response) => response.json()) 
         .then((responseJson) => {
-            // this.getSampleTextFromServer(responseJson.predicted.id);
             this.setState({
                 places: responseJson.predicted.predicted 
             });
@@ -114,30 +99,29 @@ export default class SentimentMap extends Component {
         })
     }
 
-    getSampleTextFromServer(predictedId) {
-        let url = 'http://203.151.85.73:5005/sample_text?predicted_id=' + predictedId;
-        fetch(url)
-        .then((response) => response.json()) 
-        .then((responseJson) => {
-            this.setState({
-                predicted_texts: responseJson.predicted_texts
-            });
-        })
-        .catch((error) => { 
-            console.error(error); 
-        }) 
+    revertNumToEmo(emo) {
+        switch(emo) {
+            case 1:  return 'joy';
+            case 2:  return 'sadness';
+            case 3:  return 'fear';
+            case 4:  return 'anger';
+            case 5:  return 'disgust';
+            case 6:  return 'surprise';
+            case 7:  return 'anticipation';
+            case 8:  return 'acceptance';
+        }
     }
 
-    getSampleText(latitude, longitude) {
-        if(this.state.predicted_texts.predicted_texts != null) {
-            this.state.predicted_texts.predicted_texts.map((inst, idx) => {
-                if(inst.latitude == latitude && inst.longitude == longitude) {
-                    return inst.showed_texts;
-                }
-            });
-        }
-        else {
-           return ['no'];
+    getEmoColorFromEmoText(emo) {
+        switch(emo) {
+            case 'joy':  return 'rgb(255, 164, 42)';
+            case 'sadness':  return 'rgb(16, 150, 189)';
+            case 'fear':  return 'rgb(133, 208, 141)';
+            case 'anger':  return 'rgb(255, 67, 63)';
+            case 'disgust':  return 'rgb(129, 16, 147)';
+            case 'surprise':  return 'rgb(102, 164, 123)';
+            case 'anticipation':  return 'rgb(255, 124, 120)';
+            case 'acceptance':  return 'rgb(193, 208, 73)';
         }
     }
 
@@ -145,16 +129,17 @@ export default class SentimentMap extends Component {
         this.setState({ region });
     }
 
-    clickCallout(emo) {
+    clickCallout(emo, idx) {
         let temp = {
             joy: emo.joy,
             sadness: emo.sadness,
             fear: emo.fear,
-            angry: emo.anger,
+            anger: emo.anger,
             surprise: emo.surprise,
             disgust: emo.disgust,
             anticipation: emo.anticipation,
-            acceptance: emo.acceptance
+            acceptance: emo.acceptance,
+            maxEmo: this.revertNumToEmo(this.maxEmo[idx])
         }
         this.setState({emo_percentage: temp, modalVisible: true});
         this.popupDialog.show();
@@ -174,7 +159,7 @@ export default class SentimentMap extends Component {
                             <MapView.Circle 
                                 center={{latitude: parseFloat(p.latitude), longitude: parseFloat(p.longitude)}} 
                                 radius={100} 
-                                fillColor={this.maxPercentEmotion(p).background}
+                                fillColor={this.maxEmoPic(this.maxPercentEmotion(p, idx)).background}
                                 key={idx} 
                             />
                         ))
@@ -183,23 +168,19 @@ export default class SentimentMap extends Component {
                         this.state.places.map((p, idx) => (
                             <MapView.Marker 
                                 coordinate={{latitude: parseFloat(p.latitude), longitude: parseFloat(p.longitude)}}
-                                image={this.maxPercentEmotion(p).pic}
+                                image={this.maxEmoPic(this.maxEmo[idx]).pic}
                                 key={idx}>
-                                <MapView.Callout style={styles.plainView} onPress={()=>{this.clickCallout(p);}}>
+                                <MapView.Callout style={styles.plainView} onPress={()=>{this.clickCallout(p, idx);}}>
                                     <SentimentCallout texts={p.predicted_texts}></SentimentCallout>
                                 </MapView.Callout>
                             </MapView.Marker>
                         ))
                     }
-
-                    {
-                        
-                    }
                 </MapView>
                 <PopupDialog
                     ref={(popupDialog) => { this.popupDialog = popupDialog; }}
                     width={0.8}
-                    dialogTitle={<DialogTitle title="How they feel" />}
+                    dialogTitle={<DialogTitle title="Feel: " verdict={this.state.emo_percentage.maxEmo.charAt(0).toUpperCase() + this.state.emo_percentage.maxEmo.slice(1)} verdictStyle={{'color': this.getEmoColorFromEmoText(this.state.emo_percentage.maxEmo)}}/>}
                     actions={[
                         <DialogButton
                             text="CLOSE"
@@ -215,7 +196,7 @@ export default class SentimentMap extends Component {
                         joy={this.state.emo_percentage.joy}
                         sadness={this.state.emo_percentage.sadness}
                         fear={this.state.emo_percentage.fear}
-                        angry={this.state.emo_percentage.angry}
+                        anger={this.state.emo_percentage.anger}
                         surprise={this.state.emo_percentage.surprise}
                         disgust={this.state.emo_percentage.disgust}
                         anticipation={this.state.emo_percentage.anticipation}
