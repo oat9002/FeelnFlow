@@ -40,7 +40,9 @@ export default class FlowMap extends Component {
     this.density =  ["","","","","","","","","","","",""] 
     this.denColor = ["rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)"] ,
     this.denStrokeColor = ["rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)"] 
-    this.nextDensity = ["","","","","",""]
+    this.next5Density = ["","","","","",""]
+    this.next10Density = ["","","","","",""]
+    this.next15Density = ["","","","","",""]
     this.places =[]
     this.state = {
       
@@ -185,7 +187,41 @@ export default class FlowMap extends Component {
           .then((responseJson) => {
               let denArr =[]
               denArr = responseJson.density
-              this.nextDensity[i] = denArr[0].density
+              this.next5Density[i] = denArr[0].density
+              //this.nextDensity[i] = "HIGH"
+            })
+          .catch((error) => {
+              console.error(error);
+          })
+
+        }
+//Fetch Density 10MIN
+         for(let i=0;i<12;i++){
+        
+          let url = 'http://203.151.85.73:5050/crowdflow/density?time=10MIN&ll='+this.places[i].lat+','+this.places[i].lng;
+          fetch(url,{method:"GET"})
+          .then((response) => response.json())
+          .then((responseJson) => {
+              let denArr =[]
+              denArr = responseJson.density
+              this.next10Density[i] = denArr[0].density
+              //this.nextDensity[i] = "HIGH"
+            })
+          .catch((error) => {
+              console.error(error);
+          })
+
+        }
+//Fetch Density 15MIN
+         for(let i=0;i<12;i++){
+        
+          let url = 'http://203.151.85.73:5050/crowdflow/density?time=15MIN&ll='+this.places[i].lat+','+this.places[i].lng;
+          fetch(url,{method:"GET"})
+          .then((response) => response.json())
+          .then((responseJson) => {
+              let denArr =[]
+              denArr = responseJson.density
+              this.next15Density[i] = denArr[0].density
               //this.nextDensity[i] = "HIGH"
             })
           .catch((error) => {
@@ -218,7 +254,21 @@ render() {
         }
         if(this.state.selectedOption == "5MIN"){
           for(let i=0;i<12;i++){
-              let colorJson = this.onChangeDenColor(this.nextDensity[i])          
+              let colorJson = this.onChangeDenColor(this.next5Density[i])          
+              this.denColor[i] = colorJson.denColor
+              this.denStrokeColor[i] = colorJson.denStrokeColor
+           }
+        }
+        if(this.state.selectedOption == "10MIN"){
+          for(let i=0;i<12;i++){
+              let colorJson = this.onChangeDenColor(this.next10Density[i])          
+              this.denColor[i] = colorJson.denColor
+              this.denStrokeColor[i] = colorJson.denStrokeColor
+           }
+        }
+        if(this.state.selectedOption == "10MIN"){
+          for(let i=0;i<12;i++){
+              let colorJson = this.onChangeDenColor(this.next15Density[i])          
               this.denColor[i] = colorJson.denColor
               this.denStrokeColor[i] = colorJson.denStrokeColor
            }
@@ -344,13 +394,13 @@ render() {
                    centerOffset={{ x: 10, y: 60 }}
                    anchor={{ x: 0.69, y: 1 }}
                    //image={require('./pics/arrow/arrow_up_red.png')}>
-                   image={this.showArrowDensity(this.density[idx],this.nextDensity[idx])}>
+                   image={this.showArrowDensity(this.density[idx],this.next5Density[idx])}>
                    <MapView.Callout style={styles.plainView}>
                        <FlowCallout 
                           width={CALLOUT_WIDTH}
                           place = {p.name}
                           currentDensity = {this.density[idx]}
-                          nextDensity = {this.nextDensity[idx]}
+                          nextDensity = {this.next5Density[idx]}
                           // {(this.state.nextPlace[0].nextPlace.length > 0 )?(
                           nextPlace = {this.state.nextPlaces[idx].name}
                           // }
@@ -366,13 +416,13 @@ render() {
                    centerOffset={{ x: 10, y: 60 }}
                    anchor={{ x: 0.69, y: 1 }}
                    //image={require('./pics/arrow/arrow_up_red.png')}>
-                   image={this.showArrowDensity(this.density[idx],this.nextDensity[idx])}>
+                   image={this.showArrowDensity(this.density[idx],this.next5Density[idx])}>
                    <MapView.Callout style={styles.plainView}>
                        <FlowCallout 
                           width={CALLOUT_WIDTH}
                           place = {p.name}
                           currentDensity = {this.density[idx]}
-                          nextDensity = {this.nextDensity[idx]}
+                          nextDensity = {this.next5Density[idx]}
                           //nextPlace = {p.lat}
                        />
                     </MapView.Callout>
