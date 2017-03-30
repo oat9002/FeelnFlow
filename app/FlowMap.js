@@ -255,7 +255,7 @@ export default class FlowMap extends Component {
           .catch((error) => {
               console.error(error);
           })
-      this.timer = setInterval(()=>this.getFromServer(),180*1000)       
+      this.timer = setInterval(()=>this.getFromServer(),60*1000)       
     }
 
      getFromServer(){
@@ -471,7 +471,7 @@ render() {
              {
                //Polyline
                 this.places.map((p,idx) =>(
-                    (this.state.flow[idx] == "None") ?(
+                    (this.checkFlow(idx,this.state.selectedOption) == "None") ?(
                         <MapView.Polyline
                           //coordinates={[{latitude:parseFloat(p.lat),longitude: parseFloat(p.lng)},{latitude:this.state.nextPlaces[idx].lat,longitude: this.state.nextPlaces[idx].lng}]}
                           key = {idx}
@@ -497,7 +497,7 @@ render() {
 
           {
             this.places.map((p,idx) =>(
-              (this.state.flow[idx] == "None") ?(
+              (this.checkFlow(idx,this.state.selectedOption) == "None") ?(
                 <MapView.Circle
                   key = {idx}
                   center={{latitude:13.74497311302548,longitude: 100.53022399050144}} 
@@ -508,7 +508,7 @@ render() {
                 ):(
                   <MapView.Circle
                   key = {idx}
-                  center={{latitude: this.state.flow[idx].lat, longitude: this.state.flow[idx].lng}} 
+                  center={{latitude:this.checkFlow(idx,this.state.selectedOption).lat,longitude: this.checkFlow(idx,this.state.selectedOption).lng}} 
                   radius={15}
                   fillColor = "#8a2be2"
                   strokeColor = "#8a2be2"
@@ -571,7 +571,7 @@ render() {
    
           {
               this.places.map((p,idx) =>(
-                 (this.state.flow[idx] != "None") ?(
+                 (this.checkFlow(idx,this.state.selectedOption) != "None") ?(
                  <MapView.Marker 
                    key = {idx}
                    coordinate={{latitude: parseFloat(p.lat), longitude: parseFloat(p.lng)}}
