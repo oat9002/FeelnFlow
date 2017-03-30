@@ -838,15 +838,15 @@ const styles = StyleSheet.create({
   },
     legendContainer: {
     position: 'absolute',
-    left: 220,
-    right: 0,
-    bottom: 0,
+    // left: 220,
+    right: -70,
+    bottom: 10,
     height: 100,//80
     width: 220,
     //flex: 1,
     alignItems: 'center',
     //flexDirection: 'column',
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
     backgroundColor: 'transparent'
 },
   legend: {
@@ -854,14 +854,13 @@ const styles = StyleSheet.create({
     right: 0,
     height: 100,//60
     width: 220,//180
-    flexDirection: 'row',
+    //flexDirection: 'row',
     resizeMode: 'cover'
 },
   segmentContainer: {
     position: 'absolute',
-    left: 300,
-    right: 0,
-    bottom: 480,
+    right: 10,
+    top: 10,
     alignItems: 'center',
     justifyContent: 'flex-end',
     backgroundColor: 'transparent'
