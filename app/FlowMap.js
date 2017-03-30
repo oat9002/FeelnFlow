@@ -259,8 +259,9 @@ export default class FlowMap extends Component {
     }
 
      getFromServer(){
-//Fetch Flow NOW         
-          let url = 'http://203.151.85.73:5050/crowdflow/flow?time=NOW';
+//Fetch Flow NOW
+{
+      let url = 'http://203.151.85.73:5050/crowdflow/flow?time=NOW';
           fetch(url,{method:"GET"})
           .then((response) => response.json())
           .then((responseJson) => {
@@ -284,9 +285,12 @@ export default class FlowMap extends Component {
           .catch((error) => {
               console.error(error);
           })
-//Fetch Flow 5MIN         
-          let url1 = 'http://203.151.85.73:5050/crowdflow/flow?time=5MIN';
-          fetch(url1,{method:"GET"})
+}         
+          
+//Fetch Flow 5MIN
+{
+   let url = 'http://203.151.85.73:5050/crowdflow/flow?time=5MIN';
+          fetch(url,{method:"GET"})
           .then((response) => response.json())
           .then((responseJson) => {
               if(responseJson){
@@ -308,10 +312,13 @@ export default class FlowMap extends Component {
           .catch((error) => {
               console.error(error);
         })
+}         
+         
 
-//Fetch Flow 10MIN         
-          let url2 = 'http://203.151.85.73:5050/crowdflow/flow?time=10MIN';
-          fetch(url2,{method:"GET"})
+//Fetch Flow 10MIN  
+{
+      let url = 'http://203.151.85.73:5050/crowdflow/flow?time=10MIN';
+          fetch(url,{method:"GET"})
           .then((response) => response.json())
           .then((responseJson) => {
               if(responseJson){
@@ -333,10 +340,13 @@ export default class FlowMap extends Component {
           .catch((error) => {
               console.error(error);
         })
+}       
+          
 
-//Fetch Flow 15MIN         
-          let url3 = 'http://203.151.85.73:5050/crowdflow/flow?time=15MIN';
-          fetch(url3,{method:"GET"})
+//Fetch Flow 15MIN 
+{
+        let url = 'http://203.151.85.73:5050/crowdflow/flow?time=15MIN';
+          fetch(url,{method:"GET"})
           .then((response) => response.json())
           .then((responseJson) => {
               if(responseJson){
@@ -358,6 +368,8 @@ export default class FlowMap extends Component {
           .catch((error) => {
               console.error(error);
         })
+}        
+  
     
 //Fetch Density NOW          
           for(let i=0;i<7;i++){
@@ -466,7 +478,7 @@ render() {
                 loadingEnabled={true}
                 showsScale = {true}
                 //showsTraffic = {true}
-        >
+            >
 
              {
                //Polyline
