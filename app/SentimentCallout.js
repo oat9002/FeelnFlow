@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet} from 'react-native';
+import { View, Text, StyleSheet, Image} from 'react-native';
 
 export default class SentimentCallout extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <View>
-                    <Text style={{fontWeight: 'bold'}}>What they type!</Text>
+                <View style={styles.Topic}>
+                    <Image style={{height: 30, width: 30}} source={require('./pics/twitter.png')} />
+                    <Text style={{fontWeight: 'bold', fontSize: 16}}>   Twitter</Text>
                 </View>
                 <View style={styles.emotion_container}>
                     { 
@@ -38,5 +39,10 @@ const styles = StyleSheet.create({
     },
     emotion_container: {
         flexDirection: 'row',
+    },
+    Topic: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'flex-start'
     }
 })

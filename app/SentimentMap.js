@@ -6,6 +6,7 @@ import PopupDialog, { SlideAnimation, DialogTitle, DialogButton } from 'react-na
 import MapView from 'react-native-maps'; 
 import SentimentCallout from './SentimentCallout';
 import SentimentPercentage from './SentimentPercentage';
+import { getEmoColorFromEmoText } from './EmoColor';
 
 
 const { width, height } = Dimensions.get('window');
@@ -48,7 +49,6 @@ export default class SentimentMap extends Component {
         this.clickCallout = this.clickCallout.bind(this);
         this.revertNumToEmo = this.revertNumToEmo.bind(this);
         this.maxEmoPic = this.maxEmoPic.bind(this);
-        this.getEmoColorFromEmoText = this.getEmoColorFromEmoText.bind(this);
     }
 
     maxPercentEmotion(place, maxEmoIdx) {
@@ -112,19 +112,6 @@ export default class SentimentMap extends Component {
         }
     }
 
-    getEmoColorFromEmoText(emo) {
-        switch(emo) {
-            case 'joy':  return 'rgb(255, 164, 42)';
-            case 'sadness':  return 'rgb(16, 150, 189)';
-            case 'fear':  return 'rgb(133, 208, 141)';
-            case 'anger':  return 'rgb(255, 67, 63)';
-            case 'disgust':  return 'rgb(129, 16, 147)';
-            case 'surprise':  return 'rgb(102, 164, 123)';
-            case 'anticipation':  return 'rgb(255, 124, 120)';
-            case 'acceptance':  return 'rgb(193, 208, 73)';
-        }
-    }
-
     onRegionChange(region) {
         this.setState({ region });
     }
@@ -180,7 +167,7 @@ export default class SentimentMap extends Component {
                 <PopupDialog
                     ref={(popupDialog) => { this.popupDialog = popupDialog; }}
                     width={0.8}
-                    dialogTitle={<DialogTitle title="Feel: " verdict={this.state.emo_percentage.maxEmo.charAt(0).toUpperCase() + this.state.emo_percentage.maxEmo.slice(1)} verdictStyle={{'color': this.getEmoColorFromEmoText(this.state.emo_percentage.maxEmo)}}/>}
+                    dialogTitle={<DialogTitle title="Feel: " verdict={this.state.emo_percentage.maxEmo.charAt(0).toUpperCase() + this.state.emo_percentage.maxEmo.slice(1)} verdictStyle={{'color': getEmoColorFromEmoText(this.state.emo_percentage.maxEmo)}}/>}
                     actions={[
                         <DialogButton
                             text="CLOSE"
