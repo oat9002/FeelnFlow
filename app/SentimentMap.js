@@ -54,7 +54,7 @@ export default class SentimentMap extends Component {
     maxPercentEmotion(place, maxEmoIdx) {
         let emo = 1;
         if(place.max_emo_list.length > 1) {
-            rand = Math.floor(Math.random * place.max_emo_list.length);
+            let rand = Math.floor(Math.random * place.max_emo_list.length);
             emo = place.max_emo_list[rand];
         }
         else {
