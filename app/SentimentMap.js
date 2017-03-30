@@ -51,16 +51,15 @@ export default class SentimentMap extends Component {
         this.maxEmoPic = this.maxEmoPic.bind(this);
     }
 
-    maxPercentEmotion(place, maxEmoIdx) {
+    maxPercentEmotion(max_emo_list) {
         let emo = 1;
-        if(place.max_emo_list.length > 1) {
-            let rand = Math.floor(Math.random * place.max_emo_list.length);
-            emo = place.max_emo_list[rand];
+        if(max_emo_list.length > 1) {
+            let rand = Math.floor(Math.random * max_emo_list.length);
+            emo = max_emo_list[rand];
         }
         else {
-            emo = place.max_emo_list[0];
+            emo = max_emo_list[0];
         }
-        this.maxEmo[maxEmoIdx] = emo; 
         return emo;
     }
 
@@ -116,7 +115,7 @@ export default class SentimentMap extends Component {
         this.setState({ region });
     }
 
-    clickCallout(emo, idx) {
+    clickCallout(emo) {
         let temp = {
             joy: emo.joy,
             sadness: emo.sadness,
@@ -126,7 +125,7 @@ export default class SentimentMap extends Component {
             disgust: emo.disgust,
             anticipation: emo.anticipation,
             acceptance: emo.acceptance,
-            maxEmo: this.revertNumToEmo(this.maxEmo[idx])
+            maxEmo: this.revertNumToEmo(emo.max_emo)
         }
         this.setState({emo_percentage: temp, modalVisible: true});
         this.popupDialog.show();
@@ -146,8 +145,8 @@ export default class SentimentMap extends Component {
                             <MapView.Circle 
                                 center={{latitude: parseFloat(p.latitude), longitude: parseFloat(p.longitude)}} 
                                 radius={100} 
-                                fillColor={this.maxEmoPic(this.maxPercentEmotion(p, idx)).background}
-                                key={idx} 
+                                fillColor={this.maxEmoPic(p.max_emo).background}
+                                key={idx}
                             />
                         ))
                     }
@@ -155,9 +154,9 @@ export default class SentimentMap extends Component {
                         this.state.places.map((p, idx) => (
                             <MapView.Marker 
                                 coordinate={{latitude: parseFloat(p.latitude), longitude: parseFloat(p.longitude)}}
-                                image={this.maxEmoPic(this.maxEmo[idx]).pic}
+                                image={this.maxEmoPic(p.max_emo).pic}
                                 key={idx}>
-                                <MapView.Callout style={styles.plainView} onPress={()=>{this.clickCallout(p, idx);}}>
+                                <MapView.Callout style={styles.plainView} onPress={()=>{this.clickCallout(p);}}>
                                     <SentimentCallout texts={p.predicted_texts}></SentimentCallout>
                                 </MapView.Callout>
                             </MapView.Marker>
