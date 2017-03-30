@@ -53,7 +53,10 @@ export default class FlowMap extends Component {
         longitudeDelta: LONGITUDE_DELTA,
       },
       test: "1234",
-      nextPlaces : ["None","None","None","None","None","None","None","None","None","None","None","None"],
+      flow : ["None","None","None","None","None","None","None"],
+      next5MinFlow : ["None","None","None","None","None","None","None"],
+      next10MinFlow : ["None","None","None","None","None","None","None"],
+      next15MinFlow : ["None","None","None","None","None","None","None"],
       selectedOption: "NOW"
       
     };
@@ -182,6 +185,21 @@ export default class FlowMap extends Component {
           return ""
         }
     }
+
+    checkFlow(i,select){
+        if(select=="NOW"){
+          return this.flow[i]
+        }
+        else if(select=="5MIN"){
+          return this.next5MinFlow[i]
+        }
+        else if(select=="10MIN"){
+          return this.next10MinFlow[i]
+        }
+        else if(select=="15MIN"){
+          return this.next15MinFlow[i]
+        }
+    }
         
      componentWillMount() {
 
@@ -203,9 +221,34 @@ export default class FlowMap extends Component {
     }
 
      getFromServer(){
-//Fetch Flow 5MIN         
-          let url = 'http://203.151.85.73:5050/crowdflow/flow?time=5MIN';
+//Fetch Flow NOW         
+          let url = 'http://203.151.85.73:5050/crowdflow/flow?time=NOW';
           fetch(url,{method:"GET"})
+          .then((response) => response.json())
+          .then((responseJson) => {
+              if(responseJson){
+                let flowArr = []
+                flowArr = responseJson.crowdFlow
+                let newNextPlace = []
+                for(let i=0;i<7;i++){
+                    let p = this.places[i]
+                    for(let j=0;j<7;j++){
+                        let c = flowArr[j]
+                       if(c && c.place.lat == p.lat && c.place.lng == p.lng){
+                           newNextPlace.push(c.nextPlace[0])
+                       }
+                    }
+                }
+                
+                this.setState({flow : newNextPlace})
+             }
+            })
+          .catch((error) => {
+              console.error(error);
+          })
+//Fetch Flow 5MIN         
+          let url1 = 'http://203.151.85.73:5050/crowdflow/flow?time=5MIN';
+          fetch(url1,{method:"GET"})
           .then((response) => response.json())
           .then((responseJson) => {
               if(responseJson){
@@ -221,13 +264,62 @@ export default class FlowMap extends Component {
                        }
                     }
                 }
-                
-                this.setState({nextPlaces : newNextPlace})
+                this.setState({next5MinFlow : newNextPlace})
              }
             })
           .catch((error) => {
               console.error(error);
-          })
+        })
+
+//Fetch Flow 10MIN         
+          let url2 = 'http://203.151.85.73:5050/crowdflow/flow?time=10MIN';
+          fetch(url2,{method:"GET"})
+          .then((response) => response.json())
+          .then((responseJson) => {
+              if(responseJson){
+                let flowArr = []
+                flowArr = responseJson.crowdFlow
+                let newNextPlace = []
+                for(let i=0;i<7;i++){
+                    let p = this.places[i]
+                    for(let j=0;j<12;j++){
+                        let c = flowArr[j]
+                       if(c && c.place.lat == p.lat && c.place.lng == p.lng){
+                           newNextPlace.push(c.nextPlace[0])
+                       }
+                    }
+                }
+                this.setState({next10MinFlow : newNextPlace})
+             }
+            })
+          .catch((error) => {
+              console.error(error);
+        })
+
+//Fetch Flow 15MIN         
+          let url3 = 'http://203.151.85.73:5050/crowdflow/flow?time=15MIN';
+          fetch(url3,{method:"GET"})
+          .then((response) => response.json())
+          .then((responseJson) => {
+              if(responseJson){
+                let flowArr = []
+                flowArr = responseJson.crowdFlow
+                let newNextPlace = []
+                for(let i=0;i<7;i++){
+                    let p = this.places[i]
+                    for(let j=0;j<12;j++){
+                        let c = flowArr[j]
+                       if(c && c.place.lat == p.lat && c.place.lng == p.lng){
+                           newNextPlace.push(c.nextPlace[0])
+                       }
+                    }
+                }
+                this.setState({next15MinFlow : newNextPlace})
+             }
+            })
+          .catch((error) => {
+              console.error(error);
+        })
     
 //Fetch Density NOW          
           for(let i=0;i<7;i++){
@@ -356,8 +448,9 @@ render() {
         >
 
              {
+               //Polyline
                 this.places.map((p,idx) =>(
-                    (this.state.nextPlaces[idx] == "None") ?(
+                    (this.state.flow[idx] == "None") ?(
                         <MapView.Polyline
                           //coordinates={[{latitude:parseFloat(p.lat),longitude: parseFloat(p.lng)},{latitude:this.state.nextPlaces[idx].lat,longitude: this.state.nextPlaces[idx].lng}]}
                           key = {idx}
@@ -369,7 +462,7 @@ render() {
                   ):(
                      <MapView.Polyline
                           key = {idx}
-                          coordinates={[{latitude:parseFloat(p.lat),longitude: parseFloat(p.lng)},{latitude:this.state.nextPlaces[idx].lat,longitude: this.state.nextPlaces[idx].lng}]}
+                          coordinates={[{latitude:parseFloat(p.lat),longitude: parseFloat(p.lng)},{latitude:this.state.flow[idx].lat,longitude: this.state.flow[idx].lng}]}
                           //coordinates={[{latitude:13.745844972517325,longitude: 100.53954639826303},{latitude:13.74601377826572,longitude: 100.53440439922444}]}
                           geodesic = {true}
                           strokeWidth = {3}
@@ -382,7 +475,7 @@ render() {
 
           {
             this.places.map((p,idx) =>(
-              (this.state.nextPlaces[idx] == "None") ?(
+              (this.state.flow[idx] == "None") ?(
                 <MapView.Circle
                   key = {idx}
                   center={{latitude:13.74497311302548,longitude: 100.53022399050144}} 
@@ -393,7 +486,7 @@ render() {
                 ):(
                   <MapView.Circle
                   key = {idx}
-                  center={{latitude: this.state.nextPlaces[idx].lat, longitude: this.state.nextPlaces[idx].lng}} 
+                  center={{latitude: this.state.flow[idx].lat, longitude: this.state.flow[idx].lng}} 
                   radius={15}
                   fillColor = "#8a2be2"
                   strokeColor = "#8a2be2"
@@ -456,7 +549,7 @@ render() {
    
           {
               this.places.map((p,idx) =>(
-                 (this.state.nextPlaces[idx] != "None") ?(
+                 (this.state.flow[idx] != "None") ?(
                  <MapView.Marker 
                    key = {idx}
                    coordinate={{latitude: parseFloat(p.lat), longitude: parseFloat(p.lng)}}
@@ -471,7 +564,7 @@ render() {
                           currentDensity = {this.checkCurrentDensity(idx,this.state.selectedOption)}
                           nextDensity = {this.checkNextDensity(idx,this.state.selectedOption)}
                           // {(this.state.nextPlace[0].nextPlace.length > 0 )?(
-                          nextPlace = {this.state.nextPlaces[idx].name}
+                          nextPlace = {this.state.flow[idx].name}
                           // }
                           
                        />
