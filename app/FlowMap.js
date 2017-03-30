@@ -40,6 +40,12 @@ export default class FlowMap extends Component {
     this.density =  ["","","","","","","","","","","",""] 
     this.denColor = ["rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)"] ,
     this.denStrokeColor = ["rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)"] 
+    this.den5Color = ["rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)"] ,
+    this.den5StrokeColor = ["rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)"] 
+    this.den10Color = ["rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)"] ,
+    this.den10StrokeColor = ["rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)"] 
+    this.den15Color = ["rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)"] ,
+    this.den15StrokeColor = ["rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)"] 
     this.next5Density = ["","","","","",""]
     this.next10Density = ["","","","","",""]
     this.next15Density = ["","","","","",""]
@@ -200,6 +206,38 @@ export default class FlowMap extends Component {
           return this.next15MinFlow[i]
         }
     }
+
+    checkColor(i,select){
+      if(select=="NOW"){
+        return this.denColor[i]
+      }
+      else if(select=="5MIN"){
+        return this.den5Color[i]
+      }
+      else if(select=="10MIN"){
+        return this.den10Color[i]
+      }
+      else if(select=="15MIN"){
+        return this.den15Color[i]
+      }
+    }
+
+    checkStrokeColor(i,select){
+      if(select=="NOW"){
+        return this.denStrokeColor[i]
+      }
+      else if(select=="5MIN"){
+        return this.den5StrokeColor[i]
+      }
+      else if(select=="10MIN"){
+        return this.den10StrokeColor[i]
+      }
+      else if(select=="15MIN"){
+        return this.den15StrokeColor[i]
+      }
+
+      
+    }
         
      componentWillMount() {
 
@@ -350,7 +388,10 @@ export default class FlowMap extends Component {
               let denArr =[]
               denArr = responseJson.density
               this.next5Density[i] = denArr[0].density
-              //this.nextDensity[i] = "HIGH"
+              let colorJson = this.onChangeDenColor(this.next5Density[i])          
+              this.den5Color[i] = colorJson.denColor
+              this.den5StrokeColor[i] = colorJson.denStrokeColor
+              
             })
           .catch((error) => {
               console.error(error);
@@ -367,7 +408,10 @@ export default class FlowMap extends Component {
               let denArr =[]
               denArr = responseJson.density
               this.next10Density[i] = denArr[0].density
-              //this.nextDensity[i] = "HIGH"
+              let colorJson = this.onChangeDenColor(this.next10Density[i])          
+              this.den10Color[i] = colorJson.denColor
+              this.den10StrokeColor[i] = colorJson.denStrokeColor
+             
             })
           .catch((error) => {
               console.error(error);
@@ -384,7 +428,10 @@ export default class FlowMap extends Component {
               let denArr =[]
               denArr = responseJson.density
               this.next15Density[i] = denArr[0].density
-              //this.nextDensity[i] = "HIGH"
+              let colorJson = this.onChangeDenColor(this.next15Density[i])          
+              this.den15Color[i] = colorJson.denColor
+              this.den15StrokeColor[i] = colorJson.denStrokeColor
+              
             })
           .catch((error) => {
               console.error(error);
@@ -406,34 +453,7 @@ render() {
     this.setState({
       selectedOption  
     });
-      if(this.state.selectedOption == "NOW"){
-           for(let i=0;i<7;i++){
-             let colorJson = this.onChangeDenColor(this.density[i])          
-             this.denColor[i] = colorJson.denColor
-             this.denStrokeColor[i] = colorJson.denStrokeColor
-          }
-        }
-        if(this.state.selectedOption == "5MIN"){
-          for(let i=0;i<7;i++){
-              let colorJson = this.onChangeDenColor(this.next5Density[i])          
-              this.denColor[i] = colorJson.denColor
-              this.denStrokeColor[i] = colorJson.denStrokeColor
-           }
-        }
-        if(this.state.selectedOption == "10MIN"){
-          for(let i=0;i<7;i++){
-              let colorJson = this.onChangeDenColor(this.next10Density[i])          
-              this.denColor[i] = colorJson.denColor
-              this.denStrokeColor[i] = colorJson.denStrokeColor
-           }
-        }
-        if(this.state.selectedOption == "15MIN"){
-          for(let i=0;i<7;i++){
-              let colorJson = this.onChangeDenColor(this.next15Density[i])          
-              this.denColor[i] = colorJson.denColor
-              this.denStrokeColor[i] = colorJson.denStrokeColor
-           }
-        }
+     
   }
     return (
            <View style={styles.container}>
@@ -499,8 +519,8 @@ render() {
           } 
           <MapView.Polygon
               coordinates={polygonSiamCenter.coordinates}
-              fillColor={this.denColor[0]}
-              strokeColor={this.denStrokeColor[0]}
+              fillColor={this.checkColor(0,this.state.selectedOption)}
+              strokeColor={this.checkStrokeColor(0,this.state.selectedOption)}
               strokeWidth={2}
               onPress = {() => {
                     this.setState({test: "4321"})
@@ -508,40 +528,40 @@ render() {
             />
             <MapView.Polygon
               coordinates={polygonSiamDis.coordinates}
-              fillColor={this.denColor[1]}
-              strokeColor={this.denStrokeColor[1]}
+              fillColor={this.checkColor(1,this.state.selectedOption)}
+              strokeColor={this.checkStrokeColor(1,this.state.selectedOption)}
               strokeWidth={2} 
             />
             <MapView.Polygon
               coordinates={polygonMBK.coordinates}
-              fillColor={this.denColor[2]}
-              strokeColor={this.denStrokeColor[2]}
+              fillColor={this.checkColor(2,this.state.selectedOption)}
+              strokeColor={this.checkStrokeColor(2,this.state.selectedOption)}
               strokeWidth={2} 
             />          
            
             <MapView.Polygon
               coordinates={polygonCentralWorld.coordinates}
-              fillColor={this.denColor[3]}
-              strokeColor={this.denStrokeColor[3]}
+              fillColor={this.checkColor(3,this.state.selectedOption)}
+              strokeColor={this.checkStrokeColor(3,this.state.selectedOption)}
               strokeWidth={2} 
             />
             <MapView.Polygon
               coordinates={polygonParagon.coordinates}
-              fillColor=  {this.denColor[4]}
-              strokeColor={this.denStrokeColor[4]}
+              fillColor={this.checkColor(4,this.state.selectedOption)}
+              strokeColor={this.checkStrokeColor(4,this.state.selectedOption)}
               strokeWidth={2} 
             />
            
              <MapView.Polygon
               coordinates={polygonBTSnationalStadium.coordinates}
-              fillColor={this.denColor[5]}
-              strokeColor={this.denStrokeColor[5]}
+              fillColor={this.checkColor(5,this.state.selectedOption)}
+              strokeColor={this.checkStrokeColor(5,this.state.selectedOption)}
               strokeWidth={2} 
             />            
             <MapView.Polygon
               coordinates={polygonBTSsiam.coordinates}
-              fillColor={this.denColor[6]}
-              strokeColor={this.denStrokeColor[6]}
+              fillColor={this.checkColor(6,this.state.selectedOption)}
+              strokeColor={this.checkStrokeColor(6,this.state.selectedOption)}
               strokeWidth={2} //ความหนาของเส้นรอบรูป
             />
             
