@@ -194,16 +194,16 @@ export default class FlowMap extends Component {
 
     checkFlow(i,select){
         if(select=="NOW"){
-          return this.flow[i]
+          return this.state.flow[i]
         }
         else if(select=="5MIN"){
-          return this.next5MinFlow[i]
+          return this.state.next5MinFlow[i]
         }
         else if(select=="10MIN"){
-          return this.next10MinFlow[i]
+          return this.state.next10MinFlow[i]
         }
         else if(select=="15MIN"){
-          return this.next15MinFlow[i]
+          return this.state.next15MinFlow[i]
         }
     }
 
@@ -255,7 +255,7 @@ export default class FlowMap extends Component {
           .catch((error) => {
               console.error(error);
           })
-      this.timer = setInterval(()=>this.getFromServer(),60*1000)       
+      this.timer = setInterval(()=>this.getFromServer(),180*1000)       
     }
 
      getFromServer(){
@@ -295,7 +295,7 @@ export default class FlowMap extends Component {
                 let newNextPlace = []
                 for(let i=0;i<7;i++){
                     let p = this.places[i]
-                    for(let j=0;j<12;j++){
+                    for(let j=0;j<7;j++){
                         let c = flowArr[j]
                        if(c && c.place.lat == p.lat && c.place.lng == p.lng){
                            newNextPlace.push(c.nextPlace[0])
@@ -320,7 +320,7 @@ export default class FlowMap extends Component {
                 let newNextPlace = []
                 for(let i=0;i<7;i++){
                     let p = this.places[i]
-                    for(let j=0;j<12;j++){
+                    for(let j=0;j<7;j++){
                         let c = flowArr[j]
                        if(c && c.place.lat == p.lat && c.place.lng == p.lng){
                            newNextPlace.push(c.nextPlace[0])
@@ -345,7 +345,7 @@ export default class FlowMap extends Component {
                 let newNextPlace = []
                 for(let i=0;i<7;i++){
                     let p = this.places[i]
-                    for(let j=0;j<12;j++){
+                    for(let j=0;j<7;j++){
                         let c = flowArr[j]
                        if(c && c.place.lat == p.lat && c.place.lng == p.lng){
                            newNextPlace.push(c.nextPlace[0])
@@ -388,6 +388,7 @@ export default class FlowMap extends Component {
               let denArr =[]
               denArr = responseJson.density
               this.next5Density[i] = denArr[0].density
+              //this.next5Density[i] = "HIGH"
               let colorJson = this.onChangeDenColor(this.next5Density[i])          
               this.den5Color[i] = colorJson.denColor
               this.den5StrokeColor[i] = colorJson.denStrokeColor
@@ -482,7 +483,8 @@ render() {
                   ):(
                      <MapView.Polyline
                           key = {idx}
-                          coordinates={[{latitude:parseFloat(p.lat),longitude: parseFloat(p.lng)},{latitude:this.state.flow[idx].lat,longitude: this.state.flow[idx].lng}]}
+                          coordinates={[{latitude:parseFloat(p.lat),longitude: parseFloat(p.lng)},{latitude:this.checkFlow(idx,this.state.selectedOption).lat,longitude: this.checkFlow(idx,this.state.selectedOption).lng}]}
+                          //coordinates={[{latitude:parseFloat(p.lat),longitude: parseFloat(p.lng)},{latitude:this.state.flow[idx].lat,longitude: this.state.flow[idx].lng}]}
                           //coordinates={[{latitude:13.745844972517325,longitude: 100.53954639826303},{latitude:13.74601377826572,longitude: 100.53440439922444}]}
                           geodesic = {true}
                           strokeWidth = {3}
@@ -584,7 +586,7 @@ render() {
                           currentDensity = {this.checkCurrentDensity(idx,this.state.selectedOption)}
                           nextDensity = {this.checkNextDensity(idx,this.state.selectedOption)}
                           // {(this.state.nextPlace[0].nextPlace.length > 0 )?(
-                          nextPlace = {this.state.flow[idx].name}
+                          nextPlace = {this.checkFlow(idx,this.state.selectedOption).name}
                           // }
                           
                        />
@@ -614,7 +616,7 @@ render() {
               
           }
          
-          </MapView> 
+         </MapView> 
          <View style={styles.segmentContainer}>
           <SegmentedControls
             options={ options }
