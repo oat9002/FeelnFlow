@@ -11,12 +11,15 @@ import {
     Dimensions,
     DrawerLayoutAndroid, 
     ToolbarAndroi,
-    Image, 
+    Image,
+    Picker,
+    Item, 
 } from 'react-native';
 import Main from './Main';
 import MapView from 'react-native-maps';
 import FlowCallout from './FlowCallout';
 import api from './api'
+import {SegmentedControls}from 'react-native-radio-buttons'
 
 
 const { width, height } = Dimensions.get('window');
@@ -24,7 +27,7 @@ const { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
 const LATITUDE = 13.747784;//13.728844053377617;
 const LONGITUDE = 100.535947;//100.77809506218118;
-const LATITUDE_DELTA = 0.0922;
+const LATITUDE_DELTA = 0.02;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 const SPACE = 0.01;
 let id = 0;
@@ -37,7 +40,15 @@ export default class FlowMap extends Component {
     this.density =  ["","","","","","","","","","","",""] 
     this.denColor = ["rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)"] ,
     this.denStrokeColor = ["rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)"] 
-    this.nextDensity = ["","","","","",""] 
+    this.den5Color = ["rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)"] ,
+    this.den5StrokeColor = ["rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)"] 
+    this.den10Color = ["rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)"] ,
+    this.den10StrokeColor = ["rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)"] 
+    this.den15Color = ["rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)"] ,
+    this.den15StrokeColor = ["rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)","rgba(0, 0, 0, 0.5)"] 
+    this.next5Density = ["","","","","",""]
+    this.next10Density = ["","","","","",""]
+    this.next15Density = ["","","","","",""]
     this.places =[]
     this.state = {
       
@@ -48,14 +59,20 @@ export default class FlowMap extends Component {
         longitudeDelta: LONGITUDE_DELTA,
       },
       test: "1234",
-      nextPlaces : ["None","None","None","None","None","None","None","None","None","None","None","None"]
-     
+      flow : ["None","None","None","None","None","None","None"],
+      next5MinFlow : ["None","None","None","None","None","None","None"],
+      next10MinFlow : ["None","None","None","None","None","None","None"],
+      next15MinFlow : ["None","None","None","None","None","None","None"],
+      selectedOption: "NOW"
       
     };
      this.onRegionChange = this.onRegionChange.bind(this) //อย่าลืมประกาศทุกฟังก์ชั่นนะ
      this.onChangeDenColor = this.onChangeDenColor.bind(this)
      this.getFromServer = this.getFromServer.bind(this)
+     this.showArrowDensity = this.showArrowDensity.bind(this)
+    
   }
+
 
   
     onRegionChange(region) {
@@ -85,24 +102,141 @@ export default class FlowMap extends Component {
       }
     }
 
-    showArrowDensity(den,nextDen){
-        if(den=='LOW'){
-            if(nextDen=='LOW') return require('./pics/arrow/Blank.png')
-            else if(nextDen=='MEDIUM')  return require('./pics/arrow/arrow_up_yellow.png')
-            else if(nextDen=='HIGH') return require('./pics/arrow/arrow_up_red.png')
+    showArrowDensity(i,select){
+      if(select=='NOW'){
+        if(this.density[i]=='LOW'){
+            if(this.next5Density[i]=='LOW') return require('./pics/arrow/Blank.png')
+            else if(this.next5Density[i]=='MEDIUM')  return require('./pics/arrow/arrow_up_yellow.png')
+            else if(this.next5Density[i]=='HIGH') return require('./pics/arrow/arrow_up_red.png')
             
         }
-        else if(den == 'MEDIUM'){
-            if(nextDen=='LOW') return require('./pics/arrow/arrow_down_green.png')
-            else if(nextDen=='MEDIUM')  return require('./pics/arrow/Blank.png')
-            else if(nextDen=='HIGH') return require('./pics/arrow/arrow_up_red.png')
+        else if(this.density[i] == 'MEDIUM'){
+            if(this.next5Density[i]=='LOW') return require('./pics/arrow/arrow_down_green.png')
+            else if(this.next5Density[i]=='MEDIUM')  return require('./pics/arrow/Blank.png')
+            else if(this.next5Density[i]=='HIGH') return require('./pics/arrow/arrow_up_red.png')
         }
-        else if(den == 'HIGH'){
-            if(nextDen=='LOW') return require('./pics/arrow/arrow_down_green.png')
-            else if(nextDen=='MEDIUM')  return require('./pics/arrow/arrow_down_yellow.png')
-            else if(nextDen=='HIGH') return require('./pics/arrow/Blank.png')
+        else if(this.density[i] == 'HIGH'){
+            if(this.next5Density[i]=='LOW') return require('./pics/arrow/arrow_down_green.png')
+            else if(this.next5Density[i]=='MEDIUM')  return require('./pics/arrow/arrow_down_yellow.png')
+            else if(this.next5Density[i]=='HIGH') return require('./pics/arrow/Blank.png')
         }
+      }
+      if(select=='5MIN'){
+        if(this.next5Density[i]=='LOW'){
+            if(this.next10Density[i]=='LOW') return require('./pics/arrow/Blank.png')
+            else if(this.next10Density[i]=='MEDIUM')  return require('./pics/arrow/arrow_up_yellow.png')
+            else if(this.next10Density[i]=='HIGH') return require('./pics/arrow/arrow_up_red.png')
+            
+        }
+        else if(this.next5Density[i] == 'MEDIUM'){
+            if(this.next10Density[i]=='LOW') return require('./pics/arrow/arrow_down_green.png')
+            else if(this.next10Density[i]=='MEDIUM')  return require('./pics/arrow/Blank.png')
+            else if(this.next10Density[i]=='HIGH') return require('./pics/arrow/arrow_up_red.png')
+        }
+        else if(this.next5Density[i] == 'HIGH'){
+            if(this.next10Density[i]=='LOW') return require('./pics/arrow/arrow_down_green.png')
+            else if(this.next10Density[i]=='MEDIUM')  return require('./pics/arrow/arrow_down_yellow.png')
+            else if(this.next10Density[i]=='HIGH') return require('./pics/arrow/Blank.png')
+        }
+      }
+       if(select=='10MIN'){
+        if(this.next10Density[i]=='LOW'){
+            if(this.next15Density[i]=='LOW') return require('./pics/arrow/Blank.png')
+            else if(this.next15Density[i]=='MEDIUM')  return require('./pics/arrow/arrow_up_yellow.png')
+            else if(this.next15Density[i]=='HIGH') return require('./pics/arrow/arrow_up_red.png')
+            
+        }
+        else if(this.next10Density[i] == 'MEDIUM'){
+            if(this.next15Density[i]=='LOW') return require('./pics/arrow/arrow_down_green.png')
+            else if(this.next15Density[i]=='MEDIUM')  return require('./pics/arrow/Blank.png')
+            else if(this.next15Density[i]=='HIGH') return require('./pics/arrow/arrow_up_red.png')
+        }
+        else if(this.next10Density[i] == 'HIGH'){
+            if(this.next15Density[i]=='LOW') return require('./pics/arrow/arrow_down_green.png')
+            else if(this.next15Density[i]=='MEDIUM')  return require('./pics/arrow/arrow_down_yellow.png')
+            else if(this.next15Density[i]=='HIGH') return require('./pics/arrow/Blank.png')
+        }
+      }
+       if(select=='15MIN'){
+       return require('./pics/arrow/Blank.png')
+      }
+        
 
+    }
+    checkCurrentDensity(i,select){
+        if(select=="NOW"){
+          return this.density[i]
+        }
+        else if(select=="5MIN"){
+          return this.next5Density[i]
+        }
+        else if(select=="10MIN"){
+          return this.next10Density[i]
+        }
+        else if(select=="15MIN"){
+          return this.next15Density[i]
+        }
+    }
+    checkNextDensity(i,select){
+        if(select=="NOW"){
+          return this.next5Density[i]
+        }
+        else if(select=="5MIN"){
+          return this.next10Density[i]
+        }
+        else if(select=="10MIN"){
+          return this.next15Density[i]
+        }
+        else if(select=="15MIN"){
+          return ""
+        }
+    }
+
+    checkFlow(i,select){
+        if(select=="NOW"){
+          return this.state.flow[i]
+        }
+        else if(select=="5MIN"){
+          return this.state.next5MinFlow[i]
+        }
+        else if(select=="10MIN"){
+          return this.state.next10MinFlow[i]
+        }
+        else if(select=="15MIN"){
+          return this.state.next15MinFlow[i]
+        }
+    }
+
+    checkColor(i,select){
+      if(select=="NOW"){
+        return this.denColor[i]
+      }
+      else if(select=="5MIN"){
+        return this.den5Color[i]
+      }
+      else if(select=="10MIN"){
+        return this.den10Color[i]
+      }
+      else if(select=="15MIN"){
+        return this.den15Color[i]
+      }
+    }
+
+    checkStrokeColor(i,select){
+      if(select=="NOW"){
+        return this.denStrokeColor[i]
+      }
+      else if(select=="5MIN"){
+        return this.den5StrokeColor[i]
+      }
+      else if(select=="10MIN"){
+        return this.den10StrokeColor[i]
+      }
+      else if(select=="15MIN"){
+        return this.den15StrokeColor[i]
+      }
+
+      
     }
         
      componentWillMount() {
@@ -117,11 +251,6 @@ export default class FlowMap extends Component {
               this.places = responseJson.places
 
               this.getFromServer()
-              
-              // for(let i =this.places.length-1;i>=0;i--){
-              //     this.nextPlace.push(responseJson.places[i]);
-              // }     
-              
           })
           .catch((error) => {
               console.error(error);
@@ -130,7 +259,9 @@ export default class FlowMap extends Component {
     }
 
      getFromServer(){
-          let url = 'http://203.151.85.73:5050/crowdflow/flow?time=5MIN';
+//Fetch Flow NOW
+{
+      let url = 'http://203.151.85.73:5050/crowdflow/flow?time=NOW';
           fetch(url,{method:"GET"})
           .then((response) => response.json())
           .then((responseJson) => {
@@ -138,9 +269,9 @@ export default class FlowMap extends Component {
                 let flowArr = []
                 flowArr = responseJson.crowdFlow
                 let newNextPlace = []
-                for(let i=0;i<12;i++){
+                for(let i=0;i<7;i++){
                     let p = this.places[i]
-                    for(let j=0;j<12;j++){
+                    for(let j=0;j<7;j++){
                         let c = flowArr[j]
                        if(c && c.place.lat == p.lat && c.place.lng == p.lng){
                            newNextPlace.push(c.nextPlace[0])
@@ -148,93 +279,211 @@ export default class FlowMap extends Component {
                     }
                 }
                 
-                this.setState({nextPlaces : newNextPlace})
+                this.setState({flow : newNextPlace})
              }
             })
           .catch((error) => {
               console.error(error);
           })
-
-      for(let i=0;i<12;i++){
-        
-          let url = 'http://203.151.85.73:5050/crowdflow/density?time=NOW&ll='+this.places[i].lat+','+this.places[i].lng;
-           fetch(url,{method:"GET"})
+}         
+          
+//Fetch Flow 5MIN
+{
+   let url = 'http://203.151.85.73:5050/crowdflow/flow?time=5MIN';
+          fetch(url,{method:"GET"})
           .then((response) => response.json())
           .then((responseJson) => {
-              let denArr =[]
-              denArr = responseJson.density
-              this.density[i] = denArr[0].density
-              let colorJson = this.onChangeDenColor(this.density[i])          
-              this.denColor[i] = colorJson.denColor
-              this.denStrokeColor[i] = colorJson.denStrokeColor
-              
-          })
+              if(responseJson){
+                let flowArr = []
+                flowArr = responseJson.crowdFlow
+                let newNextPlace = []
+                for(let i=0;i<7;i++){
+                    let p = this.places[i]
+                    for(let j=0;j<7;j++){
+                        let c = flowArr[j]
+                       if(c && c.place.lat == p.lat && c.place.lng == p.lng){
+                           newNextPlace.push(c.nextPlace[0])
+                       }
+                    }
+                }
+                this.setState({next5MinFlow : newNextPlace})
+             }
+            })
           .catch((error) => {
               console.error(error);
-          })
+        })
+}         
+         
 
-        }
-         for(let i=0;i<12;i++){
+//Fetch Flow 10MIN  
+{
+      let url = 'http://203.151.85.73:5050/crowdflow/flow?time=10MIN';
+          fetch(url,{method:"GET"})
+          .then((response) => response.json())
+          .then((responseJson) => {
+              if(responseJson){
+                let flowArr = []
+                flowArr = responseJson.crowdFlow
+                let newNextPlace = []
+                for(let i=0;i<7;i++){
+                    let p = this.places[i]
+                    for(let j=0;j<7;j++){
+                        let c = flowArr[j]
+                       if(c && c.place.lat == p.lat && c.place.lng == p.lng){
+                           newNextPlace.push(c.nextPlace[0])
+                       }
+                    }
+                }
+                this.setState({next10MinFlow : newNextPlace})
+             }
+            })
+          .catch((error) => {
+              console.error(error);
+        })
+}       
+          
+
+//Fetch Flow 15MIN 
+{
+        let url = 'http://203.151.85.73:5050/crowdflow/flow?time=15MIN';
+          fetch(url,{method:"GET"})
+          .then((response) => response.json())
+          .then((responseJson) => {
+              if(responseJson){
+                let flowArr = []
+                flowArr = responseJson.crowdFlow
+                let newNextPlace = []
+                for(let i=0;i<7;i++){
+                    let p = this.places[i]
+                    for(let j=0;j<7;j++){
+                        let c = flowArr[j]
+                       if(c && c.place.lat == p.lat && c.place.lng == p.lng){
+                           newNextPlace.push(c.nextPlace[0])
+                       }
+                    }
+                }
+                this.setState({next15MinFlow : newNextPlace})
+             }
+            })
+          .catch((error) => {
+              console.error(error);
+        })
+}        
+  
+    
+//Fetch Density NOW          
+          for(let i=0;i<7;i++){
+            let url = 'http://203.151.85.73:5050/crowdflow/density?time=NOW&ll='+this.places[i].lat+','+this.places[i].lng;
+            fetch(url,{method:"GET"})
+            .then((response) => response.json())
+            .then((responseJson) => {
+                let denArr =[]
+                denArr = responseJson.density
+                this.density[i] = denArr[0].density
+                let colorJson = this.onChangeDenColor(this.density[i])          
+                this.denColor[i] = colorJson.denColor
+                this.denStrokeColor[i] = colorJson.denStrokeColor
+                
+            })
+            .catch((error) => {
+                console.error(error);
+            })
+
+          }
+//Fetch Density 5MIN
+         for(let i=0;i<7;i++){
         
           let url = 'http://203.151.85.73:5050/crowdflow/density?time=5MIN&ll='+this.places[i].lat+','+this.places[i].lng;
           fetch(url,{method:"GET"})
           .then((response) => response.json())
           .then((responseJson) => {
-          
               let denArr =[]
               denArr = responseJson.density
-              this.nextDensity[i] = denArr[0].density
+              this.next5Density[i] = denArr[0].density
+              //this.next5Density[i] = "HIGH"
+              let colorJson = this.onChangeDenColor(this.next5Density[i])          
+              this.den5Color[i] = colorJson.denColor
+              this.den5StrokeColor[i] = colorJson.denStrokeColor
+              
             })
           .catch((error) => {
               console.error(error);
           })
 
         }
-        let url1 = 'http://203.151.85.73:5050/crowdflow/random';
-          fetch(url1,{method:"GET"})
+//Fetch Density 10MIN
+         for(let i=0;i<7;i++){
+        
+          let url = 'http://203.151.85.73:5050/crowdflow/density?time=10MIN&ll='+this.places[i].lat+','+this.places[i].lng;
+          fetch(url,{method:"GET"})
           .then((response) => response.json())
           .then((responseJson) => {
               let denArr =[]
               denArr = responseJson.density
-              this.density[10] = denArr[0].density
-              let colorJson = this.onChangeDenColor(this.density[10])          
-              this.denColor[10] = colorJson.denColor
-              this.denStrokeColor[10] = colorJson.denStrokeColor
+              this.next10Density[i] = denArr[0].density
+              let colorJson = this.onChangeDenColor(this.next10Density[i])          
+              this.den10Color[i] = colorJson.denColor
+              this.den10StrokeColor[i] = colorJson.denStrokeColor
+             
             })
           .catch((error) => {
               console.error(error);
           })
-        let url2 = 'http://203.151.85.73:5050/crowdflow/random';
-          fetch(url2,{method:"GET"})
+
+        }
+//Fetch Density 15MIN
+         for(let i=0;i<7;i++){
+        
+          let url = 'http://203.151.85.73:5050/crowdflow/density?time=15MIN&ll='+this.places[i].lat+','+this.places[i].lng;
+          fetch(url,{method:"GET"})
           .then((response) => response.json())
           .then((responseJson) => {
               let denArr =[]
               denArr = responseJson.density
-              this.nextDensity[10] = denArr[0].density
+              this.next15Density[i] = denArr[0].density
+              let colorJson = this.onChangeDenColor(this.next15Density[i])          
+              this.den15Color[i] = colorJson.denColor
+              this.den15StrokeColor[i] = colorJson.denStrokeColor
+              
             })
           .catch((error) => {
               console.error(error);
           })
+
+        }
+       
     }
   
 render() {
-    
+  const options = [
+      "NOW",
+      "5MIN",
+      "10MIN",
+      "15MIN"
+  ];
+
+  function setSelectedOption(selectedOption){
+    this.setState({
+      selectedOption  
+    });
+     
+  }
     return (
-         
-      <View style={styles.container}>
-        <MapView
-          region={this.state.region}
-          style={styles.map}
-          onRegionChange={this.onRegionChange}
-          initialRegion={this.state.region}
-          loadingEnabled={true}
-          showsScale = {true}
-          //showsTraffic = {true}
-        >
+           <View style={styles.container}>
+            <MapView
+                region={this.state.region}
+                style={styles.map}
+                onRegionChange={this.onRegionChange}
+                initialRegion={this.state.region}
+                loadingEnabled={true}
+                showsScale = {true}
+                //showsTraffic = {true}
+            >
 
              {
+               //Polyline
                 this.places.map((p,idx) =>(
-                    (this.state.nextPlaces[idx] == "None") ?(
+                    (this.checkFlow(idx,this.state.selectedOption) == "None") ?(
                         <MapView.Polyline
                           //coordinates={[{latitude:parseFloat(p.lat),longitude: parseFloat(p.lng)},{latitude:this.state.nextPlaces[idx].lat,longitude: this.state.nextPlaces[idx].lng}]}
                           key = {idx}
@@ -246,7 +495,8 @@ render() {
                   ):(
                      <MapView.Polyline
                           key = {idx}
-                          coordinates={[{latitude:parseFloat(p.lat),longitude: parseFloat(p.lng)},{latitude:this.state.nextPlaces[idx].lat,longitude: this.state.nextPlaces[idx].lng}]}
+                          coordinates={[{latitude:parseFloat(p.lat),longitude: parseFloat(p.lng)},{latitude:this.checkFlow(idx,this.state.selectedOption).lat,longitude: this.checkFlow(idx,this.state.selectedOption).lng}]}
+                          //coordinates={[{latitude:parseFloat(p.lat),longitude: parseFloat(p.lng)},{latitude:this.state.flow[idx].lat,longitude: this.state.flow[idx].lng}]}
                           //coordinates={[{latitude:13.745844972517325,longitude: 100.53954639826303},{latitude:13.74601377826572,longitude: 100.53440439922444}]}
                           geodesic = {true}
                           strokeWidth = {3}
@@ -259,7 +509,7 @@ render() {
 
           {
             this.places.map((p,idx) =>(
-              (this.state.nextPlaces[idx] == "None") ?(
+              (this.checkFlow(idx,this.state.selectedOption) == "None") ?(
                 <MapView.Circle
                   key = {idx}
                   center={{latitude:13.74497311302548,longitude: 100.53022399050144}} 
@@ -270,7 +520,7 @@ render() {
                 ):(
                   <MapView.Circle
                   key = {idx}
-                  center={{latitude: this.state.nextPlaces[idx].lat, longitude: this.state.nextPlaces[idx].lng}} 
+                  center={{latitude:this.checkFlow(idx,this.state.selectedOption).lat,longitude: this.checkFlow(idx,this.state.selectedOption).lng}} 
                   radius={15}
                   fillColor = "#8a2be2"
                   strokeColor = "#8a2be2"
@@ -283,8 +533,8 @@ render() {
           } 
           <MapView.Polygon
               coordinates={polygonSiamCenter.coordinates}
-              fillColor={this.denColor[0]}
-              strokeColor={this.denStrokeColor[0]}
+              fillColor={this.checkColor(0,this.state.selectedOption)}
+              strokeColor={this.checkStrokeColor(0,this.state.selectedOption)}
               strokeWidth={2}
               onPress = {() => {
                     this.setState({test: "4321"})
@@ -292,63 +542,63 @@ render() {
             />
             <MapView.Polygon
               coordinates={polygonSiamDis.coordinates}
-              fillColor={this.denColor[1]}
-              strokeColor={this.denStrokeColor[1]}
+              fillColor={this.checkColor(1,this.state.selectedOption)}
+              strokeColor={this.checkStrokeColor(1,this.state.selectedOption)}
               strokeWidth={2} 
             />
             <MapView.Polygon
               coordinates={polygonMBK.coordinates}
-              fillColor={this.denColor[2]}
-              strokeColor={this.denStrokeColor[2]}
+              fillColor={this.checkColor(2,this.state.selectedOption)}
+              strokeColor={this.checkStrokeColor(2,this.state.selectedOption)}
               strokeWidth={2} 
             />          
            
             <MapView.Polygon
               coordinates={polygonCentralWorld.coordinates}
-              fillColor={this.denColor[5]}
-              strokeColor={this.denStrokeColor[5]}
+              fillColor={this.checkColor(3,this.state.selectedOption)}
+              strokeColor={this.checkStrokeColor(3,this.state.selectedOption)}
               strokeWidth={2} 
             />
             <MapView.Polygon
               coordinates={polygonParagon.coordinates}
-              fillColor=  {this.denColor[9]}
-              strokeColor={this.denStrokeColor[9]}
+              fillColor={this.checkColor(4,this.state.selectedOption)}
+              strokeColor={this.checkStrokeColor(4,this.state.selectedOption)}
               strokeWidth={2} 
             />
            
              <MapView.Polygon
               coordinates={polygonBTSnationalStadium.coordinates}
-              fillColor={this.denColor[10]}
-              strokeColor={this.denStrokeColor[10]}
+              fillColor={this.checkColor(5,this.state.selectedOption)}
+              strokeColor={this.checkStrokeColor(5,this.state.selectedOption)}
               strokeWidth={2} 
             />            
             <MapView.Polygon
               coordinates={polygonBTSsiam.coordinates}
-              fillColor={this.denColor[11]}
-              strokeColor={this.denStrokeColor[11]}
+              fillColor={this.checkColor(6,this.state.selectedOption)}
+              strokeColor={this.checkStrokeColor(6,this.state.selectedOption)}
               strokeWidth={2} //ความหนาของเส้นรอบรูป
             />
             
                     
-              
+   
           {
               this.places.map((p,idx) =>(
-                 (this.state.nextPlaces[idx] != "None") ?(
+                 (this.checkFlow(idx,this.state.selectedOption) != "None") ?(
                  <MapView.Marker 
                    key = {idx}
                    coordinate={{latitude: parseFloat(p.lat), longitude: parseFloat(p.lng)}}
                    centerOffset={{ x: 10, y: 60 }}
                    anchor={{ x: 0.69, y: 1 }}
                    //image={require('./pics/arrow/arrow_up_red.png')}>
-                   image={this.showArrowDensity(this.density[idx],this.nextDensity[idx])}>
+                   image={this.showArrowDensity(idx,this.state.selectedOption)}>
                    <MapView.Callout style={styles.plainView}>
                        <FlowCallout 
                           width={CALLOUT_WIDTH}
                           place = {p.name}
-                          currentDensity = {this.density[idx]}
-                          nextDensity = {this.nextDensity[idx]}
+                          currentDensity = {this.checkCurrentDensity(idx,this.state.selectedOption)}
+                          nextDensity = {this.checkNextDensity(idx,this.state.selectedOption)}
                           // {(this.state.nextPlace[0].nextPlace.length > 0 )?(
-                          nextPlace = {this.state.nextPlaces[idx].name}
+                          nextPlace = {this.checkFlow(idx,this.state.selectedOption).name}
                           // }
                           
                        />
@@ -362,13 +612,13 @@ render() {
                    centerOffset={{ x: 10, y: 60 }}
                    anchor={{ x: 0.69, y: 1 }}
                    //image={require('./pics/arrow/arrow_up_red.png')}>
-                   image={this.showArrowDensity(this.density[idx],this.nextDensity[idx])}>
+                   image={this.showArrowDensity(idx,this.state.selectedOption)}>
                    <MapView.Callout style={styles.plainView}>
                        <FlowCallout 
                           width={CALLOUT_WIDTH}
                           place = {p.name}
-                          currentDensity = {this.density[idx]}
-                          nextDensity = {this.nextDensity[idx]}
+                          currentDensity = {this.checkCurrentDensity(idx,this.state.selectedOption)}
+                          nextDensity = {this.checkNextDensity(idx,this.state.selectedOption)}
                           //nextPlace = {p.lat}
                        />
                     </MapView.Callout>
@@ -378,20 +628,25 @@ render() {
               
           }
          
-          </MapView>
-          <View style={styles.legendContainer}>
+         </MapView> 
+         <View style={styles.segmentContainer}>
+          <SegmentedControls
+            options={ options }
+            onSelection={ setSelectedOption.bind(this) }
+            selectedOption={ this.state.selectedOption }
+            direction = {"column"}
+            
+         />
+        </View>
+         <View style={styles.legendContainer}>
             <Image
                source={require('./pics/arrow/symbol.png') } 
                style={styles.legend}
                resizeMode='contain' />
               
          </View>
-         
-         
-          <Text>{this.state.test}</Text>
-    </View>
-    
-    
+        </View>
+  
     );
 }
 }
@@ -562,7 +817,7 @@ const polygonParagon = {
         },
         {
           latitude: 13.746533,
-          longitude:  100.528349
+          longitude: 100.528349
         },
       ],
    }
@@ -595,25 +850,33 @@ const styles = StyleSheet.create({
   },
     legendContainer: {
     position: 'absolute',
-    left: 200,
-    right: 0,
-    bottom: 0,
-    height: 65,
-    width: 210,
-    flex: 1,
+    // left: 220,
+    right: -70,
+    bottom: 10,
+    height: 100,//80
+    width: 220,
+    //flex: 1,
     alignItems: 'center',
-    flexDirection: 'column',
-    justifyContent: 'center',
+    //flexDirection: 'column',
+    justifyContent: 'flex-end',
     backgroundColor: 'transparent'
 },
   legend: {
     top: 0,
     right: 0,
-    height: 60,
-    width: 180,
-    flexDirection: 'row',
+    height: 100,//60
+    width: 220,//180
+    //flexDirection: 'row',
     resizeMode: 'cover'
-}
+},
+  segmentContainer: {
+    position: 'absolute',
+    right: 10,
+    top: 10,
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    backgroundColor: 'transparent'
+},
  
  
 
